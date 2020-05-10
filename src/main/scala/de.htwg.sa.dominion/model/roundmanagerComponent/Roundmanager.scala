@@ -74,6 +74,11 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     this.copy(names = listNames)
   }
 
+  override def constructControllerAskNameString: String = {
+    val askNameString = "Player " + (this.names.size + 1) + " please enter your name:"
+    askNameString
+  }
+
   override def shuffle(deck: List[Card]): List[Card] ={
     val random = new Random
     val shuffledList: List[Card] = random.shuffle(deck)

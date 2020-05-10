@@ -10,6 +10,8 @@ object Dominion {
   val injector: Injector = Guice.createInjector(new DominionModule)
   val controller: ControllerInterface = injector.getInstance(classOf[Controller])
   val tui = new TUI(controller)
+  val introString: String = "Welcome to Dominion! \n Press 'q' to exit and any other key to start "
+  controller.setControllerMessage(introString)
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
