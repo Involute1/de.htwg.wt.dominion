@@ -2,10 +2,10 @@ package de.htwg.sa.dominion.model.roundmanagerComponent
 
 import de.htwg.sa.dominion.model.RoundmanagerInterface
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
-import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards}
+import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Deck}
 import de.htwg.sa.dominion.model.playercomponent.Player
 
-case class Roundmanager(players: List[Player], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
+case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)]) extends RoundmanagerInterface {
 
   override def createPlayingDecks(cardName: CardName): Roundmanager = {
@@ -46,6 +46,30 @@ case class Roundmanager(players: List[Player], numberOfPlayers: Int, turn: Int, 
     } else {
       this.copy(decks = decksNew)
     }
+  }
+  private def createPlayer(players: List[Player], name: String , index: Int): List[Player] = {
+    val player = Player(name, index + 1, Deck.startDeck, Nil, Nil, 1, 1, 0, 0)
+    val listPlayers = List.concat(players, List(player))
+    listPlayers
+  }
+  override def createPlayerList(): Roundmanager = {
+    for (i <- 0 until this.numberOfPlayers) {
+      this.copy(players = createPlayer(this.players, this.names(i), i))
+    }
+    this
+  }
+  override def namesEqualPlayer(): Boolean = {
+    if (this.numberOfPlayers == this.names.size) {true}
+    else {false}
+  }
+
+  override def updateNumberOfPlayer(numberOfPlayers: Int): Roundmanager = {
+    this.copy(numberOfPlayers = numberOfPlayers)
+  }
+
+  override def updateListNames(name: String): Roundmanager ={
+    val listNames: List[String] = List.concat(name, names)
+    this.copy(names = listNames)
   }
 
 }

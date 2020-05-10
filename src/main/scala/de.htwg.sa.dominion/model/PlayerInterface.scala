@@ -1,5 +1,7 @@
 package de.htwg.sa.dominion.model
 
+import de.htwg.sa.dominion.model.playercomponent.Player
+
 trait PlayerInterface {
 
   def constructPlayerNameString(): String
@@ -9,5 +11,6 @@ trait PlayerInterface {
   def constructPlayerStackerString(): String
 
   def constructPlayerHandString(): String
+
 
 }

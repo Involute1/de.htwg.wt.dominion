@@ -77,6 +77,7 @@ class Controller @Inject() (var roundmanager: RoundmanagerInterface) extends Con
         CardName.SMITHY, CardName.REMODEL, CardName.MERCHANT, CardName.WORKSHOP, CardName.GARDENS, CardName.MARKET)
 
       initCardNames.foreach(x => controller.roundmanager = controller.roundmanager.createPlayingDecks(x))
+      controller.roundmanager.updateNumberOfPlayer(number.get)
 
       // TODO player init & state change
     }
@@ -88,11 +89,15 @@ class Controller @Inject() (var roundmanager: RoundmanagerInterface) extends Con
 
   case class PlayerSetupState(controller: Controller) extends ControllerState {
     override def evaluate(input: String): Unit = {
-      // TODO setup players with name and decks n´shit & state change
+      val name = input
+      if (name.isEmpty) return
+      controller.roundmanager.updateListNames(input)
+      if (!controller.roundmanager.namesEqualPlayer()) return
+      controller.roundmanager.createPlayerList()
 
     }
 
-    override def getCurrentControllerMessage: String = ???
+    override def getCurrentControllerMessage: String = "Enter your name"
 
     override def nextState: ControllerState = InGameState(controller)
   }

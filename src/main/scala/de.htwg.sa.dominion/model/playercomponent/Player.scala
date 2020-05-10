@@ -1,7 +1,9 @@
 package de.htwg.sa.dominion.model.playercomponent
 
 import de.htwg.sa.dominion.model.PlayerInterface
-import de.htwg.sa.dominion.model.cardcomponent.Card
+import de.htwg.sa.dominion.model.cardcomponent.{Card, Deck}
+
+import scala.collection.mutable.ListBuffer
 
 case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card], handCards: List[Card],
                   actions: Int, buys: Int, money: Int, victoryPoint: Int) extends PlayerInterface {
@@ -28,4 +30,6 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     this.handCards.foreach(x => handString.appended(x.cardName + "(" + x + ")\n"))
     handString
   }
+
+
 }
