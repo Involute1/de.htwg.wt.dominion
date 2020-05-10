@@ -50,7 +50,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     }
   }
   private def createPlayer(players: List[Player], name: String , index: Int): List[Player] = {
-    val player = Player(name, index + 1, Deck.startDeck, Nil, Nil, 1, 1, 0, 0)
+    val player = Player(name, index + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0, 0)
     val listPlayers = List.concat(players, List(player))
     listPlayers
   }
