@@ -48,4 +48,8 @@ case class Roundmanager(players: List[Player], numberOfPlayers: Int, turn: Int, 
     }
   }
 
+  private def createPlayers() : Roundmanager {
+
+  }
+
 }

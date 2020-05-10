@@ -69,3 +69,10 @@ object Cards {
   val market: Card = Card("Market", "+1 Card, +1 Action, +1 Buy, +1 Money", Cardtype.KINGDOM, 5, 0, 0, 1, 1, 1, 1)
 
 }
+
+object Deck {
+  val startDeck : List[Card] = List(cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,
+    cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,
+    cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,cardcomponent.CardName.ESTATE,
+    cardcomponent.CardName.ESTATE,cardcomponent.CardName.ESTATE)
+}
