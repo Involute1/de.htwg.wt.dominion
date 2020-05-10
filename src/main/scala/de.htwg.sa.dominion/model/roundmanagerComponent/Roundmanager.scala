@@ -70,7 +70,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def updateListNames(name: String): Roundmanager ={
-    val listNames: List[String] = List.concat(names, name)
+    val listNames: List[String] = List.concat(names, List(name))
     this.copy(names = listNames)
   }
 

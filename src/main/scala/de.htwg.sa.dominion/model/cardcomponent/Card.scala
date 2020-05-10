@@ -70,9 +70,7 @@ object Cards {
 }
 
 object Deck {
-  val startDeck : List[Card] = List(cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,
-    cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,
-    cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,cardcomponent.CardName.ESTATE,
-    cardcomponent.CardName.ESTATE,cardcomponent.CardName.ESTATE)
+  val startDeck : List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
+    Cards.copper, Cards.estate, Cards.estate, Cards.estate)
 }
 

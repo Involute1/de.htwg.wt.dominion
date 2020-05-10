@@ -16,7 +16,7 @@ class DominionModule extends AbstractModule with ScalaModule {
     bind[CardInterface].to[Card]
     bind[ControllerInterface].to[Controller]
     bind[RoundmanagerInterface].to[Roundmanager]
-    //bind[RoundmanagerInterface].toInstance(Roundmanager(Nil))
+    bind[RoundmanagerInterface].toInstance(Roundmanager(Nil, Nil, 0, 0, Nil, 0, gameEnd = false, Nil))
     //bind[Player].toInstance(Player())
   }
 
