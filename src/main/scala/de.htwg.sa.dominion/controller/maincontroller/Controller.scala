@@ -94,7 +94,7 @@ class Controller @Inject() (var roundmanager: RoundmanagerInterface) extends Con
       controller.roundmanager.updateListNames(input)
       if (!controller.roundmanager.namesEqualPlayer()) return
       controller.roundmanager.createPlayerList()
-
+      controller.controllerState = nextState
     }
 
     override def getCurrentControllerMessage: String = "Enter your name"
