@@ -12,7 +12,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)],
                         roundStatus: RoundmanagerStatus) extends RoundmanagerInterface {
 
-  /*override def turn(input: String): Roundmanager = {
+  override def turn(input: String): Roundmanager = {
     // 1) draw 5 cards
     // print liste von handkarten + idx, wenn Kingdom karten auf hand
     // -> y: welche karte möchtest du spielen -> status => CardStatus
@@ -22,9 +22,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     // 3) buy
 
     // 4) next player
-    this = nextPlayer()
+    //this = nextPlayer()
     this
-  }*/
+  }
 
   private def nextPlayer(): Roundmanager = {
     if (this.emptyDeckCount == 3) {
@@ -88,12 +88,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def namesEqualPlayer(): Boolean = {
-    if (this.numberOfPlayers == this.names.size) {
-      true
-    }
-    else {
-      false
-    }
+    if (this.numberOfPlayers == this.names.size) {true}
+    else {false}
   }
 
   override def updateNumberOfPlayer(numberOfPlayers: Int): Roundmanager = {
@@ -124,17 +120,22 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     if (deckList.size == 0) {
       val deck1List: List[Card] = shuffle(stackList)
       val hand1List: List[Card] = List.concat(handList, List(deck1List.head))
-      val minusdeck1List: List[Card] = deck1List.drop(0)
-      this.copy(players(index) = Player(players(index).name, players(index).value, minusdeck1List,
-        players(index).stacker, hand1List, players(index).actions, players(index).buys, players(index).money,
-        players(index).victoryPoint))
+      val minusDeck1List: List[Card] = deck1List.drop(0)
+      val updatedPlayer: Player = Player(players(index).name, players(index).value, minusDeck1List,
+        stackemptyList, hand1List, players(index).actions, players(index).buys, players(index).money,
+        players(index).victoryPoint)
+      val updatedPlayers: List[Player] = players.updated(index, updatedPlayer)
+      this.copy(players = updatedPlayers)
+
     }
     else if (deckList.size >= 1) {
       val hand1List: List[Card] = List.concat(handList, List(players(index).deck.head))
-      val minusdeckList: List[Card] = deckList.drop(0)
-      this.copy(players(index) = Player(players(index).name, players(index).value, minusdeckList,
+      val minusDeckList: List[Card] = deckList.drop(0)
+      val updatedPlayer: Player = Player(players(index).name, players(index).value, minusDeckList,
         players(index).stacker, hand1List, players(index).actions, players(index).buys, players(index).money,
-        players(index).victoryPoint))
+        players(index).victoryPoint)
+      val updatedPlayers: List[Player] = players.updated(index, updatedPlayer)
+      this.copy(players = updatedPlayers)
     }
     this
   }
