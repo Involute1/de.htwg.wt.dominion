@@ -2,6 +2,7 @@ package de.htwg.sa.dominion.model
 
 import de.htwg.sa.dominion.model.cardcomponent.Card
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
+import de.htwg.sa.dominion.model.playercomponent.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
 
 trait RoundmanagerInterface {
@@ -18,5 +19,7 @@ trait RoundmanagerInterface {
   def updateListNames(name: String): Roundmanager
 
   def shuffle(deck: List[Card]): List[Card]
+
+  def getCard(players: List[Player], index: Int): Roundmanager
 
 }
