@@ -7,4 +7,7 @@ trait RoundmanagerInterface {
 
   def createPlayingDecks(cardName: CardName): Roundmanager
 
+
+  def createPlayerList(): Roundmanager
+
 }

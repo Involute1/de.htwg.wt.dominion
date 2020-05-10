@@ -30,13 +30,6 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     this.handCards.foreach(x => handString.appended(x.cardName + "(" + x + ")\n"))
     handString
   }
-  override def createPlayer(playerCount: Int, names: List[String]): List[Player] = {
-    val players = new ListBuffer[Player]
-    for (i <- 0 until playerCount) {
-      players += new Player(names(i), i + 1,Deck.startDeck,Nil,Nil,1,1,0,0)
-    }
-    val Players: List[Player] = players.toList
-    Players
-  }
+
 
 }

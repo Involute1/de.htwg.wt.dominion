@@ -83,7 +83,8 @@ class Controller(var roundmanager: RoundmanagerInterface) extends ControllerInte
 
   case class PlayerSetupState(controller: Controller) extends ControllerState {
     override def evaluate(input: String): Unit = {
-      // TODO setup players with name and decks n´shit & state change
+      if()
+
 
     }
 

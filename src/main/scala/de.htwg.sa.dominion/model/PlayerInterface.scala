@@ -12,6 +12,5 @@ trait PlayerInterface {
 
   def constructPlayerHandString(): String
 
-  def createPlayer(playerCount: Int, names: List[String]): List[Player]
 
 }
