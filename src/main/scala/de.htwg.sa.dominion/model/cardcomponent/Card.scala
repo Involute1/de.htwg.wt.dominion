@@ -43,7 +43,6 @@ object CardName extends Enumeration {
   val GARDENS: cardcomponent.CardName.Value = Value("Gardens")
   val MARKET: cardcomponent.CardName.Value = Value("Market")
 }
-// name, descr, type, cost, money, vp, cardDraw, buys, actions, addmoney
 
 object Cards {
   val copper: Card = Card("Copper", "1 Money", Cardtype.MONEY, 0, 1, 0, 0, 0, 0, 0)
@@ -76,3 +75,4 @@ object Deck {
     cardcomponent.CardName.COPPER,cardcomponent.CardName.COPPER,cardcomponent.CardName.ESTATE,
     cardcomponent.CardName.ESTATE,cardcomponent.CardName.ESTATE)
 }
+

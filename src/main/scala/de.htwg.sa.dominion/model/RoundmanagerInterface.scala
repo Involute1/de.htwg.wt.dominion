@@ -5,6 +5,6 @@ import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
 
 trait RoundmanagerInterface {
 
-  def createPlayingDecks(cardName: CardName, roundmanager: Roundmanager): Roundmanager
+  def createPlayingDecks(cardName: CardName): Roundmanager
 
 }
