@@ -15,8 +15,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def turn(input: String): Roundmanager = {
     // 1) draw 5 cards
     // print liste von handkarten + idx, wenn Kingdom karten auf hand
-      // -> y: welche karte möchtest du spielen -> status => CardStatus
-      // -> n: Keine Action karten auf hand -> status => Start_Buyphase
+    // -> y: welche karte möchtest du spielen -> status => CardStatus
+    // -> n: Keine Action karten auf hand -> status => Start_Buyphase
     // 2) action
 
     // 3) buy
@@ -73,27 +73,34 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       this.copy(decks = decksNew)
     }
   }
-  private def createPlayer(players: List[Player], name: String , index: Int): List[Player] = {
+
+  private def createPlayer(players: List[Player], name: String, index: Int): List[Player] = {
     val player = Player(name, index + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0, 0)
     val listPlayers = List.concat(players, List(player))
     listPlayers
   }
+
   override def createPlayerList(): Roundmanager = {
     for (i <- 0 until this.numberOfPlayers) {
       this.copy(players = createPlayer(this.players, this.names(i), i))
     }
     this
   }
+
   override def namesEqualPlayer(): Boolean = {
-    if (this.numberOfPlayers == this.names.size) {true}
-    else {false}
+    if (this.numberOfPlayers == this.names.size) {
+      true
+    }
+    else {
+      false
+    }
   }
 
   override def updateNumberOfPlayer(numberOfPlayers: Int): Roundmanager = {
     this.copy(numberOfPlayers = numberOfPlayers)
   }
 
-  override def updateListNames(name: String): Roundmanager ={
+  override def updateListNames(name: String): Roundmanager = {
     val listNames: List[String] = List.concat(names, List(name))
     this.copy(names = listNames)
   }
@@ -103,18 +110,21 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     askNameString
   }
 
-  override def shuffle(deck: List[Card]): List[Card] ={
+  override def shuffle(deck: List[Card]): List[Card] = {
     val random = new Random
     val shuffledList: List[Card] = random.shuffle(deck)
     shuffledList
   }
-  override def getCard(players: List[Player], index: Int): Roundmanager ={
+
+  override def getCard(players: List[Player], index: Int): Roundmanager = {
     val handList: List[Card] = players(index).handCards
     val deckList: List[Card] = players(index).deck
     if (deckList.size >= 1) {
       val hand1List: List[Card] = List.concat(handList, List(players(index).deck.head))
       val updateddeckList: List[Card] = deckList.drop(0)
-      this.copy(players(index) = Player(players(index).name,players(index).value,players(index).deck,players(index).stacker,hand1List,players(index).actions,players(index).buys,players(index).money,players(index).victoryPoint))
+      this.copy(players(index) = Player(players(index).name, players(index).value, players(index).deck,
+        players(index).stacker, hand1List, players(index).actions, players(index).buys, players(index).money,
+        players(index).victoryPoint))
     }
     this
   }
