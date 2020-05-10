@@ -108,6 +108,16 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val shuffledList: List[Card] = random.shuffle(deck)
     shuffledList
   }
+  override def getCard(players: List[Player], index: Int): Roundmanager ={
+    val handList: List[Card] = players(index).handCards
+    val deckList: List[Card] = players(index).deck
+    if (deckList.size >= 1) {
+      val hand1List: List[Card] = List.concat(handList, List(players(index).deck.head))
+      val updateddeckList: List[Card] = deckList.drop(0)
+      this.copy(players(index) = Player(players(index).name,players(index).value,players(index).deck,players(index).stacker,hand1List,players(index).actions,players(index).buys,players(index).money,players(index).victoryPoint))
+    }
+    this
+  }
 
   override def checkForGameEnd(): Boolean = {
     this.gameEnd

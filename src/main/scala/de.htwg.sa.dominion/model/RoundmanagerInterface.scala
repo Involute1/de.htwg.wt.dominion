@@ -20,6 +20,8 @@ trait RoundmanagerInterface {
 
   def shuffle(deck: List[Card]): List[Card]
 
+  def getCard(players: List[Player], index: Int): Roundmanager
+
   def checkForGameEnd(): Boolean
 
   def turn(input: String): Roundmanager
