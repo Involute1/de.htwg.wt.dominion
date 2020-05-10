@@ -12,12 +12,11 @@ import net.codingwell.scalaguice.ScalaModule
 class DominionModule extends AbstractModule with ScalaModule {
 
   override def configure(): Unit = {
-    bind[PlayerInterface].to[Player]
-    bind[CardInterface].to[Card]
-    bind[ControllerInterface].to[Controller]
-    bind[RoundmanagerInterface].to[Roundmanager]
+    //bind[PlayerInterface].to[Player]
+    //bind[CardInterface].to[Card]
+    //bind[ControllerInterface].to[Controller]
+    //bind[RoundmanagerInterface].to[Roundmanager]
     bind[RoundmanagerInterface].toInstance(Roundmanager(Nil, Nil, 0, 0, Nil, 0, gameEnd = false, Nil))
-    //bind[Player].toInstance(Player())
   }
 
 }
