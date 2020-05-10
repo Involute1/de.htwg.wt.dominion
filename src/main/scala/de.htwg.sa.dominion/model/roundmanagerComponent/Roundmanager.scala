@@ -117,7 +117,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val deckList: List[Card] = players(index).deck
     val stackList: List[Card] = players(index).stacker
     val stackemptyList: List[Card] = Nil
-    if (deckList.size == 0) {
+    if (deckList.isEmpty) {
       val deck1List: List[Card] = shuffle(stackList)
       val hand1List: List[Card] = List.concat(handList, List(deck1List.head))
       val minusDeck1List: List[Card] = deck1List.drop(0)
@@ -128,7 +128,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       this.copy(players = updatedPlayers)
 
     }
-    else if (deckList.size >= 1) {
+    else if (deckList.nonEmpty) {
       val hand1List: List[Card] = List.concat(handList, List(players(index).deck.head))
       val minusDeckList: List[Card] = deckList.drop(0)
       val updatedPlayer: Player = Player(players(index).name, players(index).value, minusDeckList,
