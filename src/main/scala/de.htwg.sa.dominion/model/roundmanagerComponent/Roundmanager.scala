@@ -5,6 +5,8 @@ import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Deck}
 import de.htwg.sa.dominion.model.playercomponent.Player
 
+import scala.util.Random
+
 case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)]) extends RoundmanagerInterface {
 
@@ -68,8 +70,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def updateListNames(name: String): Roundmanager ={
-    val listNames: List[String] = List.concat(name, names)
+    val listNames: List[String] = List.concat(names, name)
     this.copy(names = listNames)
+  }
+
+  override def shuffle(deck: List[Card]): List[Card] ={
+    val random = new Random
+    val shuffledList: List[Card] = random.shuffle(deck)
+    shuffledList
   }
 
 }
