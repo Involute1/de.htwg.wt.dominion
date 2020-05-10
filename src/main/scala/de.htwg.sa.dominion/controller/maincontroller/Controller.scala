@@ -17,7 +17,6 @@ class Controller @Inject()(var roundmanager: RoundmanagerInterface) extends Cont
   val undoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DominionModule)
 
-
   override def eval(input: String): Unit = {
     undoManager.doStep(new SetCommand(this))
     controllerState.evaluate(input)
@@ -78,12 +77,12 @@ case class PreSetupState(controller: Controller) extends ControllerState {
       CardName.SMITHY, CardName.REMODEL, CardName.MERCHANT, CardName.WORKSHOP, CardName.GARDENS, CardName.MARKET)
 
     initCardNames.foreach(x => controller.roundmanager = controller.roundmanager.createPlayingDecks(x))
-    controller.roundmanager.updateNumberOfPlayer(number.get)
+    controller.roundmanager = controller.roundmanager.updateNumberOfPlayer(number.get)
 
-    // TODO player init & state change
+    controller.controllerState = nextState
   }
 
-  override def getCurrentControllerMessage: String = "Welcome to Dominion\n Please enter the number of Players, must be between 3 & 5!:"
+  override def getCurrentControllerMessage: String = "Please enter the number of Players, must be between 3 & 5:"
 
   override def nextState: ControllerState = PlayerSetupState(controller)
 }
@@ -92,13 +91,13 @@ case class PreSetupState(controller: Controller) extends ControllerState {
     override def evaluate(input: String): Unit = {
       val name = input
       if (name.isEmpty) return
-      controller.roundmanager.updateListNames(input)
+      controller.roundmanager = controller.roundmanager.updateListNames(input)
       if (!controller.roundmanager.namesEqualPlayer()) return
       controller.roundmanager.createPlayerList()
       controller.controllerState = nextState
     }
 
-  override def getCurrentControllerMessage: String = "Enter your name"
+  override def getCurrentControllerMessage: String = controller.roundmanager.constructControllerAskNameString
 
   override def nextState: ControllerState = InGameState(controller)
 }
@@ -106,9 +105,10 @@ case class PreSetupState(controller: Controller) extends ControllerState {
 case class InGameState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     // TODO add game lokik to roundmanager
+    return
   }
 
-  override def getCurrentControllerMessage: String = ???
+  override def getCurrentControllerMessage: String = ""
 
   override def nextState: ControllerState = GameOverState(controller)
 }
