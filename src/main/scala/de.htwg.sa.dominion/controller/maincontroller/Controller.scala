@@ -1,17 +1,22 @@
 package de.htwg.sa.dominion.controller.maincontroller
 
+import com.google.inject.Guice
+import de.htwg.sa.dominion.DominionModule
 import de.htwg.sa.dominion.controller.ControllerInterface
 import de.htwg.sa.dominion.model.RoundmanagerInterface
 import de.htwg.sa.dominion.model.cardcomponent.CardName
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
 import de.htwg.sa.dominion.util.UndoManager
+import javax.inject.Inject
 
-class Controller(var roundmanager: RoundmanagerInterface) extends ControllerInterface {
+class Controller @Inject() (var roundmanager: RoundmanagerInterface) extends ControllerInterface {
 
   var controllerMessage: String = ""
   var controllerState: ControllerState = PreSetupState(this)
   val undoManager = new UndoManager
+  val injector = Guice.createInjector(new DominionModule)
+
 
   override def eval(input: String): Unit = {
     undoManager.doStep(new SetCommand(this))

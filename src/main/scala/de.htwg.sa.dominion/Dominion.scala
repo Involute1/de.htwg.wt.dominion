@@ -1,12 +1,14 @@
 package de.htwg.sa.dominion
 
+import com.google.inject.{Guice, Injector}
 import de.htwg.sa.dominion.aview.TUI
 import de.htwg.sa.dominion.controller.ControllerInterface
 import de.htwg.sa.dominion.controller.maincontroller.Controller
 
 object Dominion {
 
-  val controller: ControllerInterface = new Controller()
+  val injector: Injector = Guice.createInjector(new DominionModule)
+  val controller: ControllerInterface = injector.getInstance(classOf[Controller])
   val tui = new TUI(controller)
   controller.notifyObservers
 
