@@ -1,14 +1,38 @@
 package de.htwg.sa.dominion.model.roundmanagerComponent
 
-import de.htwg.sa.dominion.model.RoundmanagerInterface
+import de.htwg.sa.dominion.model.{RoundmanagerInterface, roundmanagerComponent}
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Deck}
 import de.htwg.sa.dominion.model.playercomponent.Player
+import de.htwg.sa.dominion.model.roundmanagerComponent.RoundmanagerStatus.RoundmanagerStatus
 
 import scala.util.Random
 
 case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
-                        emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)]) extends RoundmanagerInterface {
+                        emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)],
+                        roundStatus: RoundmanagerStatus) extends RoundmanagerInterface {
+
+  override def turn(input: String): Roundmanager = {
+    // 1) draw 5 cards
+    // print liste von handkarten + idx, wenn Kingdom karten auf hand
+      // -> y: welche karte möchtest du spielen -> status => CardStatus
+      // -> n: Keine Action karten auf hand -> status => Start_Buyphase
+    // 2) action
+
+    // 3) buy
+
+    // 4) next player
+    this = nextPlayer()
+    this
+  }
+
+  private def nextPlayer(): Roundmanager = {
+    if (this.emptyDeckCount == 3) {
+      this.copy(gameEnd = true)
+    } else {
+      this.copy(turn = turn + 1, roundStatus = RoundmanagerStatus.NEXT_PLAYER_TURN)
+    }
+  }
 
   override def createPlayingDecks(cardName: CardName): Roundmanager = {
     cardName match {
@@ -85,4 +109,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     shuffledList
   }
 
+  override def checkForGameEnd(): Boolean = {
+    this.gameEnd
+  }
+}
+
+object RoundmanagerStatus extends Enumeration {
+  type RoundmanagerStatus = Value
+  val START_ACTION_PHASE, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
 }

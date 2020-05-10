@@ -64,7 +64,7 @@ object Cards {
   val merchant: Card = Card("Merchant", "+1 Card, +1 Action, The first time you play a Silver this turn, +1 Money"
     , Cardtype.KINGDOM, 3, 0, 0, 1, 0, 1, 0)
   val workshop: Card = Card("Workshop", "Gain a card costing up to 4", Cardtype.KINGDOM, 3, 0, 0, 0, 0, 0, 0)
-  val gardens: Card = Card("Gardens", "Worth 1 WinningPoint per 10 cards you have(round down)", Cardtype.KINGDOM, 4, 0, 0, 0, 0, 0, 0)
+  val gardens: Card = Card("Gardens", "Worth 1 WinningPoint per 10 cards you have(round down)", Cardtype.VICTORYPOINT, 4, 0, 0, 0, 0, 0, 0)
   val market: Card = Card("Market", "+1 Card, +1 Action, +1 Buy, +1 Money", Cardtype.KINGDOM, 5, 0, 0, 1, 1, 1, 1)
 
 }

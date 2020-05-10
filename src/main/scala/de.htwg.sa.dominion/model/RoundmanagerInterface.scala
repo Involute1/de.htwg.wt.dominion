@@ -20,4 +20,7 @@ trait RoundmanagerInterface {
 
   def shuffle(deck: List[Card]): List[Card]
 
+  def checkForGameEnd(): Boolean
+
+  def turn(input: String): Roundmanager
 }
