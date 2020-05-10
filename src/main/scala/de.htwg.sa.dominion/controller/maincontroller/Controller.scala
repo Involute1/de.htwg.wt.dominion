@@ -1,21 +1,22 @@
 package de.htwg.sa.dominion.controller.maincontroller
 
 import de.htwg.sa.dominion.controller.ControllerInterface
+import de.htwg.sa.dominion.model.RoundmanagerInterface
 import de.htwg.sa.dominion.model.cardcomponent.CardName
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
 import de.htwg.sa.dominion.util.UndoManager
 
-class Controller extends ControllerInterface {
+class Controller(var roundmanager: RoundmanagerInterface) extends ControllerInterface {
 
   var controllerMessage: String = ""
-  var roundManager: Roundmanager = Roundmanager(Nil, 0, 0, Nil, 0, gameEnd = false, Nil)
   var controllerState: ControllerState = PreSetupState(this)
   val undoManager = new UndoManager
 
   override def eval(input: String): Unit = {
     undoManager.doStep(new SetCommand(this))
     controllerState.evaluate(input)
+    setControllerMessage(controllerState.getCurrentControllerMessage)
     notifyObservers
   }
 
@@ -70,7 +71,7 @@ class Controller extends ControllerInterface {
         CardName.DUCHY, CardName.PROVINCE, CardName.VILLAGE, CardName.FESTIVAL, CardName.CELLAR, CardName.MINE,
         CardName.SMITHY, CardName.REMODEL, CardName.MERCHANT, CardName.WORKSHOP, CardName.GARDENS, CardName.MARKET)
 
-      initCardNames.foreach(x => controller.roundManager = roundManager.createPlayingDecks(x, roundManager))
+      initCardNames.foreach(x => controller.roundmanager = controller.roundmanager.createPlayingDecks(x))
 
       // TODO player init & state change
     }

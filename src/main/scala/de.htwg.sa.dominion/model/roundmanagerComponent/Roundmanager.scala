@@ -8,17 +8,17 @@ import de.htwg.sa.dominion.model.playercomponent.Player
 case class Roundmanager(players: List[Player], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)]) extends RoundmanagerInterface {
 
-  override def createPlayingDecks(cardName: CardName, roundmanager: Roundmanager): Roundmanager = {
+  override def createPlayingDecks(cardName: CardName): Roundmanager = {
     cardName match {
       case moneyCard if moneyCard == CardName.COPPER || moneyCard == CardName.SILVER || moneyCard == CardName.GOLD
-      => constructPlayingCardDeck(cardName, 100, roundmanager)
+      => constructPlayingCardDeck(cardName, 100)
       case victoryPointCard if victoryPointCard == CardName.ESTATE || victoryPointCard == CardName.DUCHY || victoryPointCard == CardName.PROVINCE
-      => constructPlayingCardDeck(cardName, 12, roundmanager)
-      case _ => constructPlayingCardDeck(cardName, 10, roundmanager)
+      => constructPlayingCardDeck(cardName, 12)
+      case _ => constructPlayingCardDeck(cardName, 10)
     }
   }
 
-  private def constructPlayingCardDeck(card: CardName, amount: Int, roundmanager: Roundmanager): Roundmanager = {
+  private def constructPlayingCardDeck(card: CardName, amount: Int): Roundmanager = {
     // TODO Find better way for this pattern matching
     val deck: List[Card] = List.fill(amount)(card.toString match {
       case "Copper" => Cards.copper
@@ -40,11 +40,11 @@ case class Roundmanager(players: List[Player], numberOfPlayers: Int, turn: Int, 
     })
 
     val decksNew: List[List[Card]] = List(deck)
-    if (roundmanager.decks.nonEmpty) {
-      val decksNew2: List[List[Card]] = List.concat(roundmanager.decks, decksNew)
-      roundmanager.copy(decks = decksNew2)
+    if (this.decks.nonEmpty) {
+      val decksNew2: List[List[Card]] = List.concat(this.decks, decksNew)
+      this.copy(decks = decksNew2)
     } else {
-      roundmanager.copy(decks = decksNew)
+      this.copy(decks = decksNew)
     }
   }
 
