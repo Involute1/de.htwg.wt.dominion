@@ -12,7 +12,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)],
                         roundStatus: RoundmanagerStatus) extends RoundmanagerInterface {
 
-  override def turn(input: String): Roundmanager = {
+  /*override def turn(input: String): Roundmanager = {
     // 1) draw 5 cards
     // print liste von handkarten + idx, wenn Kingdom karten auf hand
     // -> y: welche karte möchtest du spielen -> status => CardStatus
@@ -24,7 +24,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     // 4) next player
     this = nextPlayer()
     this
-  }
+  }*/
 
   private def nextPlayer(): Roundmanager = {
     if (this.emptyDeckCount == 3) {
@@ -119,10 +119,20 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def getCard(players: List[Player], index: Int): Roundmanager = {
     val handList: List[Card] = players(index).handCards
     val deckList: List[Card] = players(index).deck
-    if (deckList.size >= 1) {
+    val stackList: List[Card] = players(index).stacker
+    val stackemptyList: List[Card] = Nil
+    if (deckList.size == 0) {
+      val deck1List: List[Card] = shuffle(stackList)
+      val hand1List: List[Card] = List.concat(handList, List(deck1List.head))
+      val minusdeck1List: List[Card] = deck1List.drop(0)
+      this.copy(players(index) = Player(players(index).name, players(index).value, minusdeck1List,
+        players(index).stacker, hand1List, players(index).actions, players(index).buys, players(index).money,
+        players(index).victoryPoint))
+    }
+    else if (deckList.size >= 1) {
       val hand1List: List[Card] = List.concat(handList, List(players(index).deck.head))
-      val updateddeckList: List[Card] = deckList.drop(0)
-      this.copy(players(index) = Player(players(index).name, players(index).value, players(index).deck,
+      val minusdeckList: List[Card] = deckList.drop(0)
+      this.copy(players(index) = Player(players(index).name, players(index).value, minusdeckList,
         players(index).stacker, hand1List, players(index).actions, players(index).buys, players(index).money,
         players(index).victoryPoint))
     }
