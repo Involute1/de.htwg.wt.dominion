@@ -23,6 +23,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
     // 4) next player
     //this = nextPlayer()
+    /*if (roundStatus == "START_ACTIOON_PHASE") {
+      this = drawAmountOfCards(5)
+    }*/
+
     this
   }
 
@@ -93,11 +97,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     listPlayers
   }
 
-  override def createPlayerList(): Roundmanager = {
-    for (i <- 0 until this.numberOfPlayers) {
-      this.copy(players = createPlayer(this.players, this.names(i), i))
-    }
-    this
+  override def createPlayerList(index: Int): Roundmanager = {
+    this.copy(players = createPlayer(this.players, this.names(index), index))
+  }
+
+  override def numberOfPlayersReturn(): Int = {
+    this.numberOfPlayers
   }
 
   override def namesEqualPlayer(): Boolean = {

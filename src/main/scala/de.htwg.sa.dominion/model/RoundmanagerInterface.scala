@@ -9,7 +9,7 @@ trait RoundmanagerInterface {
 
   def createPlayingDecks(cardName: CardName): Roundmanager
 
-  def createPlayerList(): Roundmanager
+  def createPlayerList(index: Int): Roundmanager
 
   def namesEqualPlayer(): Boolean
 
@@ -28,4 +28,6 @@ trait RoundmanagerInterface {
   def actionPhase(input: String): Roundmanager
 
   def constructRoundermanagerStateString: String
+
+  def numberOfPlayersReturn(): Int
 }
