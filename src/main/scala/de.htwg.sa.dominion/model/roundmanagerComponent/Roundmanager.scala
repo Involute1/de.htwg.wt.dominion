@@ -10,7 +10,7 @@ import scala.util.Random
 
 case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)],
-                        roundStatus: RoundmanagerStatus) extends RoundmanagerInterface {
+                        roundStatus: RoundmanagerStatus, playerTurn: Int) extends RoundmanagerInterface {
 
   override def actionPhase(input: String): Roundmanager = {
     // 1) draw 5 cards
@@ -23,6 +23,13 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
     // 4) next player
     //this = nextPlayer()
+    this
+  }
+
+  private def drawAmountOfCards(drawAmount: Int): Roundmanager = {
+    for (i <- 0 until drawAmount) {
+      this.drawCard(this.players, this.playerTurn)
+    }
     this
   }
 
