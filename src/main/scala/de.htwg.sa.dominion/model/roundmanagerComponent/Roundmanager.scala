@@ -2,7 +2,7 @@ package de.htwg.sa.dominion.model.roundmanagerComponent
 
 import de.htwg.sa.dominion.model.{RoundmanagerInterface, roundmanagerComponent}
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
-import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Deck}
+import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Cardtype, Deck}
 import de.htwg.sa.dominion.model.playercomponent.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.RoundmanagerStatus.RoundmanagerStatus
 
@@ -28,10 +28,20 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     //this = nextPlayer()
   }
 
+
+  private def checkActionCard(): String = {
+    for(i <- 0 until this.players(this.playerTurn).handCards.length) {
+      if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
+        "Welceh Aktionskarte möchtest du spielen?"
+      }
+    }
+    "Du hast keine Aktionskarte zum spielen"
+  }
+
   override def constructRoundermanagerStateString: String = {
     this.roundStatus match {
       case RoundmanagerStatus.INIT_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString()
-      case RoundmanagerStatus.START_ACTION_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString()
+      case RoundmanagerStatus.START_ACTION_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString() + checkActionCard()
     }
   }
 
