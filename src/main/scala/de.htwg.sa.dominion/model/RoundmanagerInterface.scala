@@ -30,4 +30,5 @@ trait RoundmanagerInterface {
   def constructRoundermanagerStateString: String
 
   def numberOfPlayersReturn(): Int
+
 }
