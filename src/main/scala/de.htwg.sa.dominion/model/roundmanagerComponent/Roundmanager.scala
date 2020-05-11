@@ -52,6 +52,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     //this = nextPlayer()
   }
 
+  override def buyPhase(input: String): Roundmanager = {
+    this.roundStatus match {
+      case RoundmanagerStatus.START_BUY_PHASE => getMoney()
+    }
+  }
+
   private def validateHandSelectInput(input: String): Boolean = {
     val number = input.toInt
     if (number >= this.players(this.playerTurn).handCards.size || number < 0) {
@@ -90,6 +96,28 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       }
     }
     false
+  }
+
+
+
+  override def updateMoney(index: Int, money: Int): Roundmanager = {
+    val startMoney: Int = players(index).money
+    val updatedMoney: Int = startMoney + money
+    val updatedPlayer: Player = Player(players(index).name, players(index).value, players(index).deck,
+      players(index).stacker, players(index).handCards, players(index).actions, players(index).buys, updatedMoney,
+      players(index).victoryPoint)
+    val updatedPlayers: List[Player] = players.updated(index, updatedPlayer)
+    this.copy(players = updatedPlayers)
+  }
+
+
+  private def getMoney(): Roundmanager = {
+    for(i <- this.players(this.playerTurn).handCards.indices) {
+      if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.MONEY) {
+        this = updateMoney(playerTurn, this.players(this.playerTurn).handCards(i).moneyValue)
+      }
+    }
+    this
   }
 
   override def constructRoundermanagerStateString: String = {
