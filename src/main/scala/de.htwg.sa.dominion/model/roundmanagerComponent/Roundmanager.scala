@@ -23,7 +23,23 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
     // 4) next player
     //this = nextPlayer()
+    if (roundStatus == "START_ACTION_PHASE") {
+      this = drawFive()
+    }
+
     this
+  }
+  private def drawFive(): Roundmanager = {
+    this = getCard(this.players, 0)
+    this = getCard(this.players, 0)
+    this = getCard(this.players, 0)
+    this = getCard(this.players, 0)
+    this = getCard(this.players, 0)
+    this
+  }
+
+  override def checkRoundmanagerState(): = String {
+
   }
 
   private def nextPlayer(): Roundmanager = {

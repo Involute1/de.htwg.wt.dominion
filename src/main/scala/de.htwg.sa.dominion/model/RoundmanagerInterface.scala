@@ -26,4 +26,6 @@ trait RoundmanagerInterface {
   def checkForGameEnd(): Boolean
 
   def turn(input: String): Roundmanager
+
+
 }
