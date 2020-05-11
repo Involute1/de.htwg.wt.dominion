@@ -112,7 +112,7 @@ case class ActionPhaseState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     if (input.isBlank) return
     controller.roundmanager = controller.roundmanager.actionPhase(input)
-
+    if (controller.roundmanager.checkIfActionPhaseDone) controller.controllerState = nextState
   }
 
   override def getCurrentControllerMessage: String = controller.roundmanager.constructRoundermanagerStateString

@@ -15,7 +15,31 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def actionPhase(input: String): Roundmanager = {
     // 1) draw 5 cards
     this.roundStatus match {
-      case RoundmanagerStatus.START_ACTION_PHASE => this
+      case RoundmanagerStatus.INIT_PHASE
+        =>
+        if (checkIfHandContainsActionCard()) {
+          if (validateHandSelectInput(input)) {
+            this.copy(roundStatus = RoundmanagerStatus.PLAY_ACTION_CARD)
+          } else this
+        } else {
+          this.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE)
+        }
+      /*case RoundmanagerStatus.START_ACTION_PHASE
+        =>
+        if (checkIfHandContainsActionCard()) {
+          if (validateHandSelectInput(input)) {
+            this.copy(roundStatus = RoundmanagerStatus.PLAY_ACTION_CARD)
+          } else this
+        } else {
+          this.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE)
+        }*/
+      case RoundmanagerStatus.PLAY_ACTION_CARD
+      => if (validateYesNoInput(input)) {
+        val card = this.players(this.playerTurn).handCards(input.toInt)
+        card.cardName match {
+          case _ => this
+        }
+      } else this.copy(roundStatus = RoundmanagerStatus.INIT_PHASE)
     }
     // print liste von handkarten + idx, wenn Kingdom karten auf hand
     // -> y: welche karte möchtest du spielen -> status => CardStatus
@@ -28,22 +52,54 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     //this = nextPlayer()
   }
 
+  private def validateHandSelectInput(input: String): Boolean = {
+    val number = input.toInt
+    if (number >= this.players(this.playerTurn).handCards.size || number < 0) {
+      return false
+    }
+    true
+  }
+
+  private def validateYesNoInput(input: String): Boolean = {
+    if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes")) {
+      return true
+    }
+    false
+  }
+
+  override def checkIfActionPhaseDone: Boolean = {
+    if (this.roundStatus == RoundmanagerStatus.START_BUY_PHASE) {
+      return true
+    }
+    false
+  }
 
   private def checkActionCard(): String = {
-    for(i <- this.players(this.playerTurn).handCards.indices) {
+    for (i <- this.players(this.playerTurn).handCards.indices) {
       if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
-        "Welche Aktionskarte möchtest du spielen?"
+        return "Welche Aktionskarte möchtest du spielen? Enter one of the numbers listed in the Brackets"
       }
     }
-    "Du hast keine Aktionskarte auf der Hand zum spielen"
+    "Du hast keine Aktionskarte auf der Hand zum spielen, press any key to end your action phase"
+  }
+
+  private def checkIfHandContainsActionCard(): Boolean = {
+    for (i <- this.players(this.playerTurn).handCards.indices) {
+      if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
+        return true
+      }
+    }
+    false
   }
 
   override def constructRoundermanagerStateString: String = {
     this.roundStatus match {
       case RoundmanagerStatus.INIT_PHASE
-      => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
+      => "----HAND CARDS----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
       case RoundmanagerStatus.START_ACTION_PHASE
-      => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
+      => "----HAND CARDS----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
+      case RoundmanagerStatus.PLAY_ACTION_CARD => "Are you sure you want to play the Card (Y/N)?"
+      case _ => this.roundStatus.toString
     }
   }
 
@@ -164,5 +220,5 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
 object RoundmanagerStatus extends Enumeration {
   type RoundmanagerStatus = Value
-  val INIT_PHASE, START_ACTION_PHASE, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
+  val INIT_PHASE, START_ACTION_PHASE, PLAY_ACTION_CARD, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
 }
