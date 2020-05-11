@@ -40,8 +40,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def constructRoundermanagerStateString: String = {
     this.roundStatus match {
-      case RoundmanagerStatus.INIT_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString()
-      case RoundmanagerStatus.START_ACTION_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString() + checkActionCard()
+      case RoundmanagerStatus.INIT_PHASE
+      => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
+      //case RoundmanagerStatus.START_ACTION_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString() + checkActionCard()
     }
   }
 
