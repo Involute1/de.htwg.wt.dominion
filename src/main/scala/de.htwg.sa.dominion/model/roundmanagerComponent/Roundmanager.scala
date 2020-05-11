@@ -30,7 +30,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def buyPhase(input: String): Roundmanager = {
     this.roundStatus match {
-      case RoundmanagerStatus.START_BUY_PHASE => this
+      case RoundmanagerStatus.START_BUY_PHASE => getMoney()
     }
   }
 
