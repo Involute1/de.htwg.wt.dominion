@@ -30,12 +30,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
 
   private def checkActionCard(): String = {
-    for(i <- 0 until this.players(this.playerTurn).handCards.length) {
+    for(i <- this.players(this.playerTurn).handCards.indices) {
       if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
-        "Welceh Aktionskarte möchtest du spielen?"
+        "Welche Aktionskarte möchtest du spielen?"
       }
     }
-    "Du hast keine Aktionskarte zum spielen"
+    "Du hast keine Aktionskarte auf der Hand zum spielen"
   }
 
   override def constructRoundermanagerStateString: String = {
