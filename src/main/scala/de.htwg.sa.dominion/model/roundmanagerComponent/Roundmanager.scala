@@ -28,6 +28,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     //this = nextPlayer()
   }
 
+  override def buyPhase(input: String): Roundmanager = {
+    this.roundStatus match {
+      case RoundmanagerStatus.START_BUY_PHASE => this
+    }
+  }
+
 
   private def checkActionCard(): String = {
     for(i <- this.players(this.playerTurn).handCards.indices) {
@@ -38,10 +44,20 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     "Du hast keine Aktionskarte auf der Hand zum spielen"
   }
 
+  /*private def getMoney(): Int = {
+
+  }
+
+  private def updateMoney(playerNumber: Int, money: Int): Roundmanager = {
+
+  }*/
+
+
   override def constructRoundermanagerStateString: String = {
     this.roundStatus match {
       case RoundmanagerStatus.INIT_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString()
       case RoundmanagerStatus.START_ACTION_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString() + checkActionCard()
+      case RoundmanagerStatus.START_BUY_PHASE => ""
     }
   }
 
