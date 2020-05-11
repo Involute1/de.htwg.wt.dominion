@@ -13,21 +13,22 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   }
 
   override def constructPlayerDeckString(): String = {
-    // TODO needs to be tested
-    val deckString = ""
-    this.deck.foreach(x => deckString.appended(x.cardName + "(" + x + ")\n"))
-    deckString
+    val deckStringList: List[String] = for ((card, idx) <- this.deck.zipWithIndex) yield card.cardName + " (" + idx + ")"
+    val playerDeckString: String = deckStringList.mkString("\n")
+    playerDeckString.toString
+
   }
 
   override def constructPlayerStackerString(): String = {
-    val stackerString = ""
-    this.stacker.foreach(x => stackerString.appended(x.cardName + "(" + x + ")\n"))
-    stackerString
+    val stackerStringList: List[String] = for ((card, idx) <- this.stacker.zipWithIndex) yield card.cardName + " (" + idx + ")"
+    val playerStackerString: String = stackerStringList.mkString("\n")
+    playerStackerString.toString
+
   }
 
   override def constructPlayerHandString(): String = {
-    val handStringList: List[String] = for (card <- this.handCards) yield card.cardName + " (" + ")\n"
-    val playherHandString: String = handStringList.mkString("")
+    val handStringList: List[String] = for ((card, idx) <- this.handCards.zipWithIndex) yield card.cardName + " (" + idx + ")"
+    val playherHandString: String = handStringList.mkString("\n")
     playherHandString.toString
   }
 
