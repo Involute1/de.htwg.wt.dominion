@@ -26,9 +26,13 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   }
 
   override def constructPlayerHandString(): String = {
-    val handString = ""
-    this.handCards.foreach(x => handString.appended(x.cardName + "(" + x + ")\n"))
-    handString
+    if (this.handCards.isEmpty) {
+      "leer"
+    } else {
+      this.handCards.head.cardName
+    }
+    //this.handCards.foreach(x => handString = x.cardName + "(" + x + ")\n")
+
   }
 
 
