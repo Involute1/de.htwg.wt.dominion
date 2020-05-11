@@ -14,6 +14,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def actionPhase(input: String): Roundmanager = {
     // 1) draw 5 cards
+    this.roundStatus match {
+      case RoundmanagerStatus.START_ACTION_PHASE => this
+    }
     // print liste von handkarten + idx, wenn Kingdom karten auf hand
     // -> y: welche karte möchtest du spielen -> status => CardStatus
     // -> n: Keine Action karten auf hand -> status => Start_Buyphase
@@ -23,37 +26,22 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
     // 4) next player
     //this = nextPlayer()
-    this.roundStatus match {
-      case RoundmanagerStatus.START_ACTION_PHASE => drawAmountOfCards(5)
-    }
-
-
   }
+
 
   private def checkActionCard(): String = {
-    for(i <- 0 until this.players(this.playerTurn).handCards.length) {
+    for(i <- this.players(this.playerTurn).handCards.indices) {
       if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
         "Welche Aktionskarte möchtest du spielen?"
-
       }
     }
-    "Du hast keine Aktionskarte zum spielen"
-  }
-
-  private def drawAmountOfCards(drawAmount: Int): Roundmanager = {
-    for (i <- 0 until drawAmount) {
-      this.drawCard(this.players, this.playerTurn)
-    }
-    this
-  }
-
-  override def updateRoundStatus(status: RoundmanagerStatus): Roundmanager = {
-    this.copy(roundStatus = status)
+    "Du hast keine Aktionskarte auf der Hand zum spielen"
   }
 
   override def constructRoundermanagerStateString: String = {
     this.roundStatus match {
-      case RoundmanagerStatus.START_ACTION_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString()  + checkActionCard()
+      case RoundmanagerStatus.INIT_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString()
+      case RoundmanagerStatus.START_ACTION_PHASE => "----ACTION PHASE----\n" + this.players(this.playerTurn).constructPlayerHandString() + checkActionCard()
     }
   }
 
@@ -105,18 +93,17 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     }
   }
 
-  private def createPlayer(players: List[Player], name: String, index: Int): List[Player] = {
-    val player = Player(name, index + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0, 0)
-    val listPlayers = List.concat(players, List(player))
-    listPlayers
-  }
-
-  override def createPlayerList(index: Int): Roundmanager = {
-    this.copy(players = createPlayer(this.players, this.names(index), index))
-  }
-
-  override def numberOfPlayersReturn(): Int = {
+  override def getNumberOfPlayers: Int = {
     this.numberOfPlayers
+  }
+
+  override def initializePlayersList(idx: Int): Roundmanager = {
+    val player = Player(this.names(idx), idx + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0, 0)
+    if (this.players.isEmpty) {
+      this.copy(players = List(player))
+    } else {
+      this.copy(players = List.concat(this.players, List(player)))
+    }
   }
 
   override def namesEqualPlayer(): Boolean = {
@@ -143,32 +130,29 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     shuffledList
   }
 
-  override def drawCard(players: List[Player], index: Int): Roundmanager = {
-    val handList: List[Card] = players(index).handCards
-    val deckList: List[Card] = players(index).deck
-    val stackList: List[Card] = players(index).stacker
+  override def drawCard(index: Int): Roundmanager = {
+    val handList: List[Card] = this.players(index).handCards
+    val deckList: List[Card] = this.players(index).deck
+    val stackList: List[Card] = this.players(index).stacker
     val stackemptyList: List[Card] = Nil
     if (deckList.isEmpty) {
       val deck1List: List[Card] = shuffle(stackList)
       val hand1List: List[Card] = List.concat(handList, List(deck1List.head))
-      val minusDeck1List: List[Card] = deck1List.drop(0)
+      val minusDeck1List: List[Card] = deck1List.drop(1)
       val updatedPlayer: Player = Player(players(index).name, players(index).value, minusDeck1List,
         stackemptyList, hand1List, players(index).actions, players(index).buys, players(index).money,
         players(index).victoryPoint)
       val updatedPlayers: List[Player] = players.updated(index, updatedPlayer)
       this.copy(players = updatedPlayers)
-
-    }
-    else if (deckList.nonEmpty) {
+    } else {
       val hand1List: List[Card] = List.concat(handList, List(players(index).deck.head))
-      val minusDeckList: List[Card] = deckList.drop(0)
+      val minusDeckList: List[Card] = deckList.drop(1)
       val updatedPlayer: Player = Player(players(index).name, players(index).value, minusDeckList,
         players(index).stacker, hand1List, players(index).actions, players(index).buys, players(index).money,
         players(index).victoryPoint)
       val updatedPlayers: List[Player] = players.updated(index, updatedPlayer)
       this.copy(players = updatedPlayers)
     }
-    this
   }
 
   override def checkForGameEnd(): Boolean = {
@@ -178,5 +162,5 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
 object RoundmanagerStatus extends Enumeration {
   type RoundmanagerStatus = Value
-  val START_ACTION_PHASE, PLAYING_ACTION_CARD, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
+  val INIT_PHASE, START_ACTION_PHASE, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
 }

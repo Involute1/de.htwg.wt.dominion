@@ -93,9 +93,13 @@ case class PreSetupState(controller: Controller) extends ControllerState {
       if (name.isEmpty) return
       controller.roundmanager = controller.roundmanager.updateListNames(input)
       if (!controller.roundmanager.namesEqualPlayer()) return
-      for (i <- 0 until controller.roundmanager.numberOfPlayersReturn()) {
-        controller.roundmanager = controller.roundmanager.createPlayerList(i)
+      for (i <- 0 until controller.roundmanager.getNumberOfPlayers) {
+        controller.roundmanager = controller.roundmanager.initializePlayersList(i)
+        for (f <- 0 until 5) {
+          controller.roundmanager = controller.roundmanager.drawCard(i)
+        }
       }
+
       controller.controllerState = nextState
     }
 
@@ -111,7 +115,7 @@ case class ActionPhaseState(controller: Controller) extends ControllerState {
 
   }
 
-  override def getCurrentControllerMessage: String = ""
+  override def getCurrentControllerMessage: String = controller.roundmanager.constructRoundermanagerStateString
 
   override def nextState: ControllerState = BuyPhaseState(controller)
 }

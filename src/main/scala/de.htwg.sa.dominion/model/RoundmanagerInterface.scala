@@ -4,13 +4,12 @@ import de.htwg.sa.dominion.model.cardcomponent.Card
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.playercomponent.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
-import de.htwg.sa.dominion.model.roundmanagerComponent.RoundmanagerStatus.RoundmanagerStatus
 
 trait RoundmanagerInterface {
 
   def createPlayingDecks(cardName: CardName): Roundmanager
 
-  def createPlayerList(index: Int): Roundmanager
+  def initializePlayersList(idx: Int): Roundmanager
 
   def namesEqualPlayer(): Boolean
 
@@ -22,7 +21,7 @@ trait RoundmanagerInterface {
 
   def shuffle(deck: List[Card]): List[Card]
 
-  def drawCard(players: List[Player], index: Int): Roundmanager
+  def drawCard(index: Int): Roundmanager
 
   def checkForGameEnd(): Boolean
 
@@ -30,7 +29,5 @@ trait RoundmanagerInterface {
 
   def constructRoundermanagerStateString: String
 
-  def numberOfPlayersReturn(): Int
-
-  def updateRoundStatus(status: RoundmanagerStatus): Roundmanager
+  def getNumberOfPlayers: Int
 }
