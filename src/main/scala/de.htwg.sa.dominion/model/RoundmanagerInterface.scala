@@ -4,6 +4,7 @@ import de.htwg.sa.dominion.model.cardcomponent.Card
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.playercomponent.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.RoundmanagerStatus.RoundmanagerStatus
 
 trait RoundmanagerInterface {
 
@@ -31,4 +32,5 @@ trait RoundmanagerInterface {
 
   def numberOfPlayersReturn(): Int
 
+  def updateRoundStatus(status: RoundmanagerStatus): Roundmanager
 }

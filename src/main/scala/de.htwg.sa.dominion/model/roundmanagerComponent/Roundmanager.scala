@@ -33,7 +33,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   private def checkActionCard(): String = {
     for(i <- 0 until this.players(this.playerTurn).handCards.length) {
       if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
-        "Welceh Aktionskarte möchtest du spielen?"
+        "Welche Aktionskarte möchtest du spielen?"
+
       }
     }
     "Du hast keine Aktionskarte zum spielen"
@@ -44,6 +45,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       this.drawCard(this.players, this.playerTurn)
     }
     this
+  }
+
+  override def updateRoundStatus(status: RoundmanagerStatus): Roundmanager = {
+    this.copy(roundStatus = status)
   }
 
   override def constructRoundermanagerStateString: String = {
@@ -173,5 +178,5 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
 object RoundmanagerStatus extends Enumeration {
   type RoundmanagerStatus = Value
-  val START_ACTION_PHASE, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
+  val START_ACTION_PHASE, PLAYING_ACTION_CARD, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
 }
