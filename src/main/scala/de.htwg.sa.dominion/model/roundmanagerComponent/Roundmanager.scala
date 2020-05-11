@@ -57,6 +57,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
 
+  private def getMoney(): Roundmanager = {
+    for(i <- this.players(this.playerTurn).handCards.indices) {
+      if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.MONEY) {
+        this = updateMoney(playerTurn, this.players(this.playerTurn).handCards(i).moneyValue)
+      }
+    }
+    this
+  }
 
   override def constructRoundermanagerStateString: String = {
     this.roundStatus match {
