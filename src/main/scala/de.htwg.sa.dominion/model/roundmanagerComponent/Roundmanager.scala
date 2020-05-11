@@ -12,7 +12,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)],
                         roundStatus: RoundmanagerStatus) extends RoundmanagerInterface {
 
-  override def turn(input: String): Roundmanager = {
+  override def actionPhase(input: String): Roundmanager = {
     // 1) draw 5 cards
     // print liste von handkarten + idx, wenn Kingdom karten auf hand
     // -> y: welche karte möchtest du spielen -> status => CardStatus
@@ -117,7 +117,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     shuffledList
   }
 
-  override def getCard(players: List[Player], index: Int): Roundmanager = {
+  override def drawCard(players: List[Player], index: Int): Roundmanager = {
     val handList: List[Card] = players(index).handCards
     val deckList: List[Card] = players(index).deck
     val stackList: List[Card] = players(index).stacker
