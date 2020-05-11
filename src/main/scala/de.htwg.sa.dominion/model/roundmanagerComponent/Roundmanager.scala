@@ -26,6 +26,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     this
   }
 
+  override def constructRoundermanagerStateString: String = {
+    this.roundStatus match {
+      case RoundmanagerStatus.START_ACTION_PHASE => "----ACTION PHASE----"
+    }
+  }
+
   private def nextPlayer(): Roundmanager = {
     if (this.emptyDeckCount == 3) {
       this.copy(gameEnd = true)
@@ -88,8 +94,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def namesEqualPlayer(): Boolean = {
-    if (this.numberOfPlayers == this.names.size) {true}
-    else {false}
+    this.numberOfPlayers == this.names.size
   }
 
   override def updateNumberOfPlayer(numberOfPlayers: Int): Roundmanager = {

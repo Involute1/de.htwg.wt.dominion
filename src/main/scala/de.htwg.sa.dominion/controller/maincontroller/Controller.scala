@@ -99,20 +99,33 @@ case class PreSetupState(controller: Controller) extends ControllerState {
 
   override def getCurrentControllerMessage: String = controller.roundmanager.constructControllerAskNameString
 
-  override def nextState: ControllerState = InGameState(controller)
+  override def nextState: ControllerState = ActionPhaseState(controller)
 }
 
-case class InGameState(controller: Controller) extends ControllerState {
+case class ActionPhaseState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
-    // TODO add game lokik to roundmanager
     if (input.isBlank) return
-    controller.roundmanager = controller.roundmanager.turn(input)
-    if (controller.roundmanager.checkForGameEnd()) controller.controllerState = nextState
+
+
   }
 
   override def getCurrentControllerMessage: String = ""
 
-  override def nextState: ControllerState = GameOverState(controller)
+  override def nextState: ControllerState = BuyPhaseState(controller)
+}
+
+case class BuyPhaseState(controller: Controller) extends ControllerState {
+  override def evaluate(input: String): Unit = {
+    if (input.isBlank) return
+
+
+
+    if (controller.roundmanager.checkForGameEnd()) controller.controllerState = nextState
+  }
+
+  override def getCurrentControllerMessage: String = ???
+
+  override def nextState: ControllerState = ???
 }
 
 case class GameOverState(controller: Controller) extends ControllerState {
