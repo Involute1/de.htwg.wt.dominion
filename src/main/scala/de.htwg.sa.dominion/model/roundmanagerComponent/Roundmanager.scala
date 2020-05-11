@@ -98,7 +98,11 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     false
   }
 
-
+  override def listAvaibleCardsToBuy(): String = {
+    val avaibleStringList: List[String] =
+    val playerStackerString: String = avaibleStringList.mkString("\n")
+    playerStackerString.toString
+  }
 
   override def updateMoney(index: Int, money: Int): Roundmanager = {
     val startMoney: Int = players(index).money
