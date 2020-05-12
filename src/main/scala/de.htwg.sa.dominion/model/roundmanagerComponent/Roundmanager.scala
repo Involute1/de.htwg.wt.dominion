@@ -232,9 +232,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def listAvaibleCardsToBuy(): String = {
-    val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length, Nil).length,
-      availableCards(this.decks.length, Nil), Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
-    val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length,Nil).length - 1,availableCards(this.decks.length,Nil),Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
+    val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length,Nil).length - 1,
+      availableCards(this.decks.length,Nil),Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
     val playerStackerString: String = avaibleStringList.mkString("\n")
     playerStackerString.toString
   }
@@ -243,28 +242,23 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     if (length == 0) {
       return available
     } else {
-      val returningCard: List[Card] = List.concat(available, List(this.decks(length-1).head))
+      val returningCard: List[Card] = List.concat(available, List(this.decks(length - 1).head))
       availableCards(length - 1, returningCard)
     }
   }
 
   private def buyableCards(index: Int,availableCards: List[Card], finishedCards: List[Card]): List[Card] = {
-    if (index == 0) {
-    val playerMoney: Int = this.players(this.playerTurn).getMoneyFromHand(this.players(this.playerTurn).handCards.length - 1, this.players(this.playerTurn)).money
-    if(index == 0) {
-      return finishedCards
-    } else if (getMoney().players(this.playerTurn).money >= availableCards(index).moneyValue) {
+    val playerMoney: Int = this.players(this.playerTurn).getMoneyFromHand(this.players(this.playerTurn).handCards.length - 1,
+      this.players(this.playerTurn)).money
+      if (index == 0) {
+        return finishedCards
+      } else if (playerMoney >= availableCards(index).costValue) {
+        val finishedCardList: List[Card] = List.concat(finishedCards, List(availableCards(index)))
+        buyableCards(index - 1, availableCards, finishedCardList)
+      } else {
+        buyableCards(index - 1, availableCards, finishedCards)
+      }
     }
-    else if( playerMoney >= availableCards(index).costValue) {
-      val finishedCardList: List[Card] = List.concat(finishedCards, List(availableCards(index)))
-      buyableCards(index - 1, availableCards, finishedCardList)
-    } else {
-      buyableCards(index - 1, availableCards, finishedCards)
-    }
-  }
-
-
-
 
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
