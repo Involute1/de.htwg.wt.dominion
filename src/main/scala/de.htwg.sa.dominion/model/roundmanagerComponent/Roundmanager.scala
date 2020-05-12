@@ -194,6 +194,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
       => "----HAND CARDS----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
+      case RoundmanagerStatus.START_BUY_PHASE
+      => "----AVAIABLE CARDS----\n" + listAvaibleCardsToBuy() + "\n---nSUICIDE----\n"
       case _ => this.roundStatus.toString
     }
   }
