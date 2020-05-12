@@ -41,12 +41,6 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
         }
       } else this.copy(roundStatus = RoundmanagerStatus.INIT_PHASE)
     }
-    // print liste von handkarten + idx, wenn Kingdom karten auf hand
-    // -> y: welche karte möchtest du spielen -> status => CardStatus
-    // -> n: Keine Action karten auf hand -> status => Start_Buyphase
-    // 2) action
-
-    // 3) buy
 
     // 4) next player
     //this = nextPlayer()
@@ -61,9 +55,13 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   private def validateHandSelectInput(input: String): Boolean = {
     val number = input.toInt
     if (number >= this.players(this.playerTurn).handCards.size || number < 0) {
-      return false
+      return isSelectedCardActionCard(number)
     }
-    true
+    isSelectedCardActionCard(number)
+  }
+
+  private def isSelectedCardActionCard(input: Int): Boolean = {
+    this.players(this.playerTurn).handCards(input).cardType == Cardtype.KINGDOM
   }
 
   private def validateYesNoInput(input: String): Boolean = {
