@@ -86,7 +86,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
           this.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE)
         }
       case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE =>
-
+        validateCellarInput(input)
         this
       /*case RoundmanagerStatus.START_ACTION_PHASE
         =>
@@ -181,6 +181,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   private def validateCellarInput(input: String): List[Int] = {
+    if (input.contains(",")) {
+      val test = input.trim
+      val splittedString = test.split(",")
+      println()
+    } else {
+      val test = input.trim
+      println()
+    }
     Nil
   }
 
@@ -248,8 +256,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   private def buyableCards(index: Int,availableCards: List[Card], finishedCards: List[Card]): List[Card] = {
-    val playerMoney: Int = this.players(this.playerTurn).getMoneyFromHand(this.players(this.playerTurn).handCards.length - 1,
-      this.players(this.playerTurn)).money
+    val playerMoney: Int = this.players(this.playerTurn).calculatePlayerMoneyForBuy().money
       if (index == 0) {
         return finishedCards
       } else if (playerMoney >= availableCards(index).costValue) {

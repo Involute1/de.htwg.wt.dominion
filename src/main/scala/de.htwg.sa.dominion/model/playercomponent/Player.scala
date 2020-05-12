@@ -86,20 +86,11 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     val updatedStacker = List.concat(this.stacker, List(this.handCards(cardIndex)))
     this.copy(handCards = updatedHand, stacker = updatedStacker)
   }
-  override def updateMoney(money: Int, playerToUpdateMoney: Player): Player = {
-    val startMoney: Int = playerToUpdateMoney.money
-    val updatedMoney: Int = startMoney + money
-    playerToUpdateMoney.copy(money = updatedMoney)
-  }
 
-  override def getMoneyFromHand(handCards: Int, playerToGetMoney: Player): Player = {
-    if (handCards >= 0) {
-      if (playerToGetMoney.handCards(handCards).cardType == Cardtype.MONEY) {
-        getMoneyFromHand(handCards - 1, updateMoney(playerToGetMoney.handCards(handCards).moneyValue, playerToGetMoney))
-      } else {
-        getMoneyFromHand(handCards - 1, playerToGetMoney)
-      }
-    }
-    playerToGetMoney
+  override def calculatePlayerMoneyForBuy(): Player = {
+    val playerMoney: Int = this.money
+    val moneyValues: List[Int] = for (card <- this.handCards) yield card.moneyValue
+    val finalMoneyValue = moneyValues.sum + playerMoney
+    this.copy(money = finalMoneyValue)
   }
 }

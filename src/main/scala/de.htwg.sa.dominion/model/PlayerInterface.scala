@@ -24,7 +24,5 @@ trait PlayerInterface {
 
   def checkForFirstSilver(): Player
 
-  def updateMoney(money: Int, playerToUpdateMoney: Player): Player
-
-  def getMoneyFromHand(handCards: Int, playerToGetMoney: Player): Player
+  def calculatePlayerMoneyForBuy: Player
 }
