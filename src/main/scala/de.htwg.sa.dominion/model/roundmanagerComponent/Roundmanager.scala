@@ -86,7 +86,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
           this.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE)
         }
       case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE =>
-        validateCellarInput(input)
+        val a = validateCellarInput(input)
         this
       /*case RoundmanagerStatus.START_ACTION_PHASE
         =>
@@ -180,16 +180,23 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     isSelectedCardActionCard(number)
   }
 
-  private def validateCellarInput(input: String): List[Int] = {
+  private def validateCellarInput(input: String): Option[List[Int]] = {
     if (input.contains(",")) {
-      val test = input.trim
-      val splittedString = test.split(",")
-      println()
+      val trimmedInput = input.trim
+      val splittedString = trimmedInput.split(",")
+      try {
+        Some(splittedString.flatMap(_.toString.toIntOption).toList)
+      } catch {
+        case _: Exception => None
+      }
     } else {
-      val test = input.trim
-      println()
+      val trimmedInput = input.trim
+      try {
+        Some(List(trimmedInput.toInt))
+      } catch {
+        case _: Exception => None
+      }
     }
-    Nil
   }
 
   private def isSelectedCardActionCard(input: Int): Boolean = {
@@ -290,7 +297,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       case RoundmanagerStatus.MERCHANT_ACTION_PHASE => merchantActionString + actionDefaultString
       case RoundmanagerStatus.MERCHANT_BUY_PHASE => merchantActionString // TODO ADD BUYPHASE STRING
       case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE => cellarFirstActionString + handDefaultString +
-        this.players(this.playerTurn).constructPlayerHandString() + "\nPlease enter the Cards you want to trash seperated with a ','"
+        this.players(this.playerTurn).constructPlayerHandString() + "\nPlease enter the Cards you want to discard seperated with a ','"
 
 
       case RoundmanagerStatus.START_BUY_PHASE
