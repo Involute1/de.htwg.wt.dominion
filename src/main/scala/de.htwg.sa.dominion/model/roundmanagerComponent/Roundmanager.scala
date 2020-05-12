@@ -14,11 +14,13 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def actionPhase(input: String): Roundmanager = {
     // 1) draw 5 cards
-    if (this.players(this.playerTurn).handCards.isEmpty) {
-
-    }
+    /*if (this.players(this.playerTurn).handCards.isEmpty) {
+      val player = this.players(this.playerTurn)
+      player.updateHand(5, player)
+    }*/
     this.roundStatus match {
-      case RoundmanagerStatus.PLAY_CARD_PHASE | RoundmanagerStatus.VILLAGE_ACTION_PHASE
+      case RoundmanagerStatus.PLAY_CARD_PHASE | RoundmanagerStatus.VILLAGE_ACTION_PHASE | RoundmanagerStatus.FESTIVAL_ACTION_PHASE
+        | RoundmanagerStatus.SMITHY_ACTION_PHASE | RoundmanagerStatus.MERCHANT_ACTION_PHASE | RoundmanagerStatus.MARKET_ACTION_PHASE
         =>
         if (checkIfHandContainsActionCard(this.players)) {
           if (validateHandSelectInput(input)) {
@@ -26,7 +28,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
             card.cardName match {
               case "Village" =>
                 // +1 Card, +2 Actions
-                val updatedPlayers = festivalAction(input.toInt)
+                val updatedPlayers = villageAction(input.toInt)
                 if (checkIfActionLeft(updatedPlayers) && checkIfHandContainsActionCard(updatedPlayers)) {
                   this.copy(players = updatedPlayers, roundStatus = RoundmanagerStatus.VILLAGE_ACTION_PHASE)
                 } else {
@@ -34,7 +36,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
                 }
               case "Festival" =>
                 // +2 Actions, +1 Card, +2 Money
-                this
+                val updatedPlayerList = festivalAction(input.toInt)
+                if (checkIfActionLeft(updatedPlayerList) && checkIfHandContainsActionCard(updatedPlayerList)) {
+                  this.copy(players = updatedPlayerList, roundStatus = RoundmanagerStatus.FESTIVAL_ACTION_PHASE)
+                } else {
+                  this.copy(players = updatedPlayerList, roundStatus = RoundmanagerStatus.FESTIVAL_BUY_PHASE)
+                }
               case "Cellar" =>
                 // +1 Action, Discard any number of cards draw as many
                 this
@@ -43,19 +50,35 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
                 this
               case "Smithy" =>
                 // + 3 cards
+                val updatedPlayerList = smithyAction(input.toInt)
+                if (checkIfActionLeft(updatedPlayerList) && checkIfHandContainsActionCard(updatedPlayerList)) {
+                  this.copy(players = updatedPlayerList, roundStatus = RoundmanagerStatus.SMITHY_ACTION_PHASE)
+                } else {
+                  this.copy(players = updatedPlayerList, roundStatus = RoundmanagerStatus.SMITHY_BUY_PHASE)
+                }
                 this
               case "Remodel" =>
                 // trash a card, gain a card that costs up to 2 more
                 this
               case "Merchant" =>
                 // +1 card, +1 action, the first time you play a silver +1 money
-                this
+                val updatedPlayerList = merchantAction(input.toInt)
+                if (checkIfActionLeft(updatedPlayerList) && checkIfHandContainsActionCard(updatedPlayerList)) {
+                  this.copy(players = updatedPlayerList, roundStatus = RoundmanagerStatus.MERCHANT_ACTION_PHASE)
+                } else {
+                  this.copy(players = updatedPlayerList, roundStatus = RoundmanagerStatus.MERCHANT_BUY_PHASE)
+                }
               case "Workshop" =>
                 // gain a card costing up to 4
                 this
               case "Market" =>
                 // +1 card, +1 action, +1 buy, +1 money
-                this
+                val updatedPlayerList = marketAction(input.toInt)
+                if (checkIfActionLeft(updatedPlayerList) && checkIfHandContainsActionCard(updatedPlayerList)) {
+                  this.copy(players = updatedPlayerList, roundStatus = RoundmanagerStatus.MARKET_ACTION_PHASE)
+                } else {
+                  this.copy(players = updatedPlayerList, roundStatus = RoundmanagerStatus.MARKET_BUY_PHASE)
+                }
             }
             //this.copy(roundStatus = RoundmanagerStatus.PLAY_ACTION_CARD)
           } else this.copy(roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE)
@@ -72,9 +95,6 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
           this.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE)
         }*/
     }
-
-    // 4) next player
-    //this = nextPlayer()
   }
 
   override def buyPhase(input: String): Roundmanager = {
@@ -83,17 +103,60 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     }
   }
 
-  private def festivalAction(input: Int): List[Player] = {
+  private def villageAction(input: Int): List[Player] = {
     val playerWithNewCards: List[Player] = drawXAmountOfCards(1)
     val updatedPlayerList: List[Player] = addToPlayerActions(2, playerWithNewCards)
     updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).removeHandCard(input)), 1)
   }
 
+  private def festivalAction(input: Int): List[Player] = {
+    val playerWithNewCards: List[Player] = drawXAmountOfCards(1)
+    val updatedPlayerList: List[Player] = addToPlayerActions(2, playerWithNewCards)
+    val finalPlayerList: List[Player] = addToPlayerMoney(2, updatedPlayerList)
+    finalPlayerList.patch(this.playerTurn, Seq(finalPlayerList(this.playerTurn).removeHandCard(input)), 1)
+  }
+
+  private def smithyAction(input: Int): List[Player] = {
+    val updatedPlayer: List[Player] = drawXAmountOfCards(3)
+    updatedPlayer.patch(this.playerTurn, Seq(updatedPlayer(this.playerTurn).removeHandCard(input)), 1)
+  }
+
+  private def marketAction(input: Int): List[Player] = {
+    val playerWithNewCards: List[Player] = drawXAmountOfCards(1)
+    val updatedPlayerList: List[Player] = addToPlayerActions(1, playerWithNewCards)
+    val finalPlayerList: List[Player] = addToPlayerMoney(1, updatedPlayerList)
+    val finalFinalPlayerList: List[Player] = addToPlayerBuys(1, finalPlayerList)
+    finalFinalPlayerList.patch(this.playerTurn, Seq(finalFinalPlayerList(this.playerTurn).removeHandCard(input)), 1)
+  }
+
+  private def merchantAction(input: Int): List[Player] = {
+    val playerWithNewCards: List[Player] = drawXAmountOfCards(1)
+    val updatedPlayerList: List[Player] = addToPlayerActions(1, playerWithNewCards)
+    val finalPlayerList: List[Player] = merchantCheckForSilver(updatedPlayerList)
+    finalPlayerList.patch(this.playerTurn, Seq(finalPlayerList(this.playerTurn).removeHandCard(input)), 1)
+  }
+
+  private def merchantCheckForSilver(playerList: List[Player]): List[Player] = {
+    val updatedPlayer: Player = playerList(this.playerTurn).checkForFirstSilver()
+    playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
+  }
+
+  private def addToPlayerMoney(moneyToAdd: Int, playerList: List[Player]): List[Player] = {
+    val updatedMoney: Int = moneyToAdd + playerList(this.playerTurn).money
+    val updatedPlayer: Player = playerList(this.playerTurn).updateMoney(updatedMoney)
+    playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
+  }
+
   private def addToPlayerActions(actionsToAdd: Int, playerList: List[Player]): List[Player] = {
     val updateActions = actionsToAdd + playerList(this.playerTurn).actions - 1
     val updatedPlayer: Player = playerList(this.playerTurn).updateActions(updateActions)
-    val updatedPlayers = playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
-    updatedPlayers
+    playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
+  }
+
+  private def addToPlayerBuys(buysToAdd: Int, playerList: List[Player]): List[Player] = {
+    val updatedBuys = buysToAdd + playerList(this.playerTurn).buys
+    val updatedPlayer: Player = playerList(this.playerTurn).updateBuys(updatedBuys)
+    playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
   }
 
   private def drawXAmountOfCards(cardDrawAmount: Int): List[Player] = {
@@ -134,10 +197,17 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   private def checkActionCard(): String = {
     for (i <- this.players(this.playerTurn).handCards.indices) {
       if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
-        return "Welche Aktionskarte möchtest du spielen? Enter one of the numbers listed in the Brackets"
+        return "Which Card do you want to play? Enter one of the numbers listed in the Brackets to select it"
       }
     }
-    "Du hast keine Aktionskarte auf der Hand zum spielen, press any key to end your action phase"
+    "You dont have any Card to play, press any key to end your action phase"
+  }
+
+  private def checkSilverOnHandMerchantAction(): String = {
+    if (this.players(this.playerTurn).handCards.contains(Cards.silver)) {
+      return ", gained 1 Action and 1 Money"
+    }
+    "and gained 1 Action"
   }
 
   private def checkIfHandContainsActionCard(playerList: List[Player]): Boolean = {
@@ -150,14 +220,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def listAvaibleCardsToBuy(): String = {
-    val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length,Nil).length,availableCards(this.decks.length,Nil),Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
+    val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length, Nil).length,
+      availableCards(this.decks.length, Nil), Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
     val playerStackerString: String = avaibleStringList.mkString("\n")
     playerStackerString.toString
-
   }
 
   private def availableCards(length: Int, available: List[Card]): List[Card] = {
-    if(length == 0) {
+    if (length == 0) {
       return available
     } else {
       val returningCard: List[Card] = List.concat(available, List(this.decks(length).head))
@@ -166,14 +236,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   private def buyableCards(index: Int,availableCards: List[Card], finishedCards: List[Card]): List[Card] = {
-    if(index == 0) {
+    if (index == 0) {
       return finishedCards
-    }
-    else if(getMoney().players(this.playerTurn).money >= availableCards(index).moneyValue) {
+    } else if (getMoney().players(this.playerTurn).money >= availableCards(index).moneyValue) {
       val finishedCardList: List[Card] = List.concat(finishedCards, List(availableCards(index)))
       buyableCards(index - 1, availableCards, finishedCardList)
-    }
-    else {
+    } else {
       buyableCards(index - 1, availableCards, finishedCards)
     }
   }
@@ -202,13 +270,29 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
     val villageActionString = "You drew 1 Card and gained 2 Actions\n"
+    val festivalActionString = "You drew 1 Card, gained 2 Actions and 2 Money\n"
+    val smithyActionString = "You drew 3 Cards\n"
+    val marketActionString = "You drew 1 Card, gained 1 Action, 1 Buy and 1 Money\n"
+    val merchantActionString = "You drew 1 Card" + checkSilverOnHandMerchantAction() + "\n"
+    val actionDefaultString = handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
       => handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
-      case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString + handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
+      case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString + actionDefaultString
       case RoundmanagerStatus.VILLAGE_BUY_PHASE => villageActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.FESTIVAL_ACTION_PHASE => festivalActionString + actionDefaultString
+      case RoundmanagerStatus.FESTIVAL_BUY_PHASE => festivalActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.SMITHY_ACTION_PHASE => smithyActionString + actionDefaultString
+      case RoundmanagerStatus.SMITHY_BUY_PHASE => smithyActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.MARKET_ACTION_PHASE => marketActionString + actionDefaultString
+      case RoundmanagerStatus.MARKET_BUY_PHASE => marketActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.MERCHANT_ACTION_PHASE => merchantActionString + actionDefaultString
+      case RoundmanagerStatus.MERCHANT_BUY_PHASE => merchantActionString // TODO ADD BUYPHASE STRING
+
+
+
       case RoundmanagerStatus.START_BUY_PHASE
-      => "----AVAIABLE CARDS----\n" + listAvaibleCardsToBuy() + "\n---nSUICIDE----\n"
+      => "----AVAILABLE CARDS----\n" + listAvaibleCardsToBuy() + "\n---nSUICIDE----\n"
       case _ => this.roundStatus.toString
     }
   }
@@ -330,5 +414,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
 object RoundmanagerStatus extends Enumeration {
   type RoundmanagerStatus = Value
-  val PLAY_CARD_PHASE, VILLAGE_ACTION_PHASE, VILLAGE_BUY_PHASE, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
+  val PLAY_CARD_PHASE, VILLAGE_ACTION_PHASE, VILLAGE_BUY_PHASE, FESTIVAL_ACTION_PHASE, FESTIVAL_BUY_PHASE,
+  SMITHY_ACTION_PHASE, SMITHY_BUY_PHASE, MARKET_ACTION_PHASE, MARKET_BUY_PHASE, MERCHANT_ACTION_PHASE, MERCHANT_BUY_PHASE,
+  START_BUY_PHASE, NEXT_PLAYER_TURN = Value
 }

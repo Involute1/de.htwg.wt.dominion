@@ -1,7 +1,7 @@
 package de.htwg.sa.dominion.model.playercomponent
 
 import de.htwg.sa.dominion.model.PlayerInterface
-import de.htwg.sa.dominion.model.cardcomponent.{Card, Deck}
+import de.htwg.sa.dominion.model.cardcomponent.{Card, Cards, Deck}
 
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
@@ -35,6 +35,23 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
 
   override def updateActions(updatedActionValue: Int): Player = {
     this.copy(actions = updatedActionValue)
+  }
+
+  override def updateMoney(updateMoneyValue: Int): Player = {
+    this.copy(money = updateMoneyValue)
+  }
+
+  override def updateBuys(updatedBuyValue: Int): Player = {
+    this.copy(buys = updatedBuyValue)
+  }
+
+  override def checkForFirstSilver(): Player = {
+    val hasSilver: Boolean = this.handCards.contains(Cards.silver)
+    if (hasSilver) {
+      val updatedMoney = this.money + 1
+      return this.copy(money = updatedMoney)
+    }
+    this
   }
 
   override def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player = {
