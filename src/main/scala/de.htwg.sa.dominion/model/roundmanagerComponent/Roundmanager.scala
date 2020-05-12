@@ -150,7 +150,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def listAvaibleCardsToBuy(): String = {
-    val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length,Nil).length,availableCards(this.decks.length,Nil),Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
+    val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length,Nil).length - 1,availableCards(this.decks.length,Nil),Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
     val playerStackerString: String = avaibleStringList.mkString("\n")
     playerStackerString.toString
 
@@ -160,16 +160,17 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     if(length == 0) {
       return available
     } else {
-      val returningCard: List[Card] = List.concat(available, List(this.decks(length).head))
+      val returningCard: List[Card] = List.concat(available, List(this.decks(length-1).head))
       availableCards(length - 1, returningCard)
     }
   }
 
   private def buyableCards(index: Int,availableCards: List[Card], finishedCards: List[Card]): List[Card] = {
+    val playerMoney: Int = this.players(this.playerTurn).getMoneyFromHand(this.players(this.playerTurn).handCards.length - 1, this.players(this.playerTurn)).money
     if(index == 0) {
       return finishedCards
     }
-    else if(getMoney().players(this.playerTurn).money >= availableCards(index).moneyValue) {
+    else if( playerMoney >= availableCards(index).costValue) {
       val finishedCardList: List[Card] = List.concat(finishedCards, List(availableCards(index)))
       buyableCards(index - 1, availableCards, finishedCardList)
     }
@@ -179,25 +180,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
 
-  override def updateMoney(index: Int, money: Int): Roundmanager = {
-    val startMoney: Int = players(index).money
-    val updatedMoney: Int = startMoney + money
-    val updatedPlayer: Player = Player(players(index).name, players(index).value, players(index).deck,
-      players(index).stacker, players(index).handCards, players(index).actions, players(index).buys, updatedMoney,
-      players(index).victoryPoint)
-    val updatedPlayers: List[Player] = players.updated(index, updatedPlayer)
-    this.copy(players = updatedPlayers)
-  }
 
-
-  private def getMoney(): Roundmanager = {
-    for(i <- this.players(this.playerTurn).handCards.indices) {
-      if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.MONEY) {
-        this.updateMoney(playerTurn, this.players(this.playerTurn).handCards(i).moneyValue)
-      }
-    }
-    this
-  }
 
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"

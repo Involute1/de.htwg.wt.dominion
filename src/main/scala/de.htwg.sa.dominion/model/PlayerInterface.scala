@@ -17,4 +17,8 @@ trait PlayerInterface {
   def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player
 
   def removeHandCard(cardIndex: Int): Player
+
+  def updateMoney(money: Int, playerToUpdateMoney: Player): Player
+
+  def getMoneyFromHand(handCards: Int, playerToGetMoney: Player): Player
 }

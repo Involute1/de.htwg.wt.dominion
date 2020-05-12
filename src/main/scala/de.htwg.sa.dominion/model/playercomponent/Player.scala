@@ -1,7 +1,8 @@
 package de.htwg.sa.dominion.model.playercomponent
 
 import de.htwg.sa.dominion.model.PlayerInterface
-import de.htwg.sa.dominion.model.cardcomponent.{Card, Deck}
+import de.htwg.sa.dominion.model.cardcomponent.{Card, Cardtype, Deck}
+import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
 
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
@@ -66,5 +67,26 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     val updatedHand = this.handCards.zipWithIndex.collect{case (a, i) if i != cardIndex => a}
     val updatedStacker = List.concat(this.stacker, List(this.handCards(cardIndex)))
     this.copy(handCards = updatedHand, stacker = updatedStacker)
+  }
+  override def updateMoney(money: Int, playerToUpdateMoney: Player): Player = {
+    val startMoney: Int = playerToUpdateMoney.money
+    val updatedMoney: Int = startMoney + money
+    val updatedPlayer: Player = playerToUpdateMoney.copy(money = updatedMoney)
+    return updatedPlayer
+  }
+
+  override def getMoneyFromHand(handCards: Int, playerToGetMoney: Player): Player = {
+    if (handCards < 0) {
+      return playerToGetMoney
+    }
+    println(playerToGetMoney.handCards(handCards))
+    if (playerToGetMoney.handCards(handCards).cardType == Cardtype.MONEY && handCards >= 0) {
+      getMoneyFromHand(handCards - 1, updateMoney(playerToGetMoney.handCards(handCards).moneyValue, playerToGetMoney))
+    } else if (handCards >= 0){
+      getMoneyFromHand(handCards - 1, playerToGetMoney)
+    } else {
+      playerToGetMoney
+    }
+
   }
 }
