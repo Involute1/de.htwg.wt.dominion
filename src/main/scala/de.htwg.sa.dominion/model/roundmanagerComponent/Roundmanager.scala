@@ -18,18 +18,19 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
     }
     this.roundStatus match {
-      case RoundmanagerStatus.PLAY_CARD_PHASE || RoundmanagerStatus.VILLAGE_ACTION_PHASE
+      case RoundmanagerStatus.PLAY_CARD_PHASE | RoundmanagerStatus.VILLAGE_ACTION_PHASE
         =>
-        if (checkIfHandContainsActionCard()) {
+        if (checkIfHandContainsActionCard(this.players)) {
           if (validateHandSelectInput(input)) {
             val card = this.players(this.playerTurn).handCards(input.toInt)
             card.cardName match {
               case "Village" =>
                 // +1 Card, +2 Actions
-                if (checkIfActionLeft() & checkIfHandContainsActionCard()) {
-                  this.copy(players = festivalAction(input.toInt))
+                val updatedPlayers = festivalAction(input.toInt)
+                if (checkIfActionLeft(updatedPlayers) && checkIfHandContainsActionCard(updatedPlayers)) {
+                  this.copy(players = updatedPlayers, roundStatus = RoundmanagerStatus.VILLAGE_ACTION_PHASE)
                 } else {
-                  this.copy(players = festivalAction(input.toInt))
+                  this.copy(players = updatedPlayers, roundStatus = RoundmanagerStatus.VILLAGE_BUY_PHASE)
                 }
               case "Festival" =>
                 // +2 Actions, +1 Card, +2 Money
@@ -126,8 +127,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     false
   }
 
-  private def checkIfActionLeft(): Boolean = {
-    this.players(this.playerTurn).actions > 0
+  private def checkIfActionLeft(playerList: List[Player]): Boolean = {
+    playerList(this.playerTurn).actions > 0
   }
 
   private def checkActionCard(): String = {
@@ -139,9 +140,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     "Du hast keine Aktionskarte auf der Hand zum spielen, press any key to end your action phase"
   }
 
-  private def checkIfHandContainsActionCard(): Boolean = {
-    for (i <- this.players(this.playerTurn).handCards.indices) {
-      if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
+  private def checkIfHandContainsActionCard(playerList: List[Player]): Boolean = {
+    for (i <- playerList(this.playerTurn).handCards.indices) {
+      if (playerList(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
         return true
       }
     }
@@ -176,11 +177,13 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }*/
 
   override def constructRoundermanagerStateString: String = {
+    val handDefaultString = "----HAND CARDS----\n"
     val villageActionString = "You drew 1 Card and gained 2 Actions\n"
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
-      => "----HAND CARDS----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
-      case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString
+      => handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
+      case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString + handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
+      case RoundmanagerStatus.VILLAGE_BUY_PHASE => villageActionString // TODO ADD BUY PHASE STRING
       case _ => this.roundStatus.toString
     }
   }
@@ -302,5 +305,5 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
 object RoundmanagerStatus extends Enumeration {
   type RoundmanagerStatus = Value
-  val PLAY_CARD_PHASE, VILLAGE_ACTION_PHASE, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
+  val PLAY_CARD_PHASE, VILLAGE_ACTION_PHASE, VILLAGE_BUY_PHASE, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
 }
