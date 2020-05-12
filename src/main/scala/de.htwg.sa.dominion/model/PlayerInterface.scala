@@ -15,4 +15,6 @@ trait PlayerInterface {
   def updateActions(updatedActionValue: Int): Player
 
   def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player
+
+  def removeHandCard(cardIndex: Int): Player
 }

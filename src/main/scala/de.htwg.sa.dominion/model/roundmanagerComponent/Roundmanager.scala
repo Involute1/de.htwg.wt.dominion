@@ -18,7 +18,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
     }
     this.roundStatus match {
-      case RoundmanagerStatus.PLAY_CARD_PHASE
+      case RoundmanagerStatus.PLAY_CARD_PHASE || RoundmanagerStatus.VILLAGE_ACTION_PHASE
         =>
         if (checkIfHandContainsActionCard()) {
           if (validateHandSelectInput(input)) {
@@ -26,9 +26,11 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
             card.cardName match {
               case "Village" =>
                 // +1 Card, +2 Actions
-                // TODO card drawing -> +2 actios (done), -> played card to stacker
-                //this.copy(players = drawXAmountOfCards(1), players = addToPlayerActions(2))
-                this
+                if (checkIfActionLeft() & checkIfHandContainsActionCard()) {
+                  this.copy(players = festivalAction(input.toInt))
+                } else {
+                  this.copy(players = festivalAction(input.toInt))
+                }
               case "Festival" =>
                 // +2 Actions, +1 Card, +2 Money
                 this
@@ -80,10 +82,16 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     }
   }
 
-  private def addToPlayerActions(actionsToAdd: Int): List[Player] = {
-    val updateActions = actionsToAdd + this.players(this.playerTurn).actions - 1
-    val updatedPlayer: Player = this.players(this.playerTurn).updateActions(updateActions)
-    val updatedPlayers = this.players.patch(this.playerTurn, Seq(updatedPlayer), 1)
+  private def festivalAction(input: Int): List[Player] = {
+    val playerWithNewCards: List[Player] = drawXAmountOfCards(1)
+    val updatedPlayerList: List[Player] = addToPlayerActions(2, playerWithNewCards)
+    updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).removeHandCard(input)), 1)
+  }
+
+  private def addToPlayerActions(actionsToAdd: Int, playerList: List[Player]): List[Player] = {
+    val updateActions = actionsToAdd + playerList(this.playerTurn).actions - 1
+    val updatedPlayer: Player = playerList(this.playerTurn).updateActions(updateActions)
+    val updatedPlayers = playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
     updatedPlayers
   }
 
@@ -168,9 +176,11 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }*/
 
   override def constructRoundermanagerStateString: String = {
+    val villageActionString = "You drew 1 Card and gained 2 Actions\n"
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
       => "----HAND CARDS----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
+      case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString
       case _ => this.roundStatus.toString
     }
   }
