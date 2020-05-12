@@ -89,22 +89,17 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   override def updateMoney(money: Int, playerToUpdateMoney: Player): Player = {
     val startMoney: Int = playerToUpdateMoney.money
     val updatedMoney: Int = startMoney + money
-    val updatedPlayer: Player = playerToUpdateMoney.copy(money = updatedMoney)
-    return updatedPlayer
+    playerToUpdateMoney.copy(money = updatedMoney)
   }
 
   override def getMoneyFromHand(handCards: Int, playerToGetMoney: Player): Player = {
-    if (handCards < 0) {
-      return playerToGetMoney
+    if (handCards >= 0) {
+      if (playerToGetMoney.handCards(handCards).cardType == Cardtype.MONEY) {
+        getMoneyFromHand(handCards - 1, updateMoney(playerToGetMoney.handCards(handCards).moneyValue, playerToGetMoney))
+      } else {
+        getMoneyFromHand(handCards - 1, playerToGetMoney)
+      }
     }
-    println(playerToGetMoney.handCards(handCards))
-    if (playerToGetMoney.handCards(handCards).cardType == Cardtype.MONEY && handCards >= 0) {
-      getMoneyFromHand(handCards - 1, updateMoney(playerToGetMoney.handCards(handCards).moneyValue, playerToGetMoney))
-    } else if (handCards >= 0){
-      getMoneyFromHand(handCards - 1, playerToGetMoney)
-    } else {
-      playerToGetMoney
-    }
-
+    playerToGetMoney
   }
 }
