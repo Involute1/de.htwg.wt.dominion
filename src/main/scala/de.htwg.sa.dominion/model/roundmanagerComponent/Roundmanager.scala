@@ -149,12 +149,35 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     false
   }
 
-  /*override def listAvaibleCardsToBuy(): String = {
-    //val avaibleStringList: List[String] =
-    //val playerStackerString: String = avaibleStringList.mkString("\n")
-    //playerStackerString.toString
-    ""
-  }*/
+  override def listAvaibleCardsToBuy(): String = {
+    val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length,Nil).length,availableCards(this.decks.length,Nil),Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
+    val playerStackerString: String = avaibleStringList.mkString("\n")
+    playerStackerString.toString
+
+  }
+
+  private def availableCards(length: Int, available: List[Card]): List[Card] = {
+    if(length == 0) {
+      return available
+    } else {
+      val returningCard: List[Card] = List.concat(available, List(this.decks(length).head))
+      availableCards(length - 1, returningCard)
+    }
+  }
+
+  private def buyableCards(index: Int,availableCards: List[Card], finishedCards: List[Card]): List[Card] = {
+    if(index == 0) {
+      return finishedCards
+    }
+    else if(getMoney().players(this.playerTurn).money >= availableCards(index).moneyValue) {
+      val finishedCardList: List[Card] = List.concat(finishedCards, List(availableCards(index)))
+      buyableCards(index - 1, availableCards, finishedCardList)
+    }
+    else {
+      buyableCards(index - 1, availableCards, finishedCards)
+    }
+  }
+
 
   override def updateMoney(index: Int, money: Int): Roundmanager = {
     val startMoney: Int = players(index).money
@@ -167,14 +190,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
 
-  /*private def getMoney(): Roundmanager = {
+  private def getMoney(): Roundmanager = {
     for(i <- this.players(this.playerTurn).handCards.indices) {
       if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.MONEY) {
-        this = updateMoney(playerTurn, this.players(this.playerTurn).handCards(i).moneyValue)
+        this.updateMoney(playerTurn, this.players(this.playerTurn).handCards(i).moneyValue)
       }
     }
     this
-  }*/
+  }
 
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
@@ -184,6 +207,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       => handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
       case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString + handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
       case RoundmanagerStatus.VILLAGE_BUY_PHASE => villageActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.START_BUY_PHASE
+      => "----AVAIABLE CARDS----\n" + listAvaibleCardsToBuy() + "\n---nSUICIDE----\n"
       case _ => this.roundStatus.toString
     }
   }

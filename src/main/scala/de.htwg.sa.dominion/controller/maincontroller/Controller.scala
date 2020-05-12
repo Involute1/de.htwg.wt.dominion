@@ -123,15 +123,13 @@ case class ActionPhaseState(controller: Controller) extends ControllerState {
 case class BuyPhaseState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     if (input.isBlank) return
-
-
-
+    controller.roundmanager = controller.roundmanager.buyPhase(input)
     if (controller.roundmanager.checkForGameEnd()) controller.controllerState = nextState
   }
 
-  override def getCurrentControllerMessage: String = ???
+  override def getCurrentControllerMessage: String = controller.roundmanager.constructRoundermanagerStateString
 
-  override def nextState: ControllerState = ???
+  override def nextState: ControllerState = ActionPhaseState(controller)
 }
 
 case class GameOverState(controller: Controller) extends ControllerState {
