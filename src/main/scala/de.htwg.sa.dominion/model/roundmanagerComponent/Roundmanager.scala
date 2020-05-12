@@ -44,7 +44,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
                 }
               case "Cellar" =>
                 // +1 Action, Discard any number of cards draw as many
-                this
+                this.copy(players = cellarActionStart(input.toInt), roundStatus = RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE)
               case "Mine" =>
                 // trash money card, gain a card that cost up to 3 more
                 this
@@ -85,6 +85,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
         } else {
           this.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE)
         }
+      case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE =>
+
+        this
       /*case RoundmanagerStatus.START_ACTION_PHASE
         =>
         if (checkIfHandContainsActionCard()) {
@@ -114,6 +117,11 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val updatedPlayerList: List[Player] = addToPlayerActions(2, playerWithNewCards)
     val finalPlayerList: List[Player] = addToPlayerMoney(2, updatedPlayerList)
     finalPlayerList.patch(this.playerTurn, Seq(finalPlayerList(this.playerTurn).removeHandCard(input)), 1)
+  }
+
+  private def cellarActionStart(input: Int): List[Player] = {
+    val playerWithNewCards: List[Player] = addToPlayerActions(1, this.players)
+    playerWithNewCards.patch(this.playerTurn, Seq(playerWithNewCards(this.playerTurn).removeHandCard(input)), 1)
   }
 
   private def smithyAction(input: Int): List[Player] = {
@@ -170,6 +178,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       return isSelectedCardActionCard(number)
     }
     isSelectedCardActionCard(number)
+  }
+
+  private def validateCellarInput(input: String): List[Int] = {
+    Nil
   }
 
   private def isSelectedCardActionCard(input: Int): Boolean = {
@@ -269,12 +281,13 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
+    val actionDefaultString = handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
     val villageActionString = "You drew 1 Card and gained 2 Actions\n"
     val festivalActionString = "You drew 1 Card, gained 2 Actions and 2 Money\n"
     val smithyActionString = "You drew 3 Cards\n"
     val marketActionString = "You drew 1 Card, gained 1 Action, 1 Buy and 1 Money\n"
     val merchantActionString = "You drew 1 Card" + checkSilverOnHandMerchantAction() + "\n"
-    val actionDefaultString = handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
+    val cellarFirstActionString = "You gained 1 Action\n"
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
       => handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
@@ -288,7 +301,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       case RoundmanagerStatus.MARKET_BUY_PHASE => marketActionString // TODO ADD BUY PHASE STRING
       case RoundmanagerStatus.MERCHANT_ACTION_PHASE => merchantActionString + actionDefaultString
       case RoundmanagerStatus.MERCHANT_BUY_PHASE => merchantActionString // TODO ADD BUYPHASE STRING
-
+      case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE => cellarFirstActionString + handDefaultString +
+        this.players(this.playerTurn).constructPlayerHandString() + "\nPlease enter the Cards you want to trash seperated with a ','"
 
 
       case RoundmanagerStatus.START_BUY_PHASE
@@ -416,5 +430,5 @@ object RoundmanagerStatus extends Enumeration {
   type RoundmanagerStatus = Value
   val PLAY_CARD_PHASE, VILLAGE_ACTION_PHASE, VILLAGE_BUY_PHASE, FESTIVAL_ACTION_PHASE, FESTIVAL_BUY_PHASE,
   SMITHY_ACTION_PHASE, SMITHY_BUY_PHASE, MARKET_ACTION_PHASE, MARKET_BUY_PHASE, MERCHANT_ACTION_PHASE, MERCHANT_BUY_PHASE,
-  START_BUY_PHASE, NEXT_PLAYER_TURN = Value
+  CELLAR_ACTION_INPUT_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
 }
