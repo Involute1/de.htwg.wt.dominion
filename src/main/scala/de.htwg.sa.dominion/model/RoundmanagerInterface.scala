@@ -35,7 +35,6 @@ trait RoundmanagerInterface {
 
   def updateMoney(index: Int, money: Int): Roundmanager
 
-  def listAvailableCardsToBuy(): String
+  def buyPhase(input: String): Roundmanager
 
-  //def buyPhase(input: String): Roundmanager
 }

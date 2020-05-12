@@ -12,5 +12,7 @@ trait PlayerInterface {
 
   def constructPlayerHandString(): String
 
+  def updateActions(updatedActionValue: Int): Player
 
+  def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player
 }
