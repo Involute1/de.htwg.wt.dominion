@@ -14,13 +14,48 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def actionPhase(input: String): Roundmanager = {
     // 1) draw 5 cards
+    if (this.players(this.playerTurn).handCards.isEmpty) {
+
+    }
     this.roundStatus match {
-      case RoundmanagerStatus.INIT_PHASE
+      case RoundmanagerStatus.PLAY_CARD_PHASE
         =>
         if (checkIfHandContainsActionCard()) {
           if (validateHandSelectInput(input)) {
-            this.copy(roundStatus = RoundmanagerStatus.PLAY_ACTION_CARD)
-          } else this
+            val card = this.players(this.playerTurn).handCards(input.toInt)
+            card.cardName match {
+              case "Village" =>
+                // +1 Card, +2 Actions
+                // TODO card drawing -> +2 actios (done), -> played card to stacker
+                //this.copy(players = drawXAmountOfCards(1), players = addToPlayerActions(2))
+                this
+              case "Festival" =>
+                // +2 Actions, +1 Card, +2 Money
+                this
+              case "Cellar" =>
+                // +1 Action, Discard any number of cards draw as many
+                this
+              case "Mine" =>
+                // trash money card, gain a card that cost up to 3 more
+                this
+              case "Smithy" =>
+                // + 3 cards
+                this
+              case "Remodel" =>
+                // trash a card, gain a card that costs up to 2 more
+                this
+              case "Merchant" =>
+                // +1 card, +1 action, the first time you play a silver +1 money
+                this
+              case "Workshop" =>
+                // gain a card costing up to 4
+                this
+              case "Market" =>
+                // +1 card, +1 action, +1 buy, +1 money
+                this
+            }
+            //this.copy(roundStatus = RoundmanagerStatus.PLAY_ACTION_CARD)
+          } else this.copy(roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE)
         } else {
           this.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE)
         }
@@ -33,13 +68,6 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
         } else {
           this.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE)
         }*/
-      case RoundmanagerStatus.PLAY_ACTION_CARD
-      => if (validateYesNoInput(input)) {
-        val card = this.players(this.playerTurn).handCards(input.toInt)
-        card.cardName match {
-          case _ => this
-        }
-      } else this.copy(roundStatus = RoundmanagerStatus.INIT_PHASE)
     }
 
     // 4) next player
@@ -48,8 +76,20 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def buyPhase(input: String): Roundmanager = {
     this.roundStatus match {
-      case RoundmanagerStatus.START_BUY_PHASE => getMoney()
+      case RoundmanagerStatus.START_BUY_PHASE => this
     }
+  }
+
+  private def addToPlayerActions(actionsToAdd: Int): List[Player] = {
+    val updateActions = actionsToAdd + this.players(this.playerTurn).actions - 1
+    val updatedPlayer: Player = this.players(this.playerTurn).updateActions(updateActions)
+    val updatedPlayers = this.players.patch(this.playerTurn, Seq(updatedPlayer), 1)
+    updatedPlayers
+  }
+
+  private def drawXAmountOfCards(cardDrawAmount: Int): List[Player] = {
+    val updatedPlayer: Player = this.players(this.playerTurn).updateHand(cardDrawAmount, this.players(this.playerTurn))
+    this.players.patch(this.playerTurn, Seq(updatedPlayer), 1)
   }
 
   private def validateHandSelectInput(input: String): Boolean = {
@@ -78,6 +118,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     false
   }
 
+  private def checkIfActionLeft(): Boolean = {
+    this.players(this.playerTurn).actions > 0
+  }
+
   private def checkActionCard(): String = {
     for (i <- this.players(this.playerTurn).handCards.indices) {
       if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.KINGDOM) {
@@ -96,11 +140,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     false
   }
 
-  override def listAvaibleCardsToBuy(): String = {
-    val avaibleStringList: List[String] =
-    val playerStackerString: String = avaibleStringList.mkString("\n")
-    playerStackerString.toString
-  }
+  /*override def listAvaibleCardsToBuy(): String = {
+    //val avaibleStringList: List[String] =
+    //val playerStackerString: String = avaibleStringList.mkString("\n")
+    //playerStackerString.toString
+    ""
+  }*/
 
   override def updateMoney(index: Int, money: Int): Roundmanager = {
     val startMoney: Int = players(index).money
@@ -113,22 +158,19 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
 
-  private def getMoney(): Roundmanager = {
+  /*private def getMoney(): Roundmanager = {
     for(i <- this.players(this.playerTurn).handCards.indices) {
       if (this.players(this.playerTurn).handCards(i).cardType == Cardtype.MONEY) {
         this = updateMoney(playerTurn, this.players(this.playerTurn).handCards(i).moneyValue)
       }
     }
     this
-  }
+  }*/
 
   override def constructRoundermanagerStateString: String = {
     this.roundStatus match {
-      case RoundmanagerStatus.INIT_PHASE
+      case RoundmanagerStatus.PLAY_CARD_PHASE
       => "----HAND CARDS----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
-      case RoundmanagerStatus.START_ACTION_PHASE
-      => "----HAND CARDS----\n" + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
-      case RoundmanagerStatus.PLAY_ACTION_CARD => "Are you sure you want to play the Card (Y/N)?"
       case _ => this.roundStatus.toString
     }
   }
@@ -250,5 +292,5 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
 object RoundmanagerStatus extends Enumeration {
   type RoundmanagerStatus = Value
-  val INIT_PHASE, START_ACTION_PHASE, PLAY_ACTION_CARD, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
+  val PLAY_CARD_PHASE, VILLAGE_ACTION_PHASE, FESTIVAL_ACTION_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN = Value
 }
