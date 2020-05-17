@@ -73,8 +73,10 @@ object Deck {
   //val startDeck : List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
     //Cards.copper, Cards.estate, Cards.estate, Cards.estate)
 
-  val startDeck : List[Card] = List(Cards.village, Cards.festival, Cards.cellar, Cards.mine, Cards.smithy, Cards.remodel,
-    Cards.merchant, Cards.workshop, Cards.market, Cards.village)
+  //val startDeck : List[Card] = List(Cards.village, Cards.festival, Cards.cellar, Cards.mine, Cards.smithy, Cards.remodel,
+    //Cards.merchant, Cards.workshop, Cards.market, Cards.village)
 
+
+  val startDeck : List[Card] = List(Cards.mine, Cards.mine, Cards.mine, Cards.mine, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver)
 }
 

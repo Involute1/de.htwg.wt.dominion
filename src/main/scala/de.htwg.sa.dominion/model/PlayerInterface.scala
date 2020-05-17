@@ -25,4 +25,12 @@ trait PlayerInterface {
   def checkForFirstSilver(): Player
 
   def calculatePlayerMoneyForBuy: Player
+
+  def discard(indexesToDiscard: List[Int]): Player
+
+  def checkForTreasure(): Boolean
+
+  def trashHandCard(cardIdx: Int): Player
+
+  def constructCellarTrashString(): String
 }

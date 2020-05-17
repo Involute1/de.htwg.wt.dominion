@@ -87,10 +87,32 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     this.copy(handCards = updatedHand, stacker = updatedStacker)
   }
 
+  override def trashHandCard(cardIdx: Int): Player = {
+    val updatedHand = this.handCards.zipWithIndex.collect{case (a, i) if i != cardIdx => a}
+    this.copy(handCards = updatedHand)
+  }
+
+  override def discard(indexesToDiscard: List[Int]): Player = {
+    val updatedStacker = List.concat(this.stacker, this.handCards.zipWithIndex.collect{case (card, idx) if indexesToDiscard.contains(idx) => card})
+    val updatedHand = this.handCards.zipWithIndex.collect{case (card, idx) if !indexesToDiscard.contains(idx) => card}
+    this.copy(stacker = updatedStacker, handCards = updatedHand)
+  }
+
   override def calculatePlayerMoneyForBuy(): Player = {
     val playerMoney: Int = this.money
     val moneyValues: List[Int] = for (card <- this.handCards) yield card.moneyValue
     val finalMoneyValue = moneyValues.sum + playerMoney
     this.copy(money = finalMoneyValue)
   }
+
+  override def checkForTreasure(): Boolean = {
+    val booleanList: List[Boolean] = for(card <- this.handCards) yield card.cardType == Cardtype.MONEY
+    booleanList.contains(true)
+  }
+
+  override def constructCellarTrashString(): String = {
+    val handStringList: List[String] = for ((card, idx) <- this.handCards.zipWithIndex if card.cardType == Cardtype.MONEY) yield card.cardName + " (" + idx + ")"
+    val playherHandString: String = handStringList.mkString("\n")
+    playherHandString.toString
+    }
 }
