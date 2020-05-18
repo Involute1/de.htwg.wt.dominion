@@ -33,4 +33,6 @@ trait PlayerInterface {
   def trashHandCard(cardIdx: Int): Player
 
   def constructCellarTrashString(): String
+
+  def removeCompleteHand(player: Player, index: Int): Player
 }
