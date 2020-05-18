@@ -115,4 +115,12 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     playherHandString.toString
     }
 
+  override def removeCompleteHand(player: Player, index: Int): Player = {
+    if(index < 0) {
+      player
+    } else {
+      removeCompleteHand(removeHandCard(index), index - 1)
+    }
+  }
+
 }
