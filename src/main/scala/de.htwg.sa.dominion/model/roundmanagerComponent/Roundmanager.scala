@@ -382,7 +382,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   private def updateMoneyForRoundmanager(playerList: List[Player]): List[Player] = {
-    playerList.patch(this.playerTurn, Seq(playerList(this.playerTurn).calculatePlayerMoneyForBuy()), 1)
+    playerList.patch(this.playerTurn, Seq(playerList(this.playerTurn).calculatePlayerMoneyForBuy), 1)
   }
 
   private def addToPlayerMoney(moneyToAdd: Int, playerList: List[Player]): List[Player] = {
@@ -640,7 +640,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   private def constructBuyableString(): String = {
-    val playerMoney: Int = this.players(this.playerTurn).calculatePlayerMoneyForBuy().money
+    val playerMoney: Int = this.players(this.playerTurn).calculatePlayerMoneyForBuy.money
     val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.head.costValue <= playerMoney)
       yield deck.head.cardName + "(" + index + ")"
     deckList.mkString("\n")
