@@ -77,6 +77,6 @@ object Deck {
     //Cards.merchant, Cards.workshop, Cards.market, Cards.village)
 
 
-  val startDeck : List[Card] = List(Cards.mine, Cards.mine, Cards.mine, Cards.mine, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver)
+  val startDeck : List[Card] = List(Cards.remodel, Cards.remodel, Cards.remodel, Cards.remodel, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver)
 }
 

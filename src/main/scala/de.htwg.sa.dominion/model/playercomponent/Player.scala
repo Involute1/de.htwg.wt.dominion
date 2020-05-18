@@ -81,7 +81,7 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     shuffledList
   }
 
-  override def removeHandCard(cardIndex: Int): Player = {
+  override def removeHandCardAddToStacker(cardIndex: Int): Player = {
     val updatedHand = this.handCards.zipWithIndex.collect{case (a, i) if i != cardIndex => a}
     val updatedStacker = List.concat(this.stacker, List(this.handCards(cardIndex)))
     this.copy(handCards = updatedHand, stacker = updatedStacker)
