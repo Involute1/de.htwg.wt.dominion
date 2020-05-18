@@ -99,9 +99,8 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   }
 
   override def calculatePlayerMoneyForBuy(): Player = {
-    val playerMoney: Int = this.money
     val moneyValues: List[Int] = for (card <- this.handCards) yield card.moneyValue
-    val finalMoneyValue = moneyValues.sum + playerMoney
+    val finalMoneyValue = moneyValues.sum + this.money
     this.copy(money = finalMoneyValue)
   }
 
@@ -115,4 +114,5 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     val playherHandString: String = handStringList.mkString("\n")
     playherHandString.toString
     }
+
 }
