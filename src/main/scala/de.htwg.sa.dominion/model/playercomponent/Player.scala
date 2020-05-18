@@ -1,11 +1,8 @@
 package de.htwg.sa.dominion.model.playercomponent
 
 import de.htwg.sa.dominion.model.PlayerInterface
-import de.htwg.sa.dominion.model.cardcomponent.{Card, Cards, Deck}
-import de.htwg.sa.dominion.model.cardcomponent.{Card, Cardtype, Deck}
-import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
+import de.htwg.sa.dominion.model.cardcomponent.{Card, Cards, Cardtype}
 
-import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card], handCards: List[Card],
@@ -17,22 +14,17 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
 
   override def constructPlayerDeckString(): String = {
     val deckStringList: List[String] = for ((card, idx) <- this.deck.zipWithIndex) yield card.cardName + " (" + idx + ")"
-    val playerDeckString: String = deckStringList.mkString("\n")
-    playerDeckString.toString
-
+    deckStringList.mkString("\n")
   }
 
   override def constructPlayerStackerString(): String = {
     val stackerStringList: List[String] = for ((card, idx) <- this.stacker.zipWithIndex) yield card.cardName + " (" + idx + ")"
-    val playerStackerString: String = stackerStringList.mkString("\n")
-    playerStackerString.toString
-
+    stackerStringList.mkString("\n")
   }
 
   override def constructPlayerHandString(): String = {
     val handStringList: List[String] = for ((card, idx) <- this.handCards.zipWithIndex) yield card.cardName + " (" + idx + ")"
-    val playherHandString: String = handStringList.mkString("\n")
-    playherHandString.toString
+    handStringList.mkString("\n")
   }
 
   override def updateActions(updatedActionValue: Int): Player = {
@@ -51,9 +43,8 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     val hasSilver: Boolean = this.handCards.contains(Cards.silver)
     if (hasSilver) {
       val updatedMoney = this.money + 1
-      return this.copy(money = updatedMoney)
-    }
-    this
+      this.copy(money = updatedMoney)
+    } else this
   }
 
   override def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player = {
@@ -82,44 +73,43 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   }
 
   override def removeHandCardAddToStacker(cardIndex: Int): Player = {
-    val updatedHand = this.handCards.zipWithIndex.collect{case (a, i) if i != cardIndex => a}
+    val updatedHand = this.handCards.zipWithIndex.collect { case (a, i) if i != cardIndex => a }
     val updatedStacker = List.concat(this.stacker, List(this.handCards(cardIndex)))
     this.copy(handCards = updatedHand, stacker = updatedStacker)
   }
 
   override def trashHandCard(cardIdx: Int): Player = {
-    val updatedHand = this.handCards.zipWithIndex.collect{case (a, i) if i != cardIdx => a}
+    val updatedHand = this.handCards.zipWithIndex.collect { case (a, i) if i != cardIdx => a }
     this.copy(handCards = updatedHand)
   }
 
   override def discard(indexesToDiscard: List[Int]): Player = {
-    val updatedStacker = List.concat(this.stacker, this.handCards.zipWithIndex.collect{case (card, idx) if indexesToDiscard.contains(idx) => card})
-    val updatedHand = this.handCards.zipWithIndex.collect{case (card, idx) if !indexesToDiscard.contains(idx) => card}
+    val updatedStacker = List.concat(this.stacker, this.handCards.zipWithIndex.collect { case (card, idx) if indexesToDiscard.contains(idx) => card })
+    val updatedHand = this.handCards.zipWithIndex.collect { case (card, idx) if !indexesToDiscard.contains(idx) => card }
     this.copy(stacker = updatedStacker, handCards = updatedHand)
   }
 
-  override def calculatePlayerMoneyForBuy(): Player = {
+  override def calculatePlayerMoneyForBuy: Player = {
     val moneyValues: List[Int] = for (card <- this.handCards) yield card.moneyValue
     val finalMoneyValue = moneyValues.sum + this.money
     this.copy(money = finalMoneyValue)
   }
 
   override def checkForTreasure(): Boolean = {
-    val booleanList: List[Boolean] = for(card <- this.handCards) yield card.cardType == Cardtype.MONEY
+    val booleanList: List[Boolean] = for (card <- this.handCards) yield card.cardType == Cardtype.MONEY
     booleanList.contains(true)
   }
 
   override def constructCellarTrashString(): String = {
     val handStringList: List[String] = for ((card, idx) <- this.handCards.zipWithIndex if card.cardType == Cardtype.MONEY) yield card.cardName + " (" + idx + ")"
-    val playherHandString: String = handStringList.mkString("\n")
-    playherHandString.toString
-    }
+    handStringList.mkString("\n")
+  }
 
   override def removeCompleteHand(player: Player, index: Int): Player = {
-    if(index < 0) {
+    if (index < 0) {
       player
     } else {
-      removeCompleteHand(removeHandCard(index), index - 1)
+      removeCompleteHand(removeHandCardAddToStacker(index), index - 1)
     }
   }
 

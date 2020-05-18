@@ -4,7 +4,7 @@ import de.htwg.sa.dominion.model.cardcomponent.Cardtype.Cardtype
 import de.htwg.sa.dominion.model.{CardInterface, cardcomponent}
 
 case class Card(cardName: String, cardDescription: String, cardType: Cardtype, costValue: Int, moneyValue: Int, vpValue: Int
-               , cardDrawValue: Int, additionalBuysValue: Int, additionalActionsValue: Int, additionalMoneyValue: Int) extends CardInterface {
+                , cardDrawValue: Int, additionalBuysValue: Int, additionalActionsValue: Int, additionalMoneyValue: Int) extends CardInterface {
 
   override def constructCardNameString(): String = {
     this.cardName
@@ -12,9 +12,9 @@ case class Card(cardName: String, cardDescription: String, cardType: Cardtype, c
 
   override def constructCardInformationString: String = {
     val cardInfoString = "Cardname: " + this.cardName + "\nCarddescription: " + this.cardDescription + "\nCost: " +
-      + this.costValue + " Money\n" + "Money worth: " + this.moneyValue + "\nVictory Points worth: " + this.vpValue + "\n" +
-        "Allows you to have " + this.additionalActionsValue + " Actions, " + this.additionalBuysValue + " Buys," + this.additionalMoneyValue + " " +
-        "Additional Money and draws " + this.cardDrawValue + " more cards"
+      +this.costValue + " Money\n" + "Money worth: " + this.moneyValue + "\nVictory Points worth: " + this.vpValue + "\n" +
+      "Allows you to have " + this.additionalActionsValue + " Actions, " + this.additionalBuysValue + " Buys," + this.additionalMoneyValue + " " +
+      "Additional Money and draws " + this.cardDrawValue + " more cards"
     cardInfoString
   }
 }
@@ -70,13 +70,13 @@ object Cards {
 }
 
 object Deck {
-  //val startDeck : List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
-    //Cards.copper, Cards.estate, Cards.estate, Cards.estate)
+  val startDeck: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
+    Cards.copper, Cards.estate, Cards.estate, Cards.estate)
 
   //val startDeck : List[Card] = List(Cards.village, Cards.festival, Cards.cellar, Cards.mine, Cards.smithy, Cards.remodel,
-    //Cards.merchant, Cards.workshop, Cards.market, Cards.village)
+  //Cards.merchant, Cards.workshop, Cards.market, Cards.village)
 
 
-  val startDeck : List[Card] = List(Cards.workshop, Cards.workshop, Cards.workshop, Cards.workshop, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver)
+  //val startDeck : List[Card] = List(Cards.workshop, Cards.workshop, Cards.workshop, Cards.workshop, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver)
 }
 
