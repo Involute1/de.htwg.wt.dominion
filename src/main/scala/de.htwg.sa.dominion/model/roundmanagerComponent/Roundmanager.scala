@@ -1,6 +1,6 @@
 package de.htwg.sa.dominion.model.roundmanagerComponent
 
-import de.htwg.sa.dominion.model.{RoundmanagerInterface, roundmanagerComponent}
+import de.htwg.sa.dominion.model.RoundmanagerInterface
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Cardtype, Deck}
 import de.htwg.sa.dominion.model.playercomponent.Player
@@ -252,7 +252,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       val trimmedInput = input.replaceAll(" ", "")
       val splittedString = trimmedInput.split(",")
       try {
-        Some(splittedString.flatMap(_.toString.toIntOption).toList)
+        Some(splittedString.flatMap(_.toIntOption).toList)
       } catch {
         case _: Exception => None
       }
