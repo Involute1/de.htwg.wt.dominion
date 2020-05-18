@@ -14,7 +14,6 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def actionPhase(input: String): Roundmanager = {
     this.roundStatus match {
-      // TODO CALCULATE PLAYER MONEY AT END
       case RoundmanagerStatus.PLAY_CARD_PHASE | RoundmanagerStatus.VILLAGE_ACTION_PHASE | RoundmanagerStatus.FESTIVAL_ACTION_PHASE
            | RoundmanagerStatus.SMITHY_ACTION_PHASE | RoundmanagerStatus.MERCHANT_ACTION_PHASE | RoundmanagerStatus.MARKET_ACTION_PHASE
            | RoundmanagerStatus.CELLAR_END_ACTION | RoundmanagerStatus.MINE_END_ACTION | RoundmanagerStatus.REMODEL_ACTION_PHASE
