@@ -402,26 +402,27 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val merchantActionString = "You drew 1 Card" + checkSilverOnHandMerchantAction() + "\n"
     val cellarFirstActionString = "You gained 1 Action\n"
     val cellarEndActionString = "You discarded x Cards, and drew as many\n"
+    val buyPhaseString= "You can spend (" + this.players(this.playerTurn).money +") Gold in (" + this.players(this.playerTurn).buys.toString() + ") Buys \n----AVAILABLE CARDS----\n" + constructBuyableString() + "\nWhich Card do you wanna buy?\n"
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
       => handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
       case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString + actionDefaultString
-      case RoundmanagerStatus.VILLAGE_BUY_PHASE => villageActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.VILLAGE_BUY_PHASE => villageActionString + buyPhaseString
       case RoundmanagerStatus.FESTIVAL_ACTION_PHASE => festivalActionString + actionDefaultString
-      case RoundmanagerStatus.FESTIVAL_BUY_PHASE => festivalActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.FESTIVAL_BUY_PHASE => festivalActionString + buyPhaseString
       case RoundmanagerStatus.SMITHY_ACTION_PHASE => smithyActionString + actionDefaultString
-      case RoundmanagerStatus.SMITHY_BUY_PHASE => smithyActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.SMITHY_BUY_PHASE => smithyActionString + buyPhaseString
       case RoundmanagerStatus.MARKET_ACTION_PHASE => marketActionString + actionDefaultString
-      case RoundmanagerStatus.MARKET_BUY_PHASE => marketActionString // TODO ADD BUY PHASE STRING
+      case RoundmanagerStatus.MARKET_BUY_PHASE => marketActionString + buyPhaseString
       case RoundmanagerStatus.MERCHANT_ACTION_PHASE => merchantActionString + actionDefaultString
-      case RoundmanagerStatus.MERCHANT_BUY_PHASE => merchantActionString // TODO ADD BUYPHASE STRING
+      case RoundmanagerStatus.MERCHANT_BUY_PHASE => merchantActionString + buyPhaseString
       case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE => cellarFirstActionString + handDefaultString +
         this.players(this.playerTurn).constructPlayerHandString() + "\nPlease enter the Cards you want to discard separated with a ','"
       case RoundmanagerStatus.CELLAR_END_ACTION => cellarEndActionString + actionDefaultString
-      case RoundmanagerStatus.CELLAR_BUY_PHASE => cellarEndActionString // TODO ADD BUYPHASE STRING
+      case RoundmanagerStatus.CELLAR_BUY_PHASE => cellarEndActionString +
       case RoundmanagerStatus.MINE_ACTION_INPUT_PHASE => "Select which Treasure to trash:\n" + this.players(this.playerTurn).constructCellarTrashString()
       case RoundmanagerStatus.MINE_NO_ACTION_PHASE => "You dont have any Treasure on hand\n" + actionDefaultString
-      case RoundmanagerStatus.MINE_NO_ACTION_BUY_PHASE => "You dont have any Treasure on hand\n" // TODO ADD BUYPHASE STRING
+      case RoundmanagerStatus.MINE_NO_ACTION_BUY_PHASE => "You dont have any Treasure on hand\n" + buyPhaseString
       case RoundmanagerStatus.MINE_END_ACTION => constructCellarTreasureString() + "\nChoose one of the treasures:\n"
 
       case RoundmanagerStatus.START_BUY_PHASE
