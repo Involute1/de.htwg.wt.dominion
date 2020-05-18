@@ -135,24 +135,41 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def buyPhase(input: String): Roundmanager = {
+    this.copy(players = updateMoneyForRoundmanager())
     this.roundStatus match {
-      case RoundmanagerStatus.START_BUY_PHASE | RoundmanagerStatus.WRONG_INPUT_BUY_PHASE | RoundmanagerStatus.NO_BUYS_LEFT=>
-        if(this.players(this.playerTurn).buys > 0){
-          val updatedPlayerList: List[Player] = updateMoneyForRoundmanager()
-          this.copy(players = updatedPlayerList)
+      case RoundmanagerStatus.START_BUY_PHASE | RoundmanagerStatus.CONTINUE_BUY_PHASE | RoundmanagerStatus.WRONG_INPUT_BUY_PHASE =>
+        if(checkIfBuyLeft(this.players)){
           if (validateBuySelectInput(input)) {
-            this.copy(players = buyCard(input))
+            val updatedPlayers: List[Player] = buyCard(input)
+            val updatedDecks: List[List[Card]] = dropCardFromDeck(input.toInt)
+            this.copy(players = updatedPlayers, decks = updatedDecks)
+            if(checkIfBuyLeft(this.players)){
+              this.copy(roundStatus = RoundmanagerStatus.BUY_AGAIN)
+            } else this.copy(roundStatus = RoundmanagerStatus.NO_BUYS_LEFT)
           } else this.copy(roundStatus = RoundmanagerStatus.WRONG_INPUT_BUY_PHASE)
         } else this.copy(roundStatus = RoundmanagerStatus.NO_BUYS_LEFT)
+      case RoundmanagerStatus.BUY_AGAIN
+
+      => if (validateYesNoInput(input)) {
+        this.copy(roundStatus = RoundmanagerStatus.CONTINUE_BUY_PHASE)
+      } else this.copy(roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE)
+
+      case RoundmanagerStatus.NO_BUYS_LEFT
+      => this.copy(roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE)
 
     }
   }
 
+  private def dropCardFromDeck(input: Int): List[List[Card]] = {
+    val updatedCardDeck: List[Card] = this.decks(input).drop(1)
+    val updatedDeck: List[List[Card]] = this.decks.patch(input, Seq(updatedCardDeck), 1)
+    updatedDeck
+  }
+
+
   private def validateBuySelectInput(input: String): Boolean = {
     val number = input.toIntOption
-    val buyCards: List[Card] = buyableCards(availableCards(this.decks.length,Nil).length - 1,
-      availableCards(this.decks.length,Nil),Nil)
-    if (number.isEmpty || number.get >= buyCards.size ) {
+    if (number.isEmpty || this.players(this.playerTurn).money < this.decks(number.get).head.costValue || number.get > this.decks.size) {
       return false
     }
     true
@@ -163,32 +180,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   private def buyCard(input: String): List[Player] = {
-    val wantingToBuyCard: Card = buyableCards(availableCards(this.decks.length,Nil).length - 1,
-      availableCards(this.decks.length,Nil),Nil)(input.toInt)
-    wantingToBuyCard.cardName match {
-      case "Copper" =>
-        val updatedPlayerList: List[Player] = addToPlayerBuys(-1, this.players)
-        updatedPlayerList.patch(this.playerTurn, Seq(addBoughtCard(0)), 1)
-      case "Silver" =>
-        val updatedPlayerList: List[Player] = addToPlayerBuys(-1, this.players)
-        updatedPlayerList.patch(this.playerTurn, Seq(addBoughtCard(1)), 1)
-        updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).updateMoney(updatedPlayerList(this.playerTurn).money - 3)), 1)
-      /*case "Gold" =>
-      case "Estate" =>
-      case "Duchy" =>
-      case "Province" =>
-      case "Village" =>
-      case "Festival" =>
-      case "Cellar" =>
-      case "Mine" =>
-      case "Smithy" =>
-      case "Remodel" =>
-      case "Merchant" =>
-      case "Workshop" =>
-      case "Gardens" =>
-      case "Market" =>*/
-
-    }
+    val updatedPlayerList: List[Player] = this.players.patch(this.playerTurn, Seq(addBoughtCard(input.toInt)), 1)
+    updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).updateMoney(updatedPlayerList(this.playerTurn).money - this.decks(input.toInt).head.costValue)), 1)
   }
 
   /*private def updateDeck(index: Int): Roundmanager = {
@@ -198,7 +191,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }*/
   private def addBoughtCard(index: Int): Player = {
     val updatedStacker = List.concat(this.players(this.playerTurn).stacker, List(this.decks(index).head))
-    this.players(this.playerTurn).copy(stacker = updatedStacker)
+    this.players(this.playerTurn).copy(stacker = updatedStacker, buys = this.players(this.playerTurn).buys -1)
   }
 
   private def updateMoneyForRoundmanager(): List[Player] = {
@@ -393,7 +386,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     false
   }
 
-  override def listAvaibleCardsToBuy(): String = {
+  /*override def listAvaibleCardsToBuy(): String = {
     val avaibleStringList: List[String] = for ((card, idx) <- buyableCards(availableCards(this.decks.length,Nil).length - 1,
       availableCards(this.decks.length,Nil),Nil).zipWithIndex) yield card.cardName + " (" + idx + ")"
     val playerStackerString: String = avaibleStringList.mkString("\n")
@@ -419,7 +412,15 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       } else {
         buyableCards(index - 1, availableCards, finishedCards)
       }
-    }
+    }*/
+
+  private def constructBuyableString(): String = {
+    val playerMoney: Int = this.players(this.playerTurn).calculatePlayerMoneyForBuy().money
+    val deckList = for ((deck, index) <- this.decks.zipWithIndex if  deck.head.costValue <= playerMoney)
+      yield deck.head.cardName + "(" + index + ")"
+    val stringDeckList = deckList.mkString("\n")
+    stringDeckList.toString
+  }
 
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
@@ -454,13 +455,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       case RoundmanagerStatus.MINE_END_ACTION => constructCellarTreasureString() + "\nChoose one of the treasures:\n"
 
       case RoundmanagerStatus.START_BUY_PHASE
-      => "----AVAILABLE CARDS----\n" + listAvaibleCardsToBuy() + "\nWhich Card do you wanna buy?\n"
+      => "You can spend (" + updateMoneyForRoundmanager()(this.playerTurn).money +") in (" + this.players(this.playerTurn).buys.toString() + ") \n----AVAILABLE CARDS----\n" + constructBuyableString() + "\nWhich Card do you wanna buy?\n"
       case RoundmanagerStatus.WRONG_INPUT_BUY_PHASE => "Wrong input try again\n"
       case RoundmanagerStatus.NO_BUYS_LEFT => "No more buys left"
+      case RoundmanagerStatus.CONTINUE_BUY_PHASE =>  "----AVAILABLE CARDS----\n" + constructBuyableString() + "\nWhich Card do you wanna buy?\n"
+      case RoundmanagerStatus.BUY_AGAIN => "Do you want do buy another card?"
       case _ => this.roundStatus.toString
     }
   }
-
   private def constructCellarTreasureString(): String = {
     val maxCostValue = this.trash.last.costValue + 3
     val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.head.cardType == Cardtype.MONEY && deck.head.costValue <= maxCostValue)
@@ -591,5 +593,5 @@ object RoundmanagerStatus extends Enumeration {
   SMITHY_ACTION_PHASE, SMITHY_BUY_PHASE, MARKET_ACTION_PHASE, MARKET_BUY_PHASE, MERCHANT_ACTION_PHASE, MERCHANT_BUY_PHASE,
   CELLAR_ACTION_INPUT_PHASE, START_BUY_PHASE, NEXT_PLAYER_TURN, WRONG_INPUT_BUY_PHASE , CELLAR_END_ACTION,
   CELLAR_BUY_PHASE, MINE_ACTION_INPUT_PHASE, MINE_NO_ACTION_PHASE,
-  MINE_NO_ACTION_BUY_PHASE, MINE_END_ACTION, NO_BUYS_LEFT = Value
+  MINE_NO_ACTION_BUY_PHASE, MINE_END_ACTION, NO_BUYS_LEFT , INIT_BUY_PHASE, CONTINUE_BUY_PHASE, BUY_AGAIN = Value
 }
