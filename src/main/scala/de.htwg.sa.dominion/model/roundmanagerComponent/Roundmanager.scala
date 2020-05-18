@@ -419,7 +419,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE => cellarFirstActionString + handDefaultString +
         this.players(this.playerTurn).constructPlayerHandString() + "\nPlease enter the Cards you want to discard separated with a ','"
       case RoundmanagerStatus.CELLAR_END_ACTION => cellarEndActionString + actionDefaultString
-      case RoundmanagerStatus.CELLAR_BUY_PHASE => cellarEndActionString +
+      case RoundmanagerStatus.CELLAR_BUY_PHASE => cellarEndActionString + buyPhaseString
       case RoundmanagerStatus.MINE_ACTION_INPUT_PHASE => "Select which Treasure to trash:\n" + this.players(this.playerTurn).constructCellarTrashString()
       case RoundmanagerStatus.MINE_NO_ACTION_PHASE => "You dont have any Treasure on hand\n" + actionDefaultString
       case RoundmanagerStatus.MINE_NO_ACTION_BUY_PHASE => "You dont have any Treasure on hand\n" + buyPhaseString
