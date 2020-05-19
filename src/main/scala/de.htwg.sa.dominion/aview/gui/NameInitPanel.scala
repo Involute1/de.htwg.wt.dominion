@@ -40,7 +40,6 @@ class NameInitPanel(controller: ControllerInterface) extends BoxPanel(Orientatio
 
   contents += new BoxPanel(Orientation.Horizontal) {
     contents += prevButton
-    //contents += HGlue
     contents += nextButton
   }
 
