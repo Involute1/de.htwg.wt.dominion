@@ -32,7 +32,7 @@ class PlayerSpec extends WordSpec with Matchers {
         Luca.constructPlayerDeckString() should be ("Copper (0)\nCopper (1)")
       }
       "have a constructPlayerStackerString method" in {
-        Luca.constructPlayerStackerString() should be ("")
+        Luca5.constructPlayerStackerString() should be ("Copper (0)")
       }
       "have a constructPlayerHandString method" in {
         Luca.constructPlayerHandString() should be ("Copper (0)\nCopper (1)\nCopper (2)\nCopper (3)\nCopper (4)")
