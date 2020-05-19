@@ -10,6 +10,7 @@ class RoundmanagerSpec extends WordSpec with Matchers {
   val playerList: List[Player] = List(Luca,Luca8)
   val roundmanager: Roundmanager = Roundmanager (Nil, Nil, 0, 1, Nil, 0, gameEnd = false, Nil,
     RoundmanagerStatus.PLAY_CARD_PHASE, 0, Nil)
+  //Hurensohn
   "A Player" when {
     "new" should {
       "have a checkifBuyLeft method" in {
