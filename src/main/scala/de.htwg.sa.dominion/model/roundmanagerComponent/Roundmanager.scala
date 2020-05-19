@@ -289,13 +289,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
           if (validateBuySelectInput(input) && checkIfBuyLeft(this.players)) {
             val updatedPlayers: List[Player] = buyCard(input)
             val updatedDecks: List[List[Card]] = dropCardFromDeck(input.toInt)
-            if (updatedDecks(input.toInt).isEmpty) {
-              val updatedEmptyDeckCount: Int = this.emptyDeckCount + 1
-              this.copy(emptyDeckCount = updatedEmptyDeckCount)
-            }
             if (checkIfBuyLeft(updatedPlayers)) {
               this.copy(players = updatedPlayers, decks = updatedDecks, roundStatus = RoundmanagerStatus.BUY_AGAIN)
-            } else this.copy(roundStatus = RoundmanagerStatus.NO_BUYS_LEFT)
+            } else if (updatedDecks(input.toInt).isEmpty) {
+              val updatedEmptyDeckCount: Int = this.emptyDeckCount + 1
+              this.copy(emptyDeckCount = updatedEmptyDeckCount, players = updatedPlayers, decks = updatedDecks,roundStatus = RoundmanagerStatus.NO_BUYS_LEFT)
+            } else this.copy(players = updatedPlayers, decks = updatedDecks,roundStatus = RoundmanagerStatus.NO_BUYS_LEFT)
           } else this.copy(roundStatus = RoundmanagerStatus.WRONG_INPUT_BUY_PHASE)
         } else this.copy(roundStatus = RoundmanagerStatus.NO_BUYS_LEFT)
       case RoundmanagerStatus.BUY_AGAIN
@@ -313,7 +312,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   private def validateBuySelectInput(input: String): Boolean = {
     val number = input.toIntOption
-    if (number.isEmpty || number.get >= this.decks.size || this.players(this.playerTurn).money < this.decks(number.get).head.costValue) {
+    if (number.isEmpty || number.get >= this.decks.size || this.decks(input.toInt).isEmpty || this.players(this.playerTurn).money < this.decks(number.get).head.costValue) {
       return false
     }
     true
@@ -614,9 +613,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def createPlayingDecks(cardName: CardName): Roundmanager = {
     cardName match {
       case moneyCard if moneyCard == CardName.COPPER || moneyCard == CardName.SILVER || moneyCard == CardName.GOLD
-      => constructPlayingCardDeck(cardName, 100)
+      => constructPlayingCardDeck(cardName, 1)
       case victoryPointCard if victoryPointCard == CardName.ESTATE || victoryPointCard == CardName.DUCHY || victoryPointCard == CardName.PROVINCE
-      => constructPlayingCardDeck(cardName, 12)
+      => constructPlayingCardDeck(cardName, 1)
       case _ => constructPlayingCardDeck(cardName, 10)
     }
   }
@@ -780,26 +779,26 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   private def constructBuyableString(): String = {
     val playerMoney: Int = this.players(this.playerTurn).money
-    val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.head.costValue <= playerMoney)
+    val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.nonEmpty && deck.head.costValue <= playerMoney)
       yield deck.head.cardName + "(" + index + ")"
     deckList.mkString("\n")
   }
 
   private def constructCellarTreasureString(): String = {
     val maxCostValue = this.trash.last.costValue + 3
-    val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.head.cardType == Cardtype.MONEY && deck.head.costValue <= maxCostValue)
+    val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.nonEmpty && deck.head.cardType == Cardtype.MONEY && deck.head.costValue <= maxCostValue)
       yield deck.head.cardName + "(" + index + ")"
     deckList.mkString("\n")
   }
 
   private def constructWorkshopString(): String = {
-    val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.head.costValue <= 4) yield deck.head.cardName + "(" + index + ")"
+    val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.nonEmpty && deck.head.costValue <= 4) yield deck.head.cardName + "(" + index + ")"
     deckList.mkString("\n")
   }
 
   private def constructRemodelString(): String = {
     val maxCostValue = this.trash.last.costValue + 2
-    val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.head.costValue <= maxCostValue) yield deck.head.cardName + "(" + index + ")"
+    val deckList = for ((deck, index) <- this.decks.zipWithIndex if deck.nonEmpty && deck.head.costValue <= maxCostValue) yield deck.head.cardName + "(" + index + ")"
     deckList.mkString("\n")
   }
 
