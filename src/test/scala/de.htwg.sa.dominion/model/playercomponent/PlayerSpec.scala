@@ -12,6 +12,7 @@ class PlayerSpec extends WordSpec with Matchers {
   val stackerLuca: List[Card] = Nil
   val stackerLuca1: List[Card] = List(Cards.copper)
   val handLuca: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
+  val handLuca2: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.silver)
   val handLuca1: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val Luca = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 0,0)
   val Luca2 = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 2, 2, 1,0)
@@ -19,6 +20,8 @@ class PlayerSpec extends WordSpec with Matchers {
   val Luca4 = Player("Luca", 0, deckLuca, stackerLuca, handLuca1, 1, 1, 0,0)
   val Luca5 = Player("Luca", 0, deckLuca, stackerLuca1, handLuca, 1, 1, 0,0)
   val Luca6 = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 5,0)
+  val Luca7 = Player("Luca", 0, deckLuca, stackerLuca, handLuca2, 1, 1, 0,0)
+  val Luca8 = Player("Luca", 0, Nil, handLuca, Nil, 1, 1, 0,0)
   val testList: List[Int] = List(0)
   "A Player" when {
     "new" should {
@@ -45,9 +48,11 @@ class PlayerSpec extends WordSpec with Matchers {
       }
       "have a checkForFirstSilver" in {
         Luca.checkForFirstSilver() should be (Luca)
+        Luca7.checkForFirstSilver() should be (Luca7.copy( money = 1))
       }
       "have a updateHand method " in {
         Luca.updateHand(1, Luca) should be (Luca3)
+        Luca8.updateHand(1,Luca8) should be (Luca8.copy(handCards = List(Cards.copper), stacker = Nil, deck = List(Cards.copper,Cards.copper,Cards.copper,Cards.copper)))
       }
       "have a removeHandCardAddToStacker method" in {
         Luca4.removeHandCardAddToStacker(0) should be (Luca5)
