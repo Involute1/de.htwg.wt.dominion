@@ -3,9 +3,7 @@ package de.htwg.sa.dominion
 import com.google.inject.AbstractModule
 import de.htwg.sa.dominion.controller.ControllerInterface
 import de.htwg.sa.dominion.controller.maincontroller.Controller
-import de.htwg.sa.dominion.model.cardcomponent.Card
 import de.htwg.sa.dominion.model.{CardInterface, PlayerInterface, RoundmanagerInterface}
-import de.htwg.sa.dominion.model.playercomponent.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.{Roundmanager, RoundmanagerStatus}
 import net.codingwell.scalaguice.ScalaModule
 

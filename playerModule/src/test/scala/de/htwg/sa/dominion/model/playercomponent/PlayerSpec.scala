@@ -13,12 +13,12 @@ class PlayerSpec extends WordSpec with Matchers {
   val stackerLuca1: List[Card] = List(Cards.copper)
   val handLuca: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val handLuca1: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
-  val Luca = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 0,0)
-  val Luca2 = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 2, 2, 1,0)
-  val Luca3 = Player("Luca", 0, deckLuca1, stackerLuca, handLuca1, 1, 1, 0,0)
-  val Luca4 = Player("Luca", 0, deckLuca, stackerLuca, handLuca1, 1, 1, 0,0)
-  val Luca5 = Player("Luca", 0, deckLuca, stackerLuca1, handLuca, 1, 1, 0,0)
-  val Luca6 = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 5,0)
+  val Luca: Player = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 0)
+  val Luca2: Player = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 2, 2, 1)
+  val Luca3: Player = Player("Luca", 0, deckLuca1, stackerLuca, handLuca1, 1, 1, 0)
+  val Luca4: Player = Player("Luca", 0, deckLuca, stackerLuca, handLuca1, 1, 1, 0)
+  val Luca5: Player = Player("Luca", 0, deckLuca, stackerLuca1, handLuca, 1, 1, 0)
+  val Luca6: Player = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 5)
   val testList: List[Int] = List(0)
   "A Player" when {
     "new" should {
