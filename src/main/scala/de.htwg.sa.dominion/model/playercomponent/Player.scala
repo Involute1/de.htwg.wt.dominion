@@ -6,7 +6,7 @@ import de.htwg.sa.dominion.model.cardcomponent.{Card, Cards, Cardtype}
 import scala.util.Random
 
 case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card], handCards: List[Card],
-                  actions: Int, buys: Int, money: Int, victoryPoint: Int) extends PlayerInterface {
+                  actions: Int, buys: Int, money: Int) extends PlayerInterface {
 
   override def constructPlayerNameString(): String = {
     this.name
@@ -106,6 +106,22 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   }
 
   override def removeCompleteHand(player: Player, index: Int): Player = {
-    this
+    if (index < 0) {
+      player
+    } else {
+      removeCompleteHand(player.removeHandCardAddToStacker(index), index - 1)
+    }
+  }
+
+  override def moveAllCardsToDeckForScore(): Player = {
+    val updatedDeck: List[Card] = List.concat(this.deck, this.stacker, this.handCards)
+    this.copy(deck = updatedDeck, handCards = Nil, stacker = Nil)
+  }
+
+  override def calculateScore: Int = {
+    val scoreList: List[Int] = for (card <- this.deck) yield card.vpValue
+    val deckSizeForGarden: Int = deck.size % 10
+    val gardenAmount: Int = this.deck.count(x => x.cardName == "Gardens")
+    scoreList.sum + (gardenAmount * deckSizeForGarden)
   }
 }

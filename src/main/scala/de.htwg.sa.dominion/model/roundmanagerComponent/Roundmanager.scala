@@ -11,7 +11,7 @@ import scala.xml.{Elem, Node}
 import scala.util.Random
 
 case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
-                        emptyDeckCount: Int, gameEnd: Boolean, score: List[(Int, String)],
+                        emptyDeckCount: Int, gameEnd: Boolean, score: List[(String, Int)],
                         roundStatus: RoundmanagerStatus, playerTurn: Int, trash: List[Card]) extends RoundmanagerInterface {
 
   override def toXML: Elem = {
@@ -52,7 +52,6 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       <action>{player.actions}</action>
       <buys>{player.buys}</buys>
       <money>{player.money}</money>
-      <victoryPoint>{player.victoryPoint}</victoryPoint>
     </player>
   }
 
@@ -138,9 +137,6 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   /*override def toJson: JsValue = Json.toJson(this)
 
   override def fromJson(jsValue: JsValue): Roundmanager = {jsValue.validate[Roundmanager].asOpt.get}*/
-
-
-
 
   override def actionPhase(input: String): Roundmanager = {
     this.roundStatus match {
@@ -247,9 +243,13 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
         if (validateMineInputForPlayingDecks(input)) {
           val updatedTupel: (List[Player], List[List[Card]]) = mineActioneEnd(input.toInt)
           if (checkIfActionLeft(updatedTupel._1) && checkIfHandContainsActionCard(updatedTupel._1)) {
-            this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE)
+            if (this.decks(input.toInt).isEmpty) {
+              this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE, emptyDeckCount = emptyDeckCount + 1)
+            } else this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE)
           } else {
-            this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.START_BUY_PHASE)
+            if (this.decks(input.toInt).isEmpty) {
+              this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.START_BUY_PHASE, emptyDeckCount = emptyDeckCount + 1)
+            } else this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.START_BUY_PHASE)
           }
         } else this
       case RoundmanagerStatus.REMODEL_ACTION_INPUT_PHASE =>
@@ -261,18 +261,26 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
         if (validateRemodelInputForPlayingDecks(input)) {
           val updatedTupel: (List[Player], List[List[Card]]) = remodelActionEnd(input.toInt)
           if (checkIfActionLeft(updatedTupel._1) && checkIfHandContainsActionCard(updatedTupel._1)) {
-            this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_ACTION_PHASE)
+            if (this.decks(input.toInt).isEmpty) {
+              this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_ACTION_PHASE, emptyDeckCount = emptyDeckCount + 1)
+            } else this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_ACTION_PHASE)
           } else {
-            this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_BUY_PHASE)
+            if (this.decks(input.toInt).isEmpty) {
+              this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_BUY_PHASE, emptyDeckCount = emptyDeckCount + 1)
+            } else this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_BUY_PHASE)
           }
         } else this
       case RoundmanagerStatus.WORKSHOP_INPUT_ACTION_PHASE =>
         if (validateWorkshopInputForPlayingDecks(input)) {
           val updatedTupel: (List[Player], List[List[Card]]) = workshopEndAction(input.toInt)
           if (checkIfActionLeft(updatedTupel._1) && checkIfHandContainsActionCard(updatedTupel._1)) {
-            this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.WORKSHOP_ACTION_PHASE)
+            if (this.decks(input.toInt).isEmpty) {
+              this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.WORKSHOP_ACTION_PHASE, emptyDeckCount = emptyDeckCount + 1)
+            } else this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.WORKSHOP_ACTION_PHASE)
           } else {
-            this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.WORKSHOP_BUY_PHASE)
+            if (this.decks(input.toInt).isEmpty) {
+              this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.WORKSHOP_BUY_PHASE, emptyDeckCount = emptyDeckCount + 1)
+            } else this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.WORKSHOP_BUY_PHASE)
           }
         } else this
     }
@@ -600,22 +608,29 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   private def nextPlayer(): Roundmanager = {
     if (this.emptyDeckCount == 3) {
-      this.copy(gameEnd = true)
+      this.copy(gameEnd = true, score = calculateScore())
     } else {
       val removeHandPlayer: Player = this.players(this.playerTurn).removeCompleteHand(this.players(this.playerTurn), this.players(this.playerTurn).handCards.size - 1)
-      val handCardPlayer: Player = removeHandPlayer.updateHand(5, this.players(this.playerTurn))
-      val updatedPlayer: Player = Player(handCardPlayer.name, handCardPlayer.value, handCardPlayer.deck, handCardPlayer.stacker, handCardPlayer.handCards, 1, 1, 0, handCardPlayer.victoryPoint)
+      val handCardPlayer: Player = removeHandPlayer.updateHand(5, removeHandPlayer)
+      val updatedPlayer: Player = Player(handCardPlayer.name, handCardPlayer.value, handCardPlayer.deck, handCardPlayer.stacker, handCardPlayer.handCards, 1, 1, 0)
       val updatedPlayers: List[Player] = this.players.patch(this.playerTurn, Seq(updatedPlayer), 1)
-      this.copy(turn = turn + 1, playerTurn = turn % numberOfPlayers, roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE, players = updatedPlayers)
+      this.copy(turn = turn + 1, playerTurn = (turn + 1) % numberOfPlayers, roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE, players = updatedPlayers)
     }
+  }
+
+  private def calculateScore(): List[(String, Int)] = {
+    val updatedPlayerList: List[Player] = for (player <- this.players) yield player.moveAllCardsToDeckForScore()
+    val scoreList: List[Int] = for (player <- updatedPlayerList) yield player.calculateScore
+    val mappedScoreList: List[(String, Int)] = for ((score, index) <- scoreList.zipWithIndex) yield ("Player " + (index + 1).toString, score)
+    List(mappedScoreList.toSeq.sortBy(_._2):_*)
   }
 
   override def createPlayingDecks(cardName: CardName): Roundmanager = {
     cardName match {
       case moneyCard if moneyCard == CardName.COPPER || moneyCard == CardName.SILVER || moneyCard == CardName.GOLD
-      => constructPlayingCardDeck(cardName, 1)
+      => constructPlayingCardDeck(cardName, 100)
       case victoryPointCard if victoryPointCard == CardName.ESTATE || victoryPointCard == CardName.DUCHY || victoryPointCard == CardName.PROVINCE
-      => constructPlayingCardDeck(cardName, 1)
+      => constructPlayingCardDeck(cardName, 12)
       case _ => constructPlayingCardDeck(cardName, 10)
     }
   }
@@ -654,7 +669,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def initializePlayersList(idx: Int): Roundmanager = {
-    val player = Player(this.names(idx), idx + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0, 0)
+    val player = Player(this.names(idx), idx + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0)
     if (this.players.isEmpty) {
       this.copy(players = List(player))
     } else {
@@ -691,16 +706,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       val hand1List: List[Card] = List.concat(handList, List(deck1List.head))
       val minusDeck1List: List[Card] = deck1List.drop(1)
       val updatedPlayer: Player = Player(players(index).name, players(index).value, minusDeck1List,
-        stackemptyList, hand1List, players(index).actions, players(index).buys, players(index).money,
-        players(index).victoryPoint)
+        stackemptyList, hand1List, players(index).actions, players(index).buys, players(index).money)
       val updatedPlayers: List[Player] = players.updated(index, updatedPlayer)
       this.copy(players = updatedPlayers)
     } else {
       val hand1List: List[Card] = List.concat(handList, List(players(index).deck.head))
       val minusDeckList: List[Card] = deckList.drop(1)
       val updatedPlayer: Player = Player(players(index).name, players(index).value, minusDeckList,
-        players(index).stacker, hand1List, players(index).actions, players(index).buys, players(index).money,
-        players(index).victoryPoint)
+        players(index).stacker, hand1List, players(index).actions, players(index).buys, players(index).money)
       val updatedPlayers: List[Player] = players.updated(index, updatedPlayer)
       this.copy(players = updatedPlayers)
     }
@@ -775,6 +788,11 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       return ", gained 1 Action and 1 Money"
     }
     "and gained 1 Action"
+  }
+
+  override def constructScoreString: String = {
+    val stringList: List[String] = for ((player, score) <- this.score) yield player + ": " + score
+    stringList.mkString("\n")
   }
 
   private def constructBuyableString(): String = {

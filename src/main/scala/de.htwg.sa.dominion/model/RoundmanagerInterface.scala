@@ -44,4 +44,6 @@ trait RoundmanagerInterface {
   def getCurrentPlayerTurn: Int
 
   def getNameListSize: Int
+
+  def constructScoreString: String
 }

@@ -30,7 +30,7 @@ class StartPanel(controller: ControllerInterface) extends BoxPanel(Orientation.V
 
   reactions += {
     case ButtonClicked(`localPlayButton`) => controller.eval("n")
-    case ButtonClicked(`quitButton`) => controller.eval("q")
+    case ButtonClicked(`quitButton`) => System.exit(0)
   }
 
 }
