@@ -14,14 +14,14 @@ class PlayerSpec extends WordSpec with Matchers {
   val handLuca: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val handLuca2: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.silver)
   val handLuca1: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
-  val Luca = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 0,0)
-  val Luca2 = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 2, 2, 1,0)
-  val Luca3 = Player("Luca", 0, deckLuca1, stackerLuca, handLuca1, 1, 1, 0,0)
-  val Luca4 = Player("Luca", 0, deckLuca, stackerLuca, handLuca1, 1, 1, 0,0)
-  val Luca5 = Player("Luca", 0, deckLuca, stackerLuca1, handLuca, 1, 1, 0,0)
-  val Luca6 = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 5,0)
-  val Luca7 = Player("Luca", 0, deckLuca, stackerLuca, handLuca2, 1, 1, 0,0)
-  val Luca8 = Player("Luca", 0, Nil, handLuca, Nil, 1, 1, 0,0)
+  val Luca = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 0)
+  val Luca2 = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 2, 2, 1)
+  val Luca3 = Player("Luca", 0, deckLuca1, stackerLuca, handLuca1, 1, 1, 0)
+  val Luca4 = Player("Luca", 0, deckLuca, stackerLuca, handLuca1, 1, 1, 0)
+  val Luca5 = Player("Luca", 0, deckLuca, stackerLuca1, handLuca, 1, 1, 0)
+  val Luca6 = Player("Luca", 0, deckLuca, stackerLuca, handLuca, 1, 1, 5)
+  val Luca7 = Player("Luca", 0, deckLuca, stackerLuca, handLuca2, 1, 1, 0)
+  val Luca8 = Player("Luca", 0, Nil, handLuca, Nil, 1, 1, 0)
   val testList: List[Int] = List(0)
   "A Player" when {
     "new" should {
@@ -72,6 +72,16 @@ class PlayerSpec extends WordSpec with Matchers {
       "have a constructCellarTashString method" in {
         Luca.constructCellarTrashString() should be ("Copper (0)\nCopper (1)\nCopper (2)\nCopper (3)\nCopper (4)")
       }
+      "have a removeCompleteHand method" in {
+        Luca.removeCompleteHand(Luca, Luca.handCards.length-1) should be (Luca.copy(handCards = Nil, stacker = handLuca))
+      }
+      "have a moveAllCardsToDeckForScore method" in {
+        Luca.moveAllCardsToDeckForScore() should be (Luca.copy(handCards = Nil, deck = List(Cards.copper, Cards.copper,Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)))
+      }
+      "have a calculateScore method" in {
+        Luca.calculateScore should be (0)
+      }
+
     }
   }
 }
