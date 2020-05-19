@@ -35,4 +35,8 @@ trait PlayerInterface {
   def constructCellarTrashString(): String
 
   def removeCompleteHand(player: Player, index: Int): Player
+
+  def moveAllCardsToDeckForScore(): Player
+
+  def calculateScore: Int
 }

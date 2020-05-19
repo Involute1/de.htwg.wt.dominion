@@ -3,6 +3,8 @@ package de.htwg.sa.dominion.model.cardcomponent
 import de.htwg.sa.dominion.model.cardcomponent.Cardtype.Cardtype
 import de.htwg.sa.dominion.model.{CardInterface, cardcomponent}
 
+import scala.xml.Elem
+
 case class Card(cardName: String, cardDescription: String, cardType: Cardtype, costValue: Int, moneyValue: Int, vpValue: Int
                 , cardDrawValue: Int, additionalBuysValue: Int, additionalActionsValue: Int, additionalMoneyValue: Int) extends CardInterface {
 
@@ -69,7 +71,7 @@ object Cards {
 
 
   //toXML Funktion
-  def cardsToXml(cards: Card) = {
+  def cardsToXml(cards: Card): Elem = {
     <card>
       <cardName>{cards.cardName}</cardName>
       <cardDescription>{cards.cardDescription}</cardDescription>
@@ -112,7 +114,7 @@ object Cards {
 }
 
 object Deck {
-  val startDeck: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
+  val startDeck: List[Card] = List(Cards.gardens, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
     Cards.copper, Cards.estate, Cards.estate, Cards.estate)
 
   //val startDeck : List[Card] = List(Cards.village, Cards.festival, Cards.cellar, Cards.mine, Cards.smithy, Cards.remodel,

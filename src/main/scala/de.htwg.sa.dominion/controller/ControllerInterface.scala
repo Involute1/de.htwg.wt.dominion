@@ -19,7 +19,7 @@ trait ControllerInterface extends Observable {
 
   def getControllerStateAsString: String
 
-  def getHelpPage: Unit
+  def getHelpPage(): Unit
 
   def getCurrentPlayerTurn: Int
 
