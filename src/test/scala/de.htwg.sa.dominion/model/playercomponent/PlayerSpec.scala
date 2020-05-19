@@ -35,13 +35,13 @@ class PlayerSpec extends WordSpec with Matchers {
         Luca.constructPlayerHandString() should be ("Copper (0)\nCopper (1)\nCopper (2)\nCopper (3)\nCopper (4)")
       }
       "have a updateActions method" in {
-        Luca.updateActions(2) should be (Luca2)
+        Luca.updateActions(2) should be (Luca.copy(actions =  2))
       }
       "have a updateMoney method" in {
-        Luca.updateMoney(1) should be (Luca2)
+        Luca.updateMoney(1) should be (Luca.copy(money = 1))
       }
       "have a updateBuys method" in {
-        Luca.updateBuys(2) should be (Luca2)
+        Luca.updateBuys(2) should be (Luca.copy(buys = 2))
       }
       "have a checkForFirstSilver" in {
         Luca.checkForFirstSilver() should be (Luca)
