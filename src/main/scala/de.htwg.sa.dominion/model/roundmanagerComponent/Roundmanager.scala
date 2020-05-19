@@ -318,7 +318,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     }
   }
 
-  private def validateBuySelectInput(input: String): Boolean = {
+  def validateBuySelectInput(input: String): Boolean = {
     val number = input.toIntOption
     if (number.isEmpty || number.get >= this.decks.size || this.decks(input.toInt).isEmpty || this.players(this.playerTurn).money < this.decks(number.get).head.costValue) {
       return false
@@ -326,7 +326,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     true
   }
 
-  private def validateHandSelectInputActionCard(input: String): Boolean = {
+  def validateHandSelectInputActionCard(input: String): Boolean = {
     val number = input.toIntOption
     if (number.isEmpty || number.get >= this.players(this.playerTurn).handCards.size || number.get < 0) {
       return false
@@ -334,7 +334,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     isSelectedCardActionCard(number.get)
   }
 
-  private def validateWorkshopInputForPlayingDecks(input: String): Boolean = {
+  def validateWorkshopInputForPlayingDecks(input: String): Boolean = {
     val number = input.toIntOption
     if (number.isEmpty || number.get >= this.players(this.playerTurn).handCards.size || number.get < 0) {
       false
@@ -346,7 +346,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     }
   }
 
-  private def validateRemodelInputForPlayingDecks(input: String): Boolean = {
+  def validateRemodelInputForPlayingDecks(input: String): Boolean = {
     val number = input.toIntOption
     if (number.isEmpty || number.get >= this.players(this.playerTurn).handCards.size || number.get < 0) {
       false
@@ -509,7 +509,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def getNameListSize: Int = this.names.size
 
-  private def checkIfBuyLeft(playerList: List[Player]): Boolean = {
+  def checkIfBuyLeft(playerList: List[Player]): Boolean = {
     playerList(this.playerTurn).buys > 0
   }
 
