@@ -112,5 +112,4 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
       removeCompleteHand(removeHandCardAddToStacker(index), index - 1)
     }
   }
-
 }
