@@ -52,6 +52,10 @@ class Controller @Inject()(var roundmanager: RoundmanagerInterface) extends Cont
     controllerMessage = message
   }
 
+  override def getCurrentPlayerTurn: Int = roundmanager.getCurrentPlayerTurn
+
+  override def getNameListSize: Int = roundmanager.getNameListSize
+
   override def getHelpPage(): Unit = {
     // TODO print helpscreen
     notifyObservers
@@ -59,6 +63,7 @@ class Controller @Inject()(var roundmanager: RoundmanagerInterface) extends Cont
 
   override def getControllerStateAsString: String = {
     controllerState match {
+      case _: PreInitGameState => "PreInitGameState"
       case _: PreSetupState => "PreStetupState"
       case _: PlayerSetupState => "PlayerSetupState"
       case _: ActionPhaseState => "ActionState"
@@ -84,6 +89,19 @@ trait ControllerState {
   def getCurrentControllerMessage: String
 
   def nextState: ControllerState
+}
+
+case class PreInitGameState(controller: Controller) extends ControllerState {
+  override def evaluate(input: String): Unit = {
+    if (input.isEmpty) return
+    controller.controllerState = nextState
+  }
+
+  override def getCurrentControllerMessage: String = {
+    "Welcome to Dominion! \n Press 'q' to exit and any other key to start "
+  }
+
+  override def nextState: ControllerState = PreSetupState(controller)
 }
 
 case class PreSetupState(controller: Controller) extends ControllerState {

@@ -41,6 +41,7 @@ class SwingGui(controller: ControllerInterface) extends Frame with Observer {
 object SwingGui {
   def getPanel(controller: ControllerInterface): Panel = {
     controller.getControllerStateAsString match {
+      case "PreInitGameState" => new StartPanel(controller)
       case "PreStetupState" => new PlayerInitPanel(controller)
       case "PlayerSetupState" => new NameInitPanel(controller)
       case "ActionState" | "BuyState" => new PlayingPanel(controller)

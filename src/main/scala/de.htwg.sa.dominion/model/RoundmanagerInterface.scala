@@ -36,4 +36,8 @@ trait RoundmanagerInterface {
   def buyPhase(input: String): Roundmanager
 
   def checkForNextPlayer: Boolean
+
+  def getCurrentPlayerTurn: Int
+
+  def getNameListSize: Int
 }
