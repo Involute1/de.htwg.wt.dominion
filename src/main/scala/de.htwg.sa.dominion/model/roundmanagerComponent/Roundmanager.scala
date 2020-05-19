@@ -498,6 +498,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     updatedDeck
   }
 
+  override def getCurrentPlayerTurn: Int = this.playerTurn
+
+  override def getNameListSize: Int = this.names.size
+
   private def checkIfBuyLeft(playerList: List[Player]): Boolean = {
     playerList(this.playerTurn).buys > 0
   }

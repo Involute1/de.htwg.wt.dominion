@@ -108,5 +108,4 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   override def removeCompleteHand(player: Player, index: Int): Player = {
     this
   }
-
 }

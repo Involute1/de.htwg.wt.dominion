@@ -40,4 +40,8 @@ trait RoundmanagerInterface {
   def checkForNextPlayer: Boolean
 
   def toXML: Elem
+
+  def getCurrentPlayerTurn: Int
+
+  def getNameListSize: Int
 }
