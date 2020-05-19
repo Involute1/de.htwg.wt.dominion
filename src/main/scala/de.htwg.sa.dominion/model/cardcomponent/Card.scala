@@ -67,6 +67,48 @@ object Cards {
   val gardens: Card = Card("Gardens", "Worth 1 WinningPoint per 10 cards you have(round down)", Cardtype.VICTORYPOINT, 4, 0, 0, 0, 0, 0, 0)
   val market: Card = Card("Market", "+1 Card, +1 Action, +1 Buy, +1 Money", Cardtype.KINGDOM, 5, 0, 0, 1, 1, 1, 1)
 
+
+  //toXML Funktion
+  def cardsToXml(cards: Card) = {
+    <card>
+      <cardName>{cards.cardName}</cardName>
+      <cardDescription>{cards.cardDescription}</cardDescription>
+      <cardType>{cards.cardType}</cardType>
+      <costValue>{cards.costValue}</costValue>
+      <moneyValue>{cards.moneyValue}</moneyValue>
+      <vpValue>{cards.vpValue}</vpValue>
+      <cardDrawValue>{cards.cardDrawValue}</cardDrawValue>
+      <additionalBuysValue>{cards.additionalBuysValue}</additionalBuysValue>
+      <additionalActionsValue>{cards.additionalActionsValue}</additionalActionsValue>
+      <additionalMoneyValue>{cards.additionalMoneyValue}</additionalMoneyValue>
+    </card>
+  }
+
+  //fromXml Funktion
+  /*def fromXML(node: scala.xml.NodeSeq, i: Int): Card = {
+    // TODO add cardType
+    val cardName = (node \ "cardName")(i).text.trim
+    val cardDescription = (node \ "cardDescription")(i).text.trim
+    val cardType = (node \ "cardType")(i).text
+    val costValue = (node  \ "costValue")(i).text.toInt
+    val moneyValue = (node \ "moneyValue")(i).text.toInt
+    val vpValue = (node \ "vpValue")(i).text.toInt
+    val cardDrawValue = (node \ "cardDrawValue")(i).text.toInt
+    val additionalBuysValue = (node \ "additionalBuysValue")(i).text.toInt
+    val additionalActionsValue = (node \ "additionalActionsValue")(i).text.toInt
+    val additionalMoneyValue = (node \ "additionalMoneyValue")(i).text.toInt
+    Card(cardName, cardDescription, cardType, costValue, moneyValue,vpValue, cardDrawValue, additionalBuysValue, additionalActionsValue, additionalMoneyValue)
+  }*/
+
+  /*def ListfromXml(node: scala.xml.NodeSeq, i: Int): List[Cards] = {
+    // TODO
+
+  }*/
+
+  /*import play.api.libs.json._
+  implicit val cardsWrites: OWrites[Card] = Json.writes[Card]
+  implicit val cardsReads: Reads[Card] = Json.reads[Card]
+ */
 }
 
 object Deck {

@@ -5,6 +5,8 @@ import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.playercomponent.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
 
+import scala.xml.Elem
+
 trait RoundmanagerInterface {
 
   def createPlayingDecks(cardName: CardName): Roundmanager
@@ -36,4 +38,6 @@ trait RoundmanagerInterface {
   def buyPhase(input: String): Roundmanager
 
   def checkForNextPlayer: Boolean
+
+  def toXML: Elem
 }
