@@ -2,6 +2,7 @@ package de.htwg.sa.dominion
 
 import com.google.inject.{Guice, Injector}
 import de.htwg.sa.dominion.aview.TUI
+import de.htwg.sa.dominion.aview.gui.SwingGui
 import de.htwg.sa.dominion.controller.ControllerInterface
 import de.htwg.sa.dominion.controller.maincontroller.Controller
 
@@ -10,6 +11,7 @@ object Dominion {
   val injector: Injector = Guice.createInjector(new DominionModule)
   val controller: ControllerInterface = injector.getInstance(classOf[Controller])
   val tui = new TUI(controller)
+  val gui = new SwingGui(controller)
   val introString: String = "Welcome to Dominion! \n Press 'q' to exit and any other key to start "
   controller.setControllerMessage(introString)
   controller.notifyObservers

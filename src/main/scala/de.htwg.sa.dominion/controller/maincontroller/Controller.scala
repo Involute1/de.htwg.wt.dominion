@@ -34,6 +34,16 @@ class Controller @Inject()(var roundmanager: RoundmanagerInterface) extends Cont
     notifyObservers
   }
 
+  override def save(): Unit = {
+    // TODO
+    ???
+  }
+
+  override def load(): Unit = {
+    // TODO
+    ???
+  }
+
   override def getControllerMessage: String = {
     controllerMessage
   }
@@ -45,6 +55,16 @@ class Controller @Inject()(var roundmanager: RoundmanagerInterface) extends Cont
   override def getHelpPage(): Unit = {
     // TODO print helpscreen
     notifyObservers
+  }
+
+  override def getControllerStateAsString: String = {
+    controllerState match {
+      case _: PreSetupState => "PreStetupState"
+      case _: PlayerSetupState => "PlayerSetupState"
+      case _: ActionPhaseState => "ActionState"
+      case _: BuyPhaseState => "BuyState"
+      case _: GameOverState => "GameOverState"
+    }
   }
 }
 

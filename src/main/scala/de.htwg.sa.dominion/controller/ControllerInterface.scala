@@ -9,9 +9,15 @@ trait ControllerInterface extends Observable {
 
   def redo(): Unit
 
+  def save(): Unit
+
+  def load(): Unit
+
   def getControllerMessage: String
 
   def setControllerMessage(message: String): Unit
 
-  def getHelpPage(): Unit
+  def getControllerStateAsString: String
+
+  def getHelpPage: Unit
 }
