@@ -183,7 +183,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   private def validateBuySelectInput(input: String): Boolean = {
     val number = input.toIntOption
-    if (number.isEmpty || this.players(this.playerTurn).money < this.decks(number.get).head.costValue || number.get > this.decks.size) {
+    if (number.isEmpty || number.get >= this.decks.size || this.players(this.playerTurn).money < this.decks(number.get).head.costValue) {
       return false
     }
     true
@@ -446,6 +446,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       return true
     }
     false
+  }
+
+  override def checkForNextPlayer: Boolean = {
+    this.roundStatus == RoundmanagerStatus.PLAY_CARD_PHASE
   }
 
   private def checkIfActionLeft(playerList: List[Player]): Boolean = {
