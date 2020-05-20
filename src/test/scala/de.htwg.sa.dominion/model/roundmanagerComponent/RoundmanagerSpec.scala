@@ -232,6 +232,16 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         roundmanager.createPlayingDecks(CardName.GARDENS) should be (roundmanagercreatePLayingDeck.copy(decks = gardendeck))
         roundmanager.createPlayingDecks(CardName.MARKET) should be (roundmanagercreatePLayingDeck.copy(decks = marketdeck))
       }
+      "have a drawCard method" in {
+        val LucadrawCard: Player = Player("Luca", 0, List(Cards.copper), Nil, handLuca, 1, 1, 0)
+        val LucadrawCardupdated: Player = Player("Luca", 0, Nil, Nil, List(Cards.copper,Cards.copper,Cards.copper,Cards.copper, Cards.copper, Cards.copper), 1, 1, 0)
+        val playerlistdrawCard: List[Player] = List(LucadrawCard,LucadrawCard)
+        val playerlistdrawupdated: List[Player] = List(LucadrawCard,LucadrawCardupdated)
+        val LucadrawCard1: Player = Player("Luca", 0, Nil, List(Cards.copper), handLuca, 1, 1, 0)
+        val playerlistdrawCard1: List[Player] = List(LucadrawCard,LucadrawCard1)
+        roundmanager.copy(players= playerlistdrawCard).drawCard(1) should be (roundmanager.copy(players = playerlistdrawupdated))
+        roundmanager.copy(players= playerlistdrawCard1).drawCard(1) should be (roundmanager.copy(players = playerlistdrawupdated))
+      }
     }
   }
 }
