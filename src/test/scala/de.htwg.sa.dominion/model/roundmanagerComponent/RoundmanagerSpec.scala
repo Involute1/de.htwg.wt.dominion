@@ -135,6 +135,47 @@ class RoundmanagerSpec extends WordSpec with Matchers {
           RoundmanagerStatus.PLAY_CARD_PHASE, 1, trash)
         roundmanagermarketAction.marketAction(0) should be (playListMarket)
       }
+      "have a merchantAction method" in {
+        val LucaSmtihy = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
+        val LucaMarket = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper), List(Cards.copper), handLuca, 1, 1, 0)
+        val playerListSmithy: List[Player] = List(LucaSmtihy,LucaSmtihy)
+        val playListMarket: List[Player] = List(LucaSmtihy,LucaMarket)
+        val roundmanagermarketAction: Roundmanager = Roundmanager (playerListSmithy, Nil, 2, 1, decks, 0, gameEnd = false, Nil,
+          RoundmanagerStatus.PLAY_CARD_PHASE, 1, trash)
+        roundmanagermarketAction.merchantAction(0) should be (playListMarket)
+      }
+      "have a merchantCheckForSilver method" in {
+
+      }
+      "have a dropCardFromDeck method" in {
+
+      }
+      "have a buyCard method" in {
+
+      }
+      "have buyPhaseAddCardToStackerFromPlayingDecks method" in {
+
+      }
+      " have a updateMoneyForRoundmanager method" in {
+
+      }
+      "have a addToStackerFromPlayingDecks method" in {
+        val copper: List[Card] = List(Cards.copper)
+        val silver: List[Card] = List(Cards.silver,Cards.silver)
+        val decksupd: List[List[Card]] = List(copper,silver)
+        val LucaaddTOstacker = Player("Luca", 0, Nil, Nil, handLuca1, 1, 1, 0)
+        val LucaaddTOstacker1 = Player("Luca", 0, Nil, List(Cards.copper), handLuca1, 1, 1, 0)
+        val playerlistaddTo : List[Player] = List(LucaaddTOstacker,LucaaddTOstacker)
+        val playerlistaddTo1 : List[Player] = List(LucaaddTOstacker,LucaaddTOstacker1)
+        roundmanagervalidateBuySelect.copy(players = playerlistaddTo).addToStackerFromPlayingDecks(0) should be (playerlistaddTo1, decksupd)
+      }
+      "have a addToTrash method" in {
+        val LucaaddTOTrash: Player = Player("Luca", 0, Nil, Nil, handLuca, 1, 1, 0)
+        val LucaaddTOTrash1: Player = Player("Luca", 0, Nil, Nil, List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), 1, 1, 0)
+        val playerlistaddToTrash: List[Player] = List(LucaaddTOTrash,LucaaddTOTrash)
+        val playerlistaddToTrashupdated: List[Player] = List(LucaaddTOTrash,LucaaddTOTrash1)
+        roundmanagervalidateBuySelect.copy(players = playerlistaddToTrash).addToTrash(0) should be (List(Cards.copper), playerlistaddToTrashupdated)
+      }
     }
   }
 }
