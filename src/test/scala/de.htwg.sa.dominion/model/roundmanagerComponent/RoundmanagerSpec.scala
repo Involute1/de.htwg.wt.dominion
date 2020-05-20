@@ -242,6 +242,10 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         roundmanager.copy(players= playerlistdrawCard).drawCard(1) should be (roundmanager.copy(players = playerlistdrawupdated))
         roundmanager.copy(players= playerlistdrawCard1).drawCard(1) should be (roundmanager.copy(players = playerlistdrawupdated))
       }
+      "have a constructRoundmanagerStateString method" in {
+        roundmanager.copy(roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE).constructRoundermanagerStateString should be ("----HAND CARDS----\nVillage (0)\nVillage (1)\nVillage (2)\nVillage (3)\nVillage (4)\n----ACTION PHASE----\nWhich Card do you want to play? Enter one of the numbers listed in the Brackets to select it")
+        roundmanager.copy(roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("----HAND CARDS----\nCopper (0)\nCopper (1)\nCopper (2)\nCopper (3)\nCopper (4)\n----ACTION PHASE----\nYou dont have any Card to play, press any key to end your action phase")
+      }
     }
   }
 }
