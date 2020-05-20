@@ -43,6 +43,21 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         roundmanagervalidateRemodel.validateRemodelInputForPlayingDecks("0") should be (true)
         roundmanager.validateRemodelInputForPlayingDecks("") should be (false)
       }
+      "have a validateMineInputForPlayingDecks method" in {
+        roundmanagervalidateRemodel.validateRemodelInputForPlayingDecks("0") should be (true)
+        roundmanager.validateMineInputForPlayingDecks("") should be (false)
+      }
+      "have a validateIsInputHandCard method" in {
+        roundmanager.validateIsInputAHandCard("") should be (false)
+        roundmanager.validateIsInputAHandCard("1") should be (true)
+      }
+      "have a checkIfInputIsMoneyCard method" in {
+        roundmanagervalidateRemodel.checkIfInputIsMoneyCard(0) should be (false)
+        roundmanagervalidateRemodel.checkIfInputIsMoneyCard(1) should be (true)
+      }
+      "have a validateMultiInputToInt method" in {
+        roundmanager.validateMultiInputToInt("1,1") should be (Some(List(1,1)))
+      }
     }
   }
 }
