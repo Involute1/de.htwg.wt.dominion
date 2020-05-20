@@ -1,5 +1,5 @@
 package de.htwg.sa.dominion.model.roundmanagerComponent
-import de.htwg.sa.dominion.model.cardcomponent.{Card, Cards}
+import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards}
 import de.htwg.sa.dominion.model.playercomponent.Player
 import org.scalatest.{Matchers, WordSpec}
 
@@ -175,6 +175,17 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         val playerlistaddToTrash: List[Player] = List(LucaaddTOTrash,LucaaddTOTrash)
         val playerlistaddToTrashupdated: List[Player] = List(LucaaddTOTrash,LucaaddTOTrash1)
         roundmanagervalidateBuySelect.copy(players = playerlistaddToTrash).addToTrash(0) should be (List(Cards.copper), playerlistaddToTrashupdated)
+      }
+      "have a checkIfActionPhaseDone method" in {
+        roundmanagervalidateBuySelect.checkIfActionPhaseDone should be (false)
+        roundmanagervalidateBuySelect.copy(roundStatus = RoundmanagerStatus.START_BUY_PHASE).checkIfActionPhaseDone should be (true)
+      }
+      "have a createPlayingDecks method" in {
+        val copper100: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
+        val copperdeck: List[List[Card]] = List(copper100)
+        val roundmanagercreatePLayingDeck: Roundmanager = Roundmanager (playerList, Nil, 2, 1, copperdeck, 0, gameEnd = false, Nil,
+          RoundmanagerStatus.PLAY_CARD_PHASE, 1, Nil)
+        roundmanager.createPlayingDecks(CardName.COPPER) should be (roundmanagercreatePLayingDeck)
       }
     }
   }
