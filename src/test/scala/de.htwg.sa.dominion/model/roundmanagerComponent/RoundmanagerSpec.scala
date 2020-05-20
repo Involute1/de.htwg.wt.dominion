@@ -9,18 +9,29 @@ class RoundmanagerSpec extends WordSpec with Matchers {
   val handRemodel: List[Card] = List(Cards.remodel, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val handVillage: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val handVillage1: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
+  val handmine: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val Luca8 = Player("Luca", 0, Nil, handLuca1, handLuca1, 1, 1, 5)
   val Luca = Player("Luca", 0, Nil, Nil, handLuca1, 1, 1, 0)
   val LucaRemodel = Player("Luca", 0, Nil, handRemodel, handRemodel, 1, 1, 0)
   val LucaVillage = Player("Luca", 0, List(Cards.copper), Nil, handVillage1, 1, 1, 0)
   val LucaVillageupdated = Player("Luca", 0, Nil, List(Cards.copper), handVillage1, 2, 1, 0)
+  val LucaFestivalupdated = Player("Luca", 0, Nil, List(Cards.copper), handVillage1, 2, 1, 2)
+  val LucaCellar = Player("Luca", 0, List(Cards.copper), List(Cards.copper), handVillage, 1, 1, 0)
+  val LucaMine = Player("Luca", 0, List(Cards.copper), List(Cards.copper), handVillage, 0, 1, 0)
+  val LucaMineEnd = Player("Luca", 0, List(Cards.copper), Nil, handmine, 1, 1, 0)
   val copper: List[Card] = List(Cards.copper, Cards.copper)
   val silver: List[Card] = List(Cards.silver,Cards.silver)
+  val copperupdated: List[Card] = List(Cards.copper)
   val decks: List[List[Card]] = List(copper,silver)
+  val updateddecks: List[List[Card]] = List(copperupdated,silver)
   val playerList: List[Player] = List(Luca,Luca8)
   val playerListRemodel: List[Player] = List(LucaRemodel,LucaRemodel)
   val playerListVillage: List[Player] = List(LucaVillage, LucaVillage)
   val playerListVillageupdated: List[Player] = List(LucaVillage, LucaVillageupdated)
+  val playerListFestival: List[Player] = List(LucaVillage,LucaFestivalupdated)
+  val playerListcellar: List[Player] = List(LucaVillage,LucaCellar)
+  val playerListMine: List[Player] = List(LucaVillage,LucaMine)
+  val playerListMineupdated: List[Player] = List(LucaVillage,LucaMineEnd)
   val trash: List[Card] = List(Cards.copper, Cards.silver)
   val roundmanager: Roundmanager = Roundmanager (playerList, Nil, 2, 1, Nil, 0, gameEnd = false, Nil,
     RoundmanagerStatus.PLAY_CARD_PHASE, 1, Nil)
@@ -79,7 +90,50 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         roundmanagervalidateRemodel.copy(players = playerListVillage).villageAction(1) should be (playerListVillageupdated)
       }
       "have a festivalAction method" in {
+        roundmanagervalidateRemodel.copy(players = playerListVillage).festivalAction(1) should be (playerListFestival)
+      }
+      "have a cellarActionStart method" in {
+        roundmanagervalidateRemodel.copy(players = playerListVillage).cellarActionStart(1) should be (playerListcellar)
+      }
+      "have a cellarActionEnd method" in {
 
+      }
+      "havea mineActionStart method" in {
+        roundmanagervalidateRemodel.copy(players = playerListVillage).mineActionStart(1) should be (playerListMine)
+      }
+      "have a minceActionEnd method" in {
+        roundmanagervalidateRemodel.copy(players = playerListVillage).mineActioneEnd(0) should be (playerListMineupdated, updateddecks)
+      }
+      "have a smithyAction method" in {
+        val handLucaSmithy: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
+        val LucaSmtihy = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
+        val LucaSmtihyupdated = Player("Luca", 0,List(Cards.copper), List(Cards.copper), handLucaSmithy, 0, 1, 0)
+        val playerListSmithy: List[Player] = List(LucaSmtihy,LucaSmtihy)
+        val playerListSmithyupdated: List[Player] = List(LucaSmtihy,LucaSmtihyupdated)
+        val roundmanagersmithyAction: Roundmanager = Roundmanager (playerListSmithy, Nil, 2, 1, decks, 0, gameEnd = false, Nil,
+          RoundmanagerStatus.PLAY_CARD_PHASE, 1, trash)
+        roundmanagersmithyAction.smithyAction(0) should be (playerListSmithyupdated)
+      }
+      "have a remodelActionStart method" in {
+
+      }
+      "have a remodelActionEnd method" in {
+
+      }
+      "have a workshopStartAction method" in {
+
+      }
+      "have a workshopEndAction method" in {
+
+      }
+      "have a marketAction method" in {
+        val LucaSmtihy = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
+        val LucaMarket = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper), List(Cards.copper), handLuca, 1, 2, 1)
+        val playerListSmithy: List[Player] = List(LucaSmtihy,LucaSmtihy)
+        val playListMarket: List[Player] = List(LucaSmtihy,LucaMarket)
+        val roundmanagermarketAction: Roundmanager = Roundmanager (playerListSmithy, Nil, 2, 1, decks, 0, gameEnd = false, Nil,
+          RoundmanagerStatus.PLAY_CARD_PHASE, 1, trash)
+        roundmanagermarketAction.marketAction(0) should be (playListMarket)
       }
     }
   }
