@@ -7,14 +7,20 @@ class RoundmanagerSpec extends WordSpec with Matchers {
   val handLuca: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val handLuca1: List[Card] = List(Cards.village,Cards.village,Cards.village,Cards.village,Cards.village)
   val handRemodel: List[Card] = List(Cards.remodel, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
+  val handVillage: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
+  val handVillage1: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val Luca8 = Player("Luca", 0, Nil, handLuca1, handLuca1, 1, 1, 5)
   val Luca = Player("Luca", 0, Nil, Nil, handLuca1, 1, 1, 0)
   val LucaRemodel = Player("Luca", 0, Nil, handRemodel, handRemodel, 1, 1, 0)
+  val LucaVillage = Player("Luca", 0, List(Cards.copper), Nil, handVillage1, 1, 1, 0)
+  val LucaVillageupdated = Player("Luca", 0, Nil, List(Cards.copper), handVillage1, 2, 1, 0)
   val copper: List[Card] = List(Cards.copper, Cards.copper)
   val silver: List[Card] = List(Cards.silver,Cards.silver)
   val decks: List[List[Card]] = List(copper,silver)
   val playerList: List[Player] = List(Luca,Luca8)
   val playerListRemodel: List[Player] = List(LucaRemodel,LucaRemodel)
+  val playerListVillage: List[Player] = List(LucaVillage, LucaVillage)
+  val playerListVillageupdated: List[Player] = List(LucaVillage, LucaVillageupdated)
   val trash: List[Card] = List(Cards.copper, Cards.silver)
   val roundmanager: Roundmanager = Roundmanager (playerList, Nil, 2, 1, Nil, 0, gameEnd = false, Nil,
     RoundmanagerStatus.PLAY_CARD_PHASE, 1, Nil)
@@ -44,7 +50,7 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         roundmanager.validateRemodelInputForPlayingDecks("") should be (false)
       }
       "have a validateMineInputForPlayingDecks method" in {
-        roundmanagervalidateRemodel.validateRemodelInputForPlayingDecks("0") should be (true)
+        roundmanagervalidateRemodel.validateRemodelInputForPlayingDecks("1") should be (true)
         roundmanager.validateMineInputForPlayingDecks("") should be (false)
       }
       "have a validateIsInputHandCard method" in {
@@ -52,11 +58,28 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         roundmanager.validateIsInputAHandCard("1") should be (true)
       }
       "have a checkIfInputIsMoneyCard method" in {
-        roundmanagervalidateRemodel.checkIfInputIsMoneyCard(0) should be (false)
+        roundmanagervalidateRemodel.checkIfInputIsMoneyCard(-1) should be (false)
         roundmanagervalidateRemodel.checkIfInputIsMoneyCard(1) should be (true)
       }
       "have a validateMultiInputToInt method" in {
         roundmanager.validateMultiInputToInt("1,1") should be (Some(List(1,1)))
+        roundmanager.validateMultiInputToInt("1,a") should be (Some(List(1)))
+        roundmanager.validateMultiInputToInt("a,a") should be (Some(List()))
+        roundmanager.validateMultiInputToInt("a a") should be (None)
+      }
+      "have a checkMultiInputCorrespondToHandIdx method" in {
+        roundmanagervalidateBuySelect.checkMultiInputCorrespondToHandIdx(Some(List(0,1))) should be (true)
+        roundmanagervalidateBuySelect.checkMultiInputCorrespondToHandIdx(None) should be (false)
+      }
+      "have a validtaeYesNoInput method" in {
+        roundmanager.validateYesNoInput("yes") should be (true)
+        roundmanager.validateYesNoInput("no") should be (false)
+      }
+      "have a villageAction method" in {
+        roundmanagervalidateRemodel.copy(players = playerListVillage).villageAction(1) should be (playerListVillageupdated)
+      }
+      "have a festivalAction method" in {
+
       }
     }
   }
