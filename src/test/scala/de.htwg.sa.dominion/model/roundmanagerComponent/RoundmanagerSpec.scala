@@ -243,8 +243,22 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         roundmanager.copy(players= playerlistdrawCard1).drawCard(1) should be (roundmanager.copy(players = playerlistdrawupdated))
       }
       "have a constructRoundmanagerStateString method" in {
+        val actionDefaultString: String = ("----HAND CARDS----\nCopper (0)\nCopper (1)\nCopper (2)\nCopper (3)\nCopper (4)\nYou dont have any Card to play, press any key to end your action phase")
+        val buyPhaseString: String =("You can spend (0) Gold in (1) Buys \n----AVAILABLE CARDS----\n\nWhich Card do you wanna buy?\n")
         roundmanager.copy(roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE).constructRoundermanagerStateString should be ("----HAND CARDS----\nVillage (0)\nVillage (1)\nVillage (2)\nVillage (3)\nVillage (4)\n----ACTION PHASE----\nWhich Card do you want to play? Enter one of the numbers listed in the Brackets to select it")
         roundmanager.copy(roundStatus = RoundmanagerStatus.PLAY_CARD_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("----HAND CARDS----\nCopper (0)\nCopper (1)\nCopper (2)\nCopper (3)\nCopper (4)\n----ACTION PHASE----\nYou dont have any Card to play, press any key to end your action phase")
+        roundmanager.copy(roundStatus = RoundmanagerStatus.VILLAGE_ACTION_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 1 Card and gained 2 Actions\n" + actionDefaultString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.VILLAGE_BUY_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 1 Card and gained 2 Actions\n"+ buyPhaseString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.FESTIVAL_ACTION_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 1 Card, gained 2 Actions and 2 Money\n"+ actionDefaultString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.FESTIVAL_BUY_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 1 Card, gained 2 Actions and 2 Money\n"+buyPhaseString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.SMITHY_ACTION_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 3 Cards\n"+actionDefaultString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.SMITHY_BUY_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 3 Cards\n"+buyPhaseString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.MARKET_ACTION_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 1 Card, gained 1 Action, 1 Buy and 1 Money\n"+actionDefaultString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.MARKET_BUY_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 1 Card, gained 1 Action, 1 Buy and 1 Money\n"+buyPhaseString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.MERCHANT_ACTION_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 1 Cardand gained 1 Action\n" + actionDefaultString)
+        roundmanager.copy(roundStatus = RoundmanagerStatus.MERCHANT_BUY_PHASE, players = playerListcellar).constructRoundermanagerStateString should be ("You drew 1 Cardand gained 1 Action\n"+buyPhaseString)
+
+
       }
     }
   }
