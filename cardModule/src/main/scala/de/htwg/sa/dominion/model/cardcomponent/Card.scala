@@ -1,7 +1,7 @@
 package de.htwg.sa.dominion.model.cardcomponent
 
+import de.htwg.sa.dominion.model.CardInterface
 import de.htwg.sa.dominion.model.cardcomponent.Cardtype.Cardtype
-import de.htwg.sa.dominion.model.{CardInterface, cardcomponent}
 
 import scala.xml.Elem
 
@@ -28,22 +28,22 @@ object Cardtype extends Enumeration {
 
 object CardName extends Enumeration {
   type CardName = Value
-  val COPPER: cardcomponent.CardName.Value = Value("Copper")
-  val SILVER: cardcomponent.CardName.Value = Value("Silver")
-  val GOLD: cardcomponent.CardName.Value = Value("Gold")
-  val ESTATE: cardcomponent.CardName.Value = Value("Estate")
-  val DUCHY: cardcomponent.CardName.Value = Value("Duchy")
-  val PROVINCE: cardcomponent.CardName.Value = Value("Province")
-  val VILLAGE: cardcomponent.CardName.Value = Value("Village")
-  val FESTIVAL: cardcomponent.CardName.Value = Value("Festival")
-  val CELLAR: cardcomponent.CardName.Value = Value("Cellar")
-  val MINE: cardcomponent.CardName.Value = Value("Mine")
-  val SMITHY: cardcomponent.CardName.Value = Value("Smithy")
-  val REMODEL: cardcomponent.CardName.Value = Value("Remodel")
-  val MERCHANT: cardcomponent.CardName.Value = Value("Merchant")
-  val WORKSHOP: cardcomponent.CardName.Value = Value("Workshop")
-  val GARDENS: cardcomponent.CardName.Value = Value("Gardens")
-  val MARKET: cardcomponent.CardName.Value = Value("Market")
+  val COPPER: CardName.Value = Value("Copper")
+  val SILVER: CardName.Value = Value("Silver")
+  val GOLD: CardName.Value = Value("Gold")
+  val ESTATE: CardName.Value = Value("Estate")
+  val DUCHY: CardName.Value = Value("Duchy")
+  val PROVINCE: CardName.Value = Value("Province")
+  val VILLAGE: CardName.Value = Value("Village")
+  val FESTIVAL: CardName.Value = Value("Festival")
+  val CELLAR: CardName.Value = Value("Cellar")
+  val MINE: CardName.Value = Value("Mine")
+  val SMITHY: CardName.Value = Value("Smithy")
+  val REMODEL: CardName.Value = Value("Remodel")
+  val MERCHANT: CardName.Value = Value("Merchant")
+  val WORKSHOP: CardName.Value = Value("Workshop")
+  val GARDENS: CardName.Value = Value("Gardens")
+  val MARKET: CardName.Value = Value("Market")
 }
 
 object Cards {
@@ -114,7 +114,7 @@ object Cards {
 }
 
 object Deck {
-  val startDeck: List[Card] = List(Cards.gardens, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
+  val startDeck: List[Card] = List(Cards.estate, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
     Cards.copper, Cards.estate, Cards.estate, Cards.estate)
 
   //val startDeck : List[Card] = List(Cards.village, Cards.festival, Cards.cellar, Cards.mine, Cards.smithy, Cards.remodel,

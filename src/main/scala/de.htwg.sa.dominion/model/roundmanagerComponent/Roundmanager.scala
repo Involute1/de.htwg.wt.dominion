@@ -5,10 +5,9 @@ import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Cardtype, Deck}
 import de.htwg.sa.dominion.model.playercomponent.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.RoundmanagerStatus.RoundmanagerStatus
-import play.api.libs.json.{JsBoolean, JsLookupResult, JsNumber, JsObject, JsValue, Json, OWrites, Writes}
-import scala.xml.{Elem, Node}
 
 import scala.util.Random
+import scala.xml.Elem
 
 case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(String, Int)],
@@ -147,7 +146,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       =>
         if (checkIfHandContainsActionCard(this.players)) {
           if (validateHandSelectInputActionCard(input)) {
-            val card = this.players(this.playerTurn).handCards(input.toInt)
+            val card: Card = this.players(this.playerTurn).handCards(input.toInt)
             card.cardName match {
               case "Village" =>
                 // +1 Card, +2 Actions
