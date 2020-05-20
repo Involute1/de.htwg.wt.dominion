@@ -10,15 +10,15 @@ class RoundmanagerSpec extends WordSpec with Matchers {
   val handVillage: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val handVillage1: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
   val handmine: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
-  val Luca8 = Player("Luca", 0, Nil, handLuca1, handLuca1, 1, 1, 5)
-  val Luca = Player("Luca", 0, Nil, Nil, handLuca1, 1, 1, 0)
-  val LucaRemodel = Player("Luca", 0, Nil, handRemodel, handRemodel, 1, 1, 0)
-  val LucaVillage = Player("Luca", 0, List(Cards.copper), Nil, handVillage1, 1, 1, 0)
-  val LucaVillageupdated = Player("Luca", 0, Nil, List(Cards.copper), handVillage1, 2, 1, 0)
-  val LucaFestivalupdated = Player("Luca", 0, Nil, List(Cards.copper), handVillage1, 2, 1, 2)
-  val LucaCellar = Player("Luca", 0, List(Cards.copper), List(Cards.copper), handVillage, 1, 1, 0)
-  val LucaMine = Player("Luca", 0, List(Cards.copper), List(Cards.copper), handVillage, 0, 1, 0)
-  val LucaMineEnd = Player("Luca", 0, List(Cards.copper), Nil, handmine, 1, 1, 0)
+  val Luca8: Player = Player("Luca", 0, Nil, handLuca1, handLuca1, 1, 1, 5)
+  val Luca: Player = Player("Luca", 0, Nil, Nil, handLuca1, 1, 1, 0)
+  val LucaRemodel: Player = Player("Luca", 0, Nil, handRemodel, handRemodel, 1, 1, 0)
+  val LucaVillage: Player = Player("Luca", 0, List(Cards.copper), Nil, handVillage1, 1, 1, 0)
+  val LucaVillageupdated: Player = Player("Luca", 0, Nil, List(Cards.copper), handVillage1, 2, 1, 0)
+  val LucaFestivalupdated: Player = Player("Luca", 0, Nil, List(Cards.copper), handVillage1, 2, 1, 2)
+  val LucaCellar: Player = Player("Luca", 0, List(Cards.copper), List(Cards.copper), handVillage, 1, 1, 0)
+  val LucaMine: Player = Player("Luca", 0, List(Cards.copper), List(Cards.copper), handVillage, 0, 1, 0)
+  val LucaMineEnd: Player = Player("Luca", 0, List(Cards.copper), Nil, handmine, 1, 1, 0)
   val copper: List[Card] = List(Cards.copper, Cards.copper)
   val silver: List[Card] = List(Cards.silver,Cards.silver)
   val copperupdated: List[Card] = List(Cards.copper)
@@ -106,8 +106,8 @@ class RoundmanagerSpec extends WordSpec with Matchers {
       }
       "have a smithyAction method" in {
         val handLucaSmithy: List[Card] = List(Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)
-        val LucaSmtihy = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
-        val LucaSmtihyupdated = Player("Luca", 0,List(Cards.copper), List(Cards.copper), handLucaSmithy, 0, 1, 0)
+        val LucaSmtihy: Player = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
+        val LucaSmtihyupdated: Player = Player("Luca", 0,List(Cards.copper), List(Cards.copper), handLucaSmithy, 0, 1, 0)
         val playerListSmithy: List[Player] = List(LucaSmtihy,LucaSmtihy)
         val playerListSmithyupdated: List[Player] = List(LucaSmtihy,LucaSmtihyupdated)
         val roundmanagersmithyAction: Roundmanager = Roundmanager (playerListSmithy, Nil, 2, 1, decks, 0, gameEnd = false, Nil,
@@ -127,8 +127,8 @@ class RoundmanagerSpec extends WordSpec with Matchers {
 
       }
       "have a marketAction method" in {
-        val LucaSmtihy = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
-        val LucaMarket = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper), List(Cards.copper), handLuca, 1, 2, 1)
+        val LucaSmtihy: Player = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
+        val LucaMarket: Player = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper), List(Cards.copper), handLuca, 1, 2, 1)
         val playerListSmithy: List[Player] = List(LucaSmtihy,LucaSmtihy)
         val playListMarket: List[Player] = List(LucaSmtihy,LucaMarket)
         val roundmanagermarketAction: Roundmanager = Roundmanager (playerListSmithy, Nil, 2, 1, decks, 0, gameEnd = false, Nil,
@@ -136,8 +136,8 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         roundmanagermarketAction.marketAction(0) should be (playListMarket)
       }
       "have a merchantAction method" in {
-        val LucaSmtihy = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
-        val LucaMarket = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper), List(Cards.copper), handLuca, 1, 1, 0)
+        val LucaSmtihy: Player = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper,Cards.copper), Nil, handLuca, 1, 1, 0)
+        val LucaMarket: Player = Player("Luca", 0,List(Cards.copper,Cards.copper,Cards.copper), List(Cards.copper), handLuca, 1, 1, 0)
         val playerListSmithy: List[Player] = List(LucaSmtihy,LucaSmtihy)
         val playListMarket: List[Player] = List(LucaSmtihy,LucaMarket)
         val roundmanagermarketAction: Roundmanager = Roundmanager (playerListSmithy, Nil, 2, 1, decks, 0, gameEnd = false, Nil,
@@ -163,8 +163,8 @@ class RoundmanagerSpec extends WordSpec with Matchers {
         val copper: List[Card] = List(Cards.copper)
         val silver: List[Card] = List(Cards.silver,Cards.silver)
         val decksupd: List[List[Card]] = List(copper,silver)
-        val LucaaddTOstacker = Player("Luca", 0, Nil, Nil, handLuca1, 1, 1, 0)
-        val LucaaddTOstacker1 = Player("Luca", 0, Nil, List(Cards.copper), handLuca1, 1, 1, 0)
+        val LucaaddTOstacker: Player = Player("Luca", 0, Nil, Nil, handLuca1, 1, 1, 0)
+        val LucaaddTOstacker1: Player = Player("Luca", 0, Nil, List(Cards.copper), handLuca1, 1, 1, 0)
         val playerlistaddTo : List[Player] = List(LucaaddTOstacker,LucaaddTOstacker)
         val playerlistaddTo1 : List[Player] = List(LucaaddTOstacker,LucaaddTOstacker1)
         roundmanagervalidateBuySelect.copy(players = playerlistaddTo).addToStackerFromPlayingDecks(0) should be (playerlistaddTo1, decksupd)
