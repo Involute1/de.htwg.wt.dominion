@@ -38,13 +38,14 @@ class PlayingPanel(controller: IController) extends BoxPanel(Orientation.Vertica
 
   val handPanel: BoxPanel = new BoxPanel(Orientation.Horizontal) {
     val hand: List[Card] = controller.getCurrentPlayerHand
-    val labelList: List[Label] = for (card <- hand) yield new Label {
+    val labelList: List[Label] = for ((card, index) <- hand.zipWithIndex) yield new Label {
       private val temp = CardsGraphics.mapCardNameToImg(card.cardName)
       private val resize = temp.getScaledInstance(177, 276, java.awt.Image.SCALE_SMOOTH)
       icon = new ImageIcon(resize)
       listenTo(mouse.clicks)
       reactions += {
-        case _: MouseClicked => controller.eval(hand.indexOf(card).toString)
+        case _: MouseClicked =>
+          controller.eval(index.toString)
       }
     }
     labelList.foreach(x => contents += x)
@@ -52,7 +53,7 @@ class PlayingPanel(controller: IController) extends BoxPanel(Orientation.Vertica
 
   val playingDeckPanel: FlowPanel = new FlowPanel() {
     val playingDecks: List[List[Card]] = controller.getPlayingDecks
-    val labelList: List[Label] = for (deck <- playingDecks if deck.nonEmpty) yield new Label {
+    val labelList: List[Label] = for ((deck, index) <- playingDecks.zipWithIndex if deck.nonEmpty) yield new Label {
       private val temp = CardsGraphics.mapCardNameToImg(deck.head.cardName)
       private val resize = temp.getScaledInstance(177, 276, java.awt.Image.SCALE_SMOOTH)
       icon = new ImageIcon(resize)
@@ -60,7 +61,8 @@ class PlayingPanel(controller: IController) extends BoxPanel(Orientation.Vertica
       font = myFont
       listenTo(mouse.clicks)
       reactions += {
-        case _: MouseClicked => controller.eval(playingDecks.indexOf(deck).toString)
+        case _: MouseClicked =>
+          controller.eval(index.toString)
       }
     }
     labelList.foreach(x => contents += x)
