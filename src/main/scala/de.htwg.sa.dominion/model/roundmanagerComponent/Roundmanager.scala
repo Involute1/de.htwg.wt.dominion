@@ -258,6 +258,21 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
         } else this
       case RoundmanagerStatus.REMODEL_END_ACTION =>
         if (validateRemodelInputForPlayingDecks(input)) {
+          if(this.decks(input.toInt).head.cardName == "Province") {
+            val updatedTupel: (List[Player], List[List[Card]]) = remodelActionEnd(input.toInt)
+            if (this.decks(input.toInt).isEmpty) {
+              this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_ACTION_PHASE, emptyDeckCount = 3)
+            } else
+            if (checkIfActionLeft(updatedTupel._1) && checkIfHandContainsActionCard(updatedTupel._1)) {
+              if (this.decks(input.toInt).isEmpty) {
+                this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_ACTION_PHASE, emptyDeckCount = emptyDeckCount + 1)
+              } else this.copy(players = updatedTupel._1, decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_ACTION_PHASE)
+            } else {
+              if (this.decks(input.toInt).isEmpty) {
+                this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_BUY_PHASE, emptyDeckCount = emptyDeckCount + 1)
+              } else this.copy(players = updateMoneyForRoundmanager(updatedTupel._1), decks = updatedTupel._2, roundStatus = RoundmanagerStatus.REMODEL_BUY_PHASE)
+            }
+          }
           val updatedTupel: (List[Player], List[List[Card]]) = remodelActionEnd(input.toInt)
           if (checkIfActionLeft(updatedTupel._1) && checkIfHandContainsActionCard(updatedTupel._1)) {
             if (this.decks(input.toInt).isEmpty) {
