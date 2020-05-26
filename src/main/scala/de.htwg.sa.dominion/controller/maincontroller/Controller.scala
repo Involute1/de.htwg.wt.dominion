@@ -2,15 +2,15 @@ package de.htwg.sa.dominion.controller.maincontroller
 
 import com.google.inject.{Guice, Injector}
 import de.htwg.sa.dominion.DominionModule
-import de.htwg.sa.dominion.controller.ControllerInterface
-import de.htwg.sa.dominion.model.RoundmanagerInterface
-import de.htwg.sa.dominion.model.cardcomponent.CardName
+import de.htwg.sa.dominion.controller.IController
+import de.htwg.sa.dominion.model.IRoundmanager
+import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName}
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
-import de.htwg.sa.dominion.util.UndoManager
+import de.htwg.sa.dominion.util.{Observer, UndoManager}
 import javax.inject.Inject
 
-class Controller @Inject()(var roundmanager: RoundmanagerInterface) extends ControllerInterface {
+class Controller @Inject()(var roundmanager: IRoundmanager) extends IController {
 
   var controllerMessage: String = ""
   var controllerState: ControllerState = PreSetupState(this)
@@ -52,14 +52,36 @@ class Controller @Inject()(var roundmanager: RoundmanagerInterface) extends Cont
     controllerMessage = message
   }
 
-  override def getCurrentPlayerTurn: Int = roundmanager.getCurrentPlayerTurn
-
-  override def getNameListSize: Int = roundmanager.getNameListSize
-
   override def getHelpPage(): Unit = {
     // TODO print helpscreen
     notifyObservers
   }
+
+  override def getCurrentPlayerTurn: Int = roundmanager.getCurrentPlayerTurn
+
+  override def getNameListSize: Int = roundmanager.getNameListSize
+
+  override def getCurrentPhaseAsString: String = {
+    getControllerStateAsString match {
+      case "ActionState" => "Actionphase"
+      case "BuyState" => "Buyphase"
+      case _ => ""
+    }
+  }
+
+  override def getCurrentPlayerActions: Int = roundmanager.getCurrentPlayerActions
+
+  override def getCurrentPlayerBuys: Int = roundmanager.getCurrentPlayerBuys
+
+  override def getCurrentPlayerDeck: List[Card] = roundmanager.getCurrentPlayerDeck
+
+  override def getCurrentPlayerHand: List[Card] = roundmanager.getCurrentPlayerHand
+
+  override def getCurrentPlayerMoney: Int = roundmanager.getCurrentPlayerMoney
+
+  override def getCurrentPlayerName: String = roundmanager.getCurrentPlayerName
+
+  override def getPlayingDecks: List[List[Card]] = roundmanager.getPlayingDecks
 
   override def getControllerStateAsString: String = {
     controllerState match {

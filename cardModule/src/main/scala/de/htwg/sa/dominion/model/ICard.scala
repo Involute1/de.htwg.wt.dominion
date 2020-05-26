@@ -1,6 +1,6 @@
 package de.htwg.sa.dominion.model
 
-trait CardInterface {
+trait ICard {
 
   def constructCardNameString(): String
 

@@ -1,12 +1,12 @@
 package de.htwg.sa.dominion.aview.gui
 
-import de.htwg.sa.dominion.controller.ControllerInterface
+import de.htwg.sa.dominion.controller.IController
 import javax.swing.ImageIcon
 
 import scala.swing.event.ButtonClicked
 import scala.swing.{BoxPanel, Button, FlowPanel, Label, Orientation}
 
-class PlayerInitPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
+class PlayerInitPanel(controller: IController) extends BoxPanel(Orientation.Vertical) {
   val threePlayerButton: Button = new Button("3 Players")
 
   val fourPlayerButton: Button = new Button("4 Players")

@@ -1,6 +1,6 @@
 package de.htwg.sa.dominion.model.roundmanagerComponent
 
-import de.htwg.sa.dominion.model.RoundmanagerInterface
+import de.htwg.sa.dominion.model.IRoundmanager
 import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
 import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Cardtype, Deck}
 import de.htwg.sa.dominion.model.playercomponent.Player
@@ -11,7 +11,7 @@ import scala.xml.Elem
 
 case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(String, Int)],
-                        roundStatus: RoundmanagerStatus, playerTurn: Int, trash: List[Card]) extends RoundmanagerInterface {
+                        roundStatus: RoundmanagerStatus, playerTurn: Int, trash: List[Card]) extends IRoundmanager {
 
   override def toXML: Elem = {
     <RoundManager>
@@ -666,6 +666,32 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def getNumberOfPlayers: Int = {
     this.numberOfPlayers
   }
+
+  override def getCurrentPlayerActions: Int = {
+    this.players(this.playerTurn).actions
+  }
+
+  override def getCurrentPlayerBuys: Int = {
+    this.players(this.playerTurn).buys
+  }
+
+  override def getCurrentPlayerDeck: List[Card] = {
+    this.players(this.playerTurn).deck
+  }
+
+  override def getCurrentPlayerHand: List[Card] = {
+    this.players(this.playerTurn).handCards
+  }
+
+  override def getCurrentPlayerMoney: Int = {
+    this.players(this.playerTurn).money
+  }
+
+  override def getCurrentPlayerName: String = {
+    this.players(this.playerTurn).name
+  }
+
+  override def getPlayingDecks: List[List[Card]] = this.decks
 
   override def initializePlayersList(idx: Int): Roundmanager = {
     val player = Player(this.names(idx), idx + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0)

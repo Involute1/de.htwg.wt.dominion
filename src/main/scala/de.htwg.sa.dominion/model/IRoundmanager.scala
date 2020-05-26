@@ -6,7 +6,7 @@ import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
 
 import scala.xml.Elem
 
-trait RoundmanagerInterface {
+trait IRoundmanager {
 
   def createPlayingDecks(cardName: CardName): Roundmanager
 
@@ -45,4 +45,18 @@ trait RoundmanagerInterface {
   def getNameListSize: Int
 
   def constructScoreString: String
+
+  def getCurrentPlayerName: String
+
+  def getCurrentPlayerActions: Int
+
+  def getCurrentPlayerMoney: Int
+
+  def getCurrentPlayerBuys: Int
+
+  def getCurrentPlayerDeck: List[Card]
+
+  def getCurrentPlayerHand: List[Card]
+
+  def getPlayingDecks: List[List[Card]]
 }

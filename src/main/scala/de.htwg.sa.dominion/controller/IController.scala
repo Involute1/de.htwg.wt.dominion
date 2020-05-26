@@ -1,7 +1,8 @@
 package de.htwg.sa.dominion.controller
+import de.htwg.sa.dominion.model.cardcomponent.Card
 import de.htwg.sa.dominion.util.Observable
 
-trait ControllerInterface extends Observable {
+trait IController extends Observable {
 
   def eval(input: String)
 
@@ -24,4 +25,20 @@ trait ControllerInterface extends Observable {
   def getCurrentPlayerTurn: Int
 
   def getNameListSize: Int
+
+  def getCurrentPlayerName: String
+
+  def getCurrentPlayerActions: Int
+
+  def getCurrentPlayerMoney: Int
+
+  def getCurrentPlayerBuys: Int
+
+  def getCurrentPlayerDeck: List[Card]
+
+  def getCurrentPhaseAsString: String
+
+  def getCurrentPlayerHand: List[Card]
+
+  def getPlayingDecks: List[List[Card]]
 }

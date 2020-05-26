@@ -1,11 +1,11 @@
 package de.htwg.sa.dominion.aview.gui
 
-import de.htwg.sa.dominion.controller.ControllerInterface
+import de.htwg.sa.dominion.controller.IController
 import de.htwg.sa.dominion.util.Observer
 
 import scala.swing.{Action, Frame, Menu, MenuBar, MenuItem, Panel}
 
-class SwingGui(controller: ControllerInterface) extends Frame with Observer {
+class SwingGui(controller: IController) extends Frame with Observer {
 
   controller.add(this)
   title = "Dominion"
@@ -39,7 +39,7 @@ class SwingGui(controller: ControllerInterface) extends Frame with Observer {
 }
 
 object SwingGui {
-  def getPanel(controller: ControllerInterface): Panel = {
+  def getPanel(controller: IController): Panel = {
     controller.getControllerStateAsString match {
       case "PreInitGameState" => new StartPanel(controller)
       case "PreStetupState" => new PlayerInitPanel(controller)

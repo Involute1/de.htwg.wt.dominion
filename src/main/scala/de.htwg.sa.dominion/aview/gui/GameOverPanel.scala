@@ -1,9 +1,9 @@
 package de.htwg.sa.dominion.aview.gui
 
-import de.htwg.sa.dominion.controller.ControllerInterface
+import de.htwg.sa.dominion.controller.IController
 
 import scala.swing.{BoxPanel, Orientation}
 
-class GameOverPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
+class GameOverPanel(controller: IController) extends BoxPanel(Orientation.Vertical) {
 
 }

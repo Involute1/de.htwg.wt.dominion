@@ -1,9 +1,9 @@
 package de.htwg.sa.dominion.aview
 
-import de.htwg.sa.dominion.controller.ControllerInterface
+import de.htwg.sa.dominion.controller.IController
 import de.htwg.sa.dominion.util.Observer
 
-class TUI(controller: ControllerInterface) extends Observer {
+class TUI(controller: IController) extends Observer {
 
   controller.add(this)
 

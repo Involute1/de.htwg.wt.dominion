@@ -1,12 +1,12 @@
 package de.htwg.sa.dominion.aview.gui
 
-import de.htwg.sa.dominion.controller.ControllerInterface
+import de.htwg.sa.dominion.controller.IController
 import javax.swing.ImageIcon
 
 import scala.swing.event.{ButtonClicked, Key, KeyPressed}
 import scala.swing.{BoxPanel, Button, Dimension, FlowPanel, Font, Label, Orientation, Swing, TextField}
 
-class NameInitPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
+class NameInitPanel(controller: IController) extends BoxPanel(Orientation.Vertical) {
 
   val currentPlayerturn: Int = controller.getNameListSize + 1
   val nameTextBox: TextField = new TextField() {

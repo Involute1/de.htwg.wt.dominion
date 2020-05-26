@@ -1,12 +1,12 @@
 package de.htwg.sa.dominion.model.cardcomponent
 
-import de.htwg.sa.dominion.model.CardInterface
+import de.htwg.sa.dominion.model.ICard
 import de.htwg.sa.dominion.model.cardcomponent.Cardtype.Cardtype
 
 import scala.xml.Elem
 
 case class Card(cardName: String, cardDescription: String, cardType: Cardtype, costValue: Int, moneyValue: Int, vpValue: Int
-                , cardDrawValue: Int, additionalBuysValue: Int, additionalActionsValue: Int, additionalMoneyValue: Int) extends CardInterface {
+                , cardDrawValue: Int, additionalBuysValue: Int, additionalActionsValue: Int, additionalMoneyValue: Int) extends ICard {
 
   override def constructCardNameString(): String = {
     this.cardName

@@ -1,12 +1,12 @@
 package de.htwg.sa.dominion.aview.gui
 
-import de.htwg.sa.dominion.controller.ControllerInterface
+import de.htwg.sa.dominion.controller.IController
 import javax.swing.ImageIcon
 
 import scala.swing.event.ButtonClicked
 import scala.swing.{BoxPanel, Button, FlowPanel, Label, Orientation}
 
-class StartPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
+class StartPanel(controller: IController) extends BoxPanel(Orientation.Vertical) {
 
   val localPlayButton: Button = new Button("Local")
 

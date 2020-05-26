@@ -1,12 +1,12 @@
 package de.htwg.sa.dominion.model.playercomponent
 
-import de.htwg.sa.dominion.model.PlayerInterface
+import de.htwg.sa.dominion.model.IPlayer
 import de.htwg.sa.dominion.model.cardcomponent.{Card, Cards, Cardtype}
 
 import scala.util.Random
 
 case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card], handCards: List[Card],
-                  actions: Int, buys: Int, money: Int) extends PlayerInterface {
+                  actions: Int, buys: Int, money: Int) extends IPlayer {
 
   override def constructPlayerNameString(): String = {
     this.name
