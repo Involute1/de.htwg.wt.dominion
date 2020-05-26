@@ -6,7 +6,6 @@ import de.htwg.sa.dominion.controller.IController
 import de.htwg.sa.dominion.model.cardcomponent.Card
 import javax.swing.{BorderFactory, ImageIcon}
 
-import scala.swing.BorderPanel.Position.{Center, East, South, West}
 import scala.swing.event.{ButtonClicked, MouseClicked}
 import scala.swing.{BorderPanel, BoxPanel, Button, Dimension, FlowPanel, Font, Label, Orientation}
 
@@ -15,11 +14,12 @@ class PlayingPanel(controller: IController) extends BoxPanel(Orientation.Vertica
   val myFont = new Font("Charlemagne Std Bold", java.awt.Font.BOLD, 15)
 
   val infoPanel: BoxPanel = new BoxPanel(Orientation.Vertical) {
-    contents += new Label("Player: " + (controller.getNameListSize + 1) + " (" + controller.getCurrentPlayerName + ")" +
+    contents += new Label("Player: " + (controller.getCurrentPlayerTurn + 1) + " (" + controller.getCurrentPlayerName + ") " +
       controller.getCurrentPhaseAsString)
     contents += new Label("Actions: " + controller.getCurrentPlayerActions)
     contents += new Label("Buys: " + controller.getCurrentPlayerBuys)
     contents += new Label("Money: " + controller.getCurrentPlayerMoney)
+    contents += new Label("Turn: " + controller.getTurn)
     font = new Font("Charlemagne Std Bold", java.awt.Font.BOLD, 20)
     border = BorderFactory.createLineBorder(Color.BLACK, 2)
   }
@@ -66,9 +66,29 @@ class PlayingPanel(controller: IController) extends BoxPanel(Orientation.Vertica
     labelList.foreach(x => contents += x)
   }
 
-  val southPanel = new BoxPanel(Orientation.Horizontal) {
+  val yesButton = new Button("Yes")
+  val noButton = new Button("No")
+  val okButton = new Button("Okay")
+  val doneButton = new Button("Done")
+
+  val optionPanelString = new BoxPanel(Orientation.Vertical) {
+    contents += new Label()
+  }
+
+  val optionPanelButtons: BoxPanel = new BoxPanel(Orientation.Horizontal) {
+
+  }
+
+  val optionPanel: BoxPanel = new BoxPanel(Orientation.Vertical) {
+    contents += optionPanelString
+    contents += optionPanelButtons
+    border = BorderFactory.createLineBorder(Color.BLACK, 2)
+  }
+
+  val southPanel: BoxPanel = new BoxPanel(Orientation.Horizontal) {
     contents += deckPanel
     contents += handPanel
+    contents += optionPanel
   }
 
   val nextButton = new Button("\u2192")

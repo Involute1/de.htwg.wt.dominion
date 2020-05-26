@@ -705,6 +705,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def getScore: List[(String, Int)] = this.score
 
+  override def getTurn: Int = this.turn
+
   override def initializePlayersList(idx: Int): Roundmanager = {
     val player = Player(this.names(idx), idx + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0)
     if (this.players.isEmpty) {

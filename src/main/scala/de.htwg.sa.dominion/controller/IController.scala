@@ -43,4 +43,6 @@ trait IController extends Observable {
   def getPlayingDecks: List[List[Card]]
 
   def getScore: List[(String, Int)]
+
+  def getTurn: Int
 }
