@@ -59,4 +59,6 @@ trait IRoundmanager {
   def getCurrentPlayerHand: List[Card]
 
   def getPlayingDecks: List[List[Card]]
+
+  def getScore: List[(String, Int)]
 }

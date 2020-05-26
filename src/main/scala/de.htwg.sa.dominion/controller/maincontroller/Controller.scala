@@ -83,6 +83,8 @@ class Controller @Inject()(var roundmanager: IRoundmanager) extends IController 
 
   override def getPlayingDecks: List[List[Card]] = roundmanager.getPlayingDecks
 
+  override def getScore: List[(String, Int)] = roundmanager.getScore
+
   override def getControllerStateAsString: String = {
     controllerState match {
       case _: PreInitGameState => "PreInitGameState"

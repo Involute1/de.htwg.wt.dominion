@@ -621,7 +621,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val updatedPlayerList: List[Player] = for (player <- this.players) yield player.moveAllCardsToDeckForScore()
     val scoreList: List[Int] = for (player <- updatedPlayerList) yield player.calculateScore
     val mappedScoreList: List[(String, Int)] = for ((score, index) <- scoreList.zipWithIndex) yield ("Player " + (index + 1).toString, score)
-    List(mappedScoreList.toSeq.sortBy(_._2):_*)
+    List(mappedScoreList.sortBy(_._2):_*)
   }
 
   override def createPlayingDecks(cardName: CardName): Roundmanager = {
@@ -692,6 +692,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   override def getPlayingDecks: List[List[Card]] = this.decks
+
+  override def getScore: List[(String, Int)] = this.score
 
   override def initializePlayersList(idx: Int): Roundmanager = {
     val player = Player(this.names(idx), idx + 1, shuffle(Deck.startDeck), Nil, Nil, 1, 1, 0)
