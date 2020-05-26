@@ -294,6 +294,16 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
            | RoundmanagerStatus.REMODEL_BUY_PHASE | RoundmanagerStatus.WORKSHOP_BUY_PHASE =>
         if (checkIfBuyLeft(this.players)) {
           if (validateBuySelectInput(input) && checkIfBuyLeft(this.players)) {
+            if (this.decks(input.toInt).head.cardName == "Province") {
+              val updatedPlayers: List[Player] = buyCard(input)
+              val updatedDecks: List[List[Card]] = dropCardFromDeck(input.toInt)
+              if (updatedDecks(input.toInt).isEmpty) {
+                val updatedEmptyDeckCount: Int = 3
+                this.copy(emptyDeckCount = updatedEmptyDeckCount, players = updatedPlayers, decks = updatedDecks,roundStatus = RoundmanagerStatus.NO_BUYS_LEFT)
+              } else if (checkIfBuyLeft(updatedPlayers)) {
+                this.copy(players = updatedPlayers, decks = updatedDecks, roundStatus = RoundmanagerStatus.BUY_AGAIN)
+              } else this.copy(players = updatedPlayers, decks = updatedDecks,roundStatus = RoundmanagerStatus.NO_BUYS_LEFT)
+            }
             val updatedPlayers: List[Player] = buyCard(input)
             val updatedDecks: List[List[Card]] = dropCardFromDeck(input.toInt)
             if (checkIfBuyLeft(updatedPlayers)) {
