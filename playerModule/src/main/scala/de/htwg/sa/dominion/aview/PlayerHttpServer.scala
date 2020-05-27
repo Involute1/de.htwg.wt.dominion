@@ -9,7 +9,7 @@ import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.dominion.PlayerMain
 import de.htwg.sa.dominion.controller.util.{UpdatedPlayerActions, UpdatedPlayerBuys}
-import de.htwg.sa.dominion.util.UpdatedActionsContainer
+import de.htwg.sa.dominion.util.{IntListContainer, UpdatedActionsContainer}
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -121,16 +121,20 @@ class PlayerHttpServer(controller: IPlayerController) {
     },
     get{
       path("player" / "calculatePlayerMoneyForBuy") {
-        // TODO
-        //controller.calculatePlayerMoneyForBuy()
+        controller.calculatePlayerMoneyForBuy
         complete("")
       }
     },
-    get{
+    post {
       path("player" / "discard") {
-        // TODO
-        //controller.discard()
-        complete("")
+        decodeRequest {
+          entity(as[String]) {string => {
+            val container = Json.fromJson(Json.parse(string))(IntListContainer.containerReads).get
+            controller.discard(container.list)
+            complete("")
+          }
+          }
+        }
       }
     },
     get{
@@ -144,11 +148,15 @@ class PlayerHttpServer(controller: IPlayerController) {
         complete(controller.constructCellarTrashString())
       }
     },
-    get{
+    post {
       path("player" / "removeCompleteHand") {
-        // TODO
-        //controller.removeCompleteHand()
-        complete("")
+        decodeRequest {
+          entity(as[String]) {string => {
+            val playerContainer = Json.fromJson(Json.parse(string))(UpdatedActionsContainer.containerReads).get
+            complete(Json.toJson(UpdatedActionsContainer(controller.removeCompleteHand(playerContainer,string.toInt))).toString())
+          }
+          }
+        }
       }
     },
     get{
