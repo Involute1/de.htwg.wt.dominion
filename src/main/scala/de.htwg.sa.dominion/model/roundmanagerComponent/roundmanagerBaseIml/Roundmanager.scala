@@ -2,7 +2,7 @@ package de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml
 
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl._
-import de.htwg.sa.dominion.model.playercomponent.playerBaseImpl.Player
+import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.RoundmanagerStatus.RoundmanagerStatus
 

@@ -1,12 +1,12 @@
 package de.htwg.sa.dominion.model.fileIoComponent.XMLImpl
 
-import de.htwg.sa.dominion.model.cardComponent.ICard
-import de.htwg.sa.dominion.model.fileIoComponent.IFileIO
+import de.htwg.sa.dominion.model.fileIoComponent.IPlayerFileIO
+import de.htwg.sa.dominion.model.playerComponent.IPlayer
 
 import scala.util.Try
 
-class FileIO extends IFileIO {
-  override def load(card: ICard, path: String): Try[ICard] = ???
+class FileIO extends IPlayerFileIO {
+  override def load(player: IPlayer, path: String): Try[IPlayer] = ???
 
-  override def save(card: ICard, path: String): Try[Boolean] = ???
+  override def save(player: IPlayer, path: String): Try[Boolean] = ???
 }

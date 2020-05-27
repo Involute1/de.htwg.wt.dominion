@@ -1,7 +1,6 @@
-package de.htwg.sa.dominion.model.playercomponent
+package de.htwg.sa.dominion.model.playerComponent.playerBaseImpl
 
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cards}
-import de.htwg.sa.dominion.model.playercomponent.playerBaseImpl.Player
 import org.scalatest.{Matchers, WordSpec}
 
 

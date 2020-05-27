@@ -1,7 +1,7 @@
-package de.htwg.sa.dominion.model.playercomponent.playerBaseImpl
+package de.htwg.sa.dominion.model.playerComponent.playerBaseImpl
 
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cards, Cardtype}
-import de.htwg.sa.dominion.model.playercomponent.IPlayer
+import de.htwg.sa.dominion.model.playerComponent.IPlayer
 
 import scala.util.Random
 

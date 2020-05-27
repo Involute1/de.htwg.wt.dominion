@@ -1,11 +1,11 @@
 package de.htwg.sa.dominion.model.fileIoComponent.XMLImpl
 
 import de.htwg.sa.dominion.model.cardComponent.ICard
-import de.htwg.sa.dominion.model.fileIoComponent.IFileIO
+import de.htwg.sa.dominion.model.fileIoComponent.ICardFileIO
 
 import scala.util.Try
 
-class FileIO extends IFileIO {
+class FileIO extends ICardFileIO {
 
   override def load(card: ICard, path: String): Try[ICard] = ???
 

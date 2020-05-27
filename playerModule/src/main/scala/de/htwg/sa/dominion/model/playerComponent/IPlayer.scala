@@ -1,6 +1,6 @@
-package de.htwg.sa.dominion.model.playercomponent
+package de.htwg.sa.dominion.model.playerComponent
 
-import de.htwg.sa.dominion.model.playercomponent.playerBaseImpl.Player
+import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 
 trait IPlayer {
 

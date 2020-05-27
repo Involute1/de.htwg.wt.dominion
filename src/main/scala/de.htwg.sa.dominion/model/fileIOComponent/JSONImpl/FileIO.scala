@@ -1,13 +1,13 @@
 package de.htwg.sa.dominion.model.fileIOComponent.JSONImpl
 
 import de.htwg.sa.dominion.model.ModelInterface
-import de.htwg.sa.dominion.model.fileIOComponent.IFileIO
+import de.htwg.sa.dominion.model.fileIOComponent.IDominionFileIO
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
 import play.api.libs.json._
 
 import scala.io.Source
 
-class FileIO extends IFileIO {
+class FileIO extends IDominionFileIO {
 
   override def load(modelInterface: ModelInterface): (String, Roundmanager) = {
     val source = Source.fromFile("roundmanager.json")

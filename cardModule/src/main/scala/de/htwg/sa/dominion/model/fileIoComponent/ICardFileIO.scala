@@ -4,7 +4,7 @@ import de.htwg.sa.dominion.model.cardComponent.ICard
 
 import scala.util.Try
 
-trait IFileIO {
+trait ICardFileIO {
 
   def load(card: ICard, path: String): Try[ICard]
 

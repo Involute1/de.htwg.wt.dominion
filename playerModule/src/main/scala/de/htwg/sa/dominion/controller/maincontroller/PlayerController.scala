@@ -2,11 +2,11 @@ package de.htwg.sa.dominion.controller.maincontroller
 
 import com.google.inject.Inject
 import de.htwg.sa.dominion.controller.IPlayerController
-import de.htwg.sa.dominion.model.fileIoComponent.IFileIO
-import de.htwg.sa.dominion.model.playercomponent.IPlayer
-import de.htwg.sa.dominion.model.playercomponent.playerBaseImpl.Player
+import de.htwg.sa.dominion.model.fileIoComponent.IPlayerFileIO
+import de.htwg.sa.dominion.model.playerComponent.IPlayer
+import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 
-class PlayerController @Inject()(var player: IPlayer, fileIo: IFileIO) extends IPlayerController {
+class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) extends IPlayerController {
 
   override def save(): Unit = ???
 
