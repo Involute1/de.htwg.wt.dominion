@@ -6,7 +6,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
-import de.htwg.sa.dominion.controller.util.UpdatedPlayerContainer
+import de.htwg.sa.dominion.controller.util.{UpdatedPlayerActions, UpdatedPlayerBuys}
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -16,7 +16,7 @@ class PlayerHttpServer(controller: IPlayerController) {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  val route: Route = concat(/*
+  val route: Route = concat(
     get {
       path("player" / "save") {
         controller.save()
@@ -52,19 +52,23 @@ class PlayerHttpServer(controller: IPlayerController) {
     post {
       path("player" / "updateActions") {
         decodeRequest {
-          entity(as[String]) { string => {
-            val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerContainer.constainerReads).get
-            controller.updateActions(updatedController.buys)
-            complete("")
+          entity(as[String]) {string => {
+            val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerActions.containerReads).get
+            complete(Json.toJson(controller.updateActions(updatedController.actions)).toString())
           }
           }
         }
       }
     },
-    get{
-      path("player" / "updateHand") {
-        controller.updateHand()
-        complete("")
+    post {
+      path("player" / "updateMoney") {
+        decodeRequest {
+          entity(as[String]) {string => {
+            val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerBuys.containerReads).get
+            complete(Json.toJson(controller.updateBuys(updatedController.buys)).toString)
+          }
+          }
+        }
       }
     },
     get{
@@ -136,7 +140,7 @@ class PlayerHttpServer(controller: IPlayerController) {
       path("player" / "calculateScore") {
         complete(controller.calculateScore.toString())
       }
-    }*/
+    }
   )
 
   println("PlayerModule Server online at http://localhost:8081/")
