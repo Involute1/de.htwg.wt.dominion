@@ -6,12 +6,6 @@ import de.htwg.sa.dominion.controller.maincontroller.PlayerController
 
 object PlayerMain {
 
-  val injector: Injector = Guice.createInjector(new PlayerModule)
-  val controller: PlayerController = injector.getInstance(classOf[PlayerController])
-  val httpServer: PlayerHttpServer = new PlayerHttpServer(controller)
-
-  @volatile var shutdown: Boolean = false
-
   def main(args: Array[String]): Unit = {
     while(!shutdown) {
       Thread.sleep(100)
