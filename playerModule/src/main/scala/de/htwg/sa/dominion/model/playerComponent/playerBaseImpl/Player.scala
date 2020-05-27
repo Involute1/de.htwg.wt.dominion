@@ -2,6 +2,7 @@ package de.htwg.sa.dominion.model.playerComponent.playerBaseImpl
 
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cards, Cardtype}
 import de.htwg.sa.dominion.model.playerComponent.IPlayer
+import play.api.libs.json.{JsValue, Json}
 
 import scala.util.Random
 
@@ -124,4 +125,14 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     val gardenAmount: Int = this.deck.count(x => x.cardName == "Gardens")
     scoreList.sum + (gardenAmount * deckSizeForGarden)
   }
+
+  override def toJson: JsValue = Json.toJson(this)
+
+  override def fromJson(jsValue: JsValue): IPlayer = {jsValue.validate[Player].asOpt.get}
+}
+
+object Player {
+  import play.api.libs.json._
+  implicit val playerReads: Reads[Player] = Json.reads[Player]
+  implicit val playerWrites: OWrites[Player] = Json.writes[Player]
 }

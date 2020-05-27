@@ -1,6 +1,7 @@
 package de.htwg.sa.dominion.model.playerComponent
 
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
+import play.api.libs.json.JsValue
 
 trait IPlayer {
 
@@ -39,4 +40,8 @@ trait IPlayer {
   def moveAllCardsToDeckForScore(): Player
 
   def calculateScore: Int
+
+  def toJson: JsValue
+
+  def fromJson(jsValue: JsValue): IPlayer
 }

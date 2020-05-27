@@ -8,4 +8,8 @@ trait ICard {
   def constructCardNameString(): String
 
   def constructCardInformationString: String
+
+  def toJson: JsValue
+
+  def fromJson(jsValue: JsValue): ICard
 }

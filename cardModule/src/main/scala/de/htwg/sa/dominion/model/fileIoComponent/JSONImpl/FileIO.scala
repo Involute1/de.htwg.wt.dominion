@@ -16,15 +16,14 @@ class FileIO extends ICardFileIO {
       val string = source.getLines().mkString
       source.close
       val json = Json.parse(string)
-      //card.fromJson(json)
-      ???
+      card.fromJson(json)
     }
   }
 
   override def save(card: ICard, path: String): Try[Boolean] = {
     Try {
       val printWriter = new PrintWriter(new File(path + ".json"))
-      //printWriter.write(Json.prettyPrint(card.toJson))
+      printWriter.write(Json.prettyPrint(card.toJson))
       printWriter.close()
       true
     }

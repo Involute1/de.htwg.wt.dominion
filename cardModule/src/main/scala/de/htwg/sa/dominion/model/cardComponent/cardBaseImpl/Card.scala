@@ -1,8 +1,8 @@
 package de.htwg.sa.dominion.model.cardComponent.cardBaseImpl
 
-import de.htwg.sa.dominion.model.cardComponent.ICard
+import de.htwg.sa.dominion.model.cardComponent.{ICard, cardBaseImpl}
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Cardtype.Cardtype
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsValue, Json, Reads}
 
 import scala.xml.Elem
 
@@ -20,31 +20,26 @@ case class Card(cardName: String, cardDescription: String, cardType: Cardtype, c
       "Additional Money and draws " + this.cardDrawValue + " more cards"
     cardInfoString
   }
+
+  override def toJson: JsValue = Json.toJson(this)
+
+  override def fromJson(jsValue: JsValue): ICard = {jsValue.validate[Card].asOpt.get}
+}
+
+object Card {
+  import play.api.libs.json._
+  implicit val cardReads: Reads[Card] = Json.reads[Card]
+  implicit val cardWrites: OWrites[Card] = Json.writes[Card]
 }
 
 object Cardtype extends Enumeration {
+  import play.api.libs.json._
   type Cardtype = Value
-  val MONEY, VICTORYPOINT, KINGDOM = Value
-}
+  val MONEY: cardBaseImpl.Cardtype.Value = Value("Money")
+  val VICTORYPOINT: cardBaseImpl.Cardtype.Value = Value("VP")
+  val KINGDOM: cardBaseImpl.Cardtype.Value = Value("Kingdom")
 
-object CardName extends Enumeration {
-  type CardName = Value
-  val COPPER: CardName.Value = Value("Copper")
-  val SILVER: CardName.Value = Value("Silver")
-  val GOLD: CardName.Value = Value("Gold")
-  val ESTATE: CardName.Value = Value("Estate")
-  val DUCHY: CardName.Value = Value("Duchy")
-  val PROVINCE: CardName.Value = Value("Province")
-  val VILLAGE: CardName.Value = Value("Village")
-  val FESTIVAL: CardName.Value = Value("Festival")
-  val CELLAR: CardName.Value = Value("Cellar")
-  val MINE: CardName.Value = Value("Mine")
-  val SMITHY: CardName.Value = Value("Smithy")
-  val REMODEL: CardName.Value = Value("Remodel")
-  val MERCHANT: CardName.Value = Value("Merchant")
-  val WORKSHOP: CardName.Value = Value("Workshop")
-  val GARDENS: CardName.Value = Value("Gardens")
-  val MARKET: CardName.Value = Value("Market")
+  implicit val format: Format[cardBaseImpl.Cardtype.Value] = Json.formatEnum(this)
 }
 
 object Cards {

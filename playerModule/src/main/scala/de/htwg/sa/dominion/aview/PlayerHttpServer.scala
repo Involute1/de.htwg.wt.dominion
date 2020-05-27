@@ -66,7 +66,7 @@ class PlayerHttpServer(controller: IPlayerController) {
     post {
       path("player" / "updateActions") {
         decodeRequest {
-          entity(as[String]) {string => {
+          entity(as[String]) { string => {
             complete(Json.toJson(UpdatedActionsContainer(controller.updateActions(string.toInt))).toString())
           }
           }
