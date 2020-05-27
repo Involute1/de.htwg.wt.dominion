@@ -45,4 +45,6 @@ trait IController extends Observable {
   def getScore: List[(String, Int)]
 
   def getTurn: Int
+
+  def toHTML: String
 }

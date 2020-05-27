@@ -56,6 +56,8 @@ class Controller @Inject()(var roundmanager: IRoundmanager) extends IController 
     notifyObservers
   }
 
+  override def toHTML: String = controllerState.getCurrentControllerMessage.replace("\n", "<br>")
+
   override def getCurrentPlayerTurn: Int = roundmanager.getCurrentPlayerTurn
 
   override def getNameListSize: Int = roundmanager.getNameListSize

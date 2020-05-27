@@ -1,12 +1,12 @@
 package de.htwg.sa.dominion.model.fileIOComponent.XMLImpl
 
 import de.htwg.sa.dominion.model.ModelInterface
-import de.htwg.sa.dominion.model.fileIOComponent.FileIOInterface
+import de.htwg.sa.dominion.model.fileIOComponent.IFileIO
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
 
 import scala.xml.Elem
 
-class FileIO extends FileIOInterface {
+class FileIO extends IFileIO {
 
   override def load(modelInterface: ModelInterface): (String, Roundmanager) = {
     val saveState = scala.xml.XML.loadFile("roundmanager.xml")

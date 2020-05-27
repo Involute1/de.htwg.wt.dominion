@@ -21,32 +21,28 @@ class HttpServer(controller: IController) {
       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "<h1>HTWG Dominion</h1>"))
     }
     path("dominion") {
-      stuffToHtml
+      toHtml
     }
     path("dominion" / "undo") {
       controller.undo()
-      stuffToHtml
+      toHtml
     }
     path("dominion" / "redo") {
       controller.redo()
-      stuffToHtml
+      toHtml
     }
     path("dominion" / "save") {
       controller.save()
-      stuffToHtml
+      toHtml
     }
     path("dominion" / "load") {
       controller.load()
-      stuffToHtml
+      toHtml
     }
     path("dominion" / Segment) { command => {
-      processInputLine(command)
-      stuffToHtml
+      controller.eval(command)
+      toHtml
     }}
-  }
-
-  def stuffToHtml: StandardRoute = {
-    complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>HTWG Dominion</h1>"))
   }
 
   val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 8080)
@@ -57,15 +53,8 @@ class HttpServer(controller: IController) {
       .onComplete(_ => system.terminate())
   }
 
-  def processInputLine(input: String): Unit = {
-    input match {
-      case "q" =>
-      case "u" => controller.undo()
-      case "r" => controller.redo()
-      case "h" => controller.getHelpPage()
-      case "s" => controller.save()
-      case "l" => controller.load()
-      case _ => controller.eval(input)
-    }
+  def toHtml: StandardRoute = {
+    complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>HTWG Dominion</h1>") + controller.toHTML)
   }
+
 }

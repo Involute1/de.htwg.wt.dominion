@@ -1,4 +1,4 @@
-package de.htwg.sa.dominion.model.fileIoComponent.JSONImpl
+package de.htwg.sa.dominion.model.fileIoComponent.XMLImpl
 
 import de.htwg.sa.dominion.model.cardComponent.ICard
 import de.htwg.sa.dominion.model.fileIoComponent.IFileIO

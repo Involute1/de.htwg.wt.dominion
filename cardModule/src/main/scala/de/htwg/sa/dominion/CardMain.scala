@@ -19,9 +19,4 @@ object CardMain {
     }
     httpServer.shutdownWebServer()
   }
-
-  def shutdownServer(): Boolean = {
-    shutdown = true
-    true
-  }
 }
