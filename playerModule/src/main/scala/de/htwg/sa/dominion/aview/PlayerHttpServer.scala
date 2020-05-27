@@ -54,7 +54,7 @@ class PlayerHttpServer(controller: IPlayerController) {
         decodeRequest {
           entity(as[String]) {string => {
             val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerActions.containerReads).get
-            complete(Json.toJson(controller.updateActions(updatedController.actions)).toString)
+            complete(Json.toJson(controller.updateActions(updatedController.actions)).toString())
           }
           }
         }
@@ -65,7 +65,7 @@ class PlayerHttpServer(controller: IPlayerController) {
         decodeRequest {
           entity(as[String]) {string => {
             val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerBuys.containerReads).get
-            complete(Json.toJson(controller.updateActions(updatedController.buys)).toString)
+            complete(Json.toJson(controller.updateBuys(updatedController.buys)).toString)
           }
           }
         }
