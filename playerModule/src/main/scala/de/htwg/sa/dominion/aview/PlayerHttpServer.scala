@@ -6,6 +6,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
+import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -15,7 +16,120 @@ class PlayerHttpServer(controller: IPlayerController) {
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   val route: Route = concat(
-    // TODO
+    get {
+      path("player" / "save") {
+        controller.save()
+        complete("")
+      }
+    },
+    get {
+      path("player" / "load") {
+        controller.load()
+        complete("")
+      }
+    },
+    get {
+      path("player" / "constructPlayerNameString") {
+        complete(controller.constructPlayerNameString())
+      }
+    },
+    get {
+      path("player" / "constructPlayerDeck") {
+        complete(controller.constructPlayerDeckString())
+      }
+    },
+    get {
+      path("player" / "constructPlayerStackerString") {
+        complete(controller.constructPlayerStackerString())
+      }
+    },
+    get {
+      path("player" / "constructPlayerHandString") {
+        complete(controller.constructPlayerHandString())
+      }
+    },
+    get {
+      path("player" / "updateActions") {
+        controller.updateActions()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "updateHand") {
+        controller.updateHand()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "removeHandCardAddToStacker") {
+        controller.removeHandCardAddToStacker()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "updateMoney") {
+        controller.updateMoney()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "updateBuys") {
+        controller.updateBuys()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "CheckForFirstSilver") {
+        controller.checkForFirstSilver()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "calculatePlayerMoneyForBuy") {
+        controller.calculatePlayerMoneyForBuy()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "discard") {
+        controller.discard()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "checkForTreasure") {
+        controller.checkForTreasure()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "trashHandCard") {
+        controller.trashHandCard()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "constructCellarTrashstring") {
+        complete(controller.constructCellarTrashString())
+      }
+    },
+    get{
+      path("player" / "removeCompleteHand") {
+        controller.removeCompleteHand()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "moveAllCardsToDeckForScore") {
+        controller.moveAllCardsToDeckForScore()
+        complete("")
+      }
+    },
+    get{
+      path("player" / "calculateScore") {
+        complete(controller.calculateScore.toString())
+      }
+    }
   )
 
   println("PlayerModule Server online at http://localhost:8081/")
