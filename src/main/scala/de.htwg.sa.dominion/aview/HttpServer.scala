@@ -16,36 +16,46 @@ class HttpServer(controller: IController) {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContext = system.dispatcher
 
-  val route: Route = get {
-    pathSingleSlash {
-      complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "<h1>HTWG Dominion</h1>"))
-    }
-    path("dominion") {
+  val route: Route = {get {
+    path("dominion"){
       toHtml
+    }~
+      path("dominion" / "undo"){
+        controller.undo()
+        toHtml
+      }~
+      path("dominion" / "redo"){
+        controller.redo()
+        toHtml
+      }~
+      path("dominion" / "save"){
+        controller.save()
+        toHtml
+      }~
+      path("dominion" / "load"){
+        controller.load()
+        toHtml
+      }~
+      path("dominion" / Segment){
+        input =>
+          controller.eval(input)
+          toHtml
+      }
+  }~
+    post {
+      path("dominion") {
+        decodeRequest {
+          entity(as[String]) { input => {
+            controller.eval(input.replace("input=", ""))
+            toHtml
+          }
+          }
+        }
+      }
     }
-    path("dominion" / "undo") {
-      controller.undo()
-      toHtml
-    }
-    path("dominion" / "redo") {
-      controller.redo()
-      toHtml
-    }
-    path("dominion" / "save") {
-      controller.save()
-      toHtml
-    }
-    path("dominion" / "load") {
-      controller.load()
-      toHtml
-    }
-    path("dominion" / Segment) { command => {
-      controller.eval(command)
-      toHtml
-    }}
   }
 
-  println("PlayerModule Server online at http://localhost:8080/")
+  println(s"Dominion Module Server online at http://localhost:8080/")
 
   val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 8080)
 
@@ -56,7 +66,10 @@ class HttpServer(controller: IController) {
   }
 
   def toHtml: StandardRoute = {
-    complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>HTWG Dominion</h1>") + controller.toHTML)
+    complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Dominion</h1>" + controller.toHTML +
+    """</p><form action="/dominion" method="post">
+        | <input type="text" id="input" name="input">
+        | <input type="submit" value="Submit">
+        |</form> """.stripMargin))
   }
-
 }

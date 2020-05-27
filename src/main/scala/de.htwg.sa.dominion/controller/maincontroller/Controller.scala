@@ -12,7 +12,7 @@ import javax.inject.Inject
 class Controller @Inject()(var roundmanager: IRoundmanager) extends IController {
 
   var controllerMessage: String = ""
-  var controllerState: ControllerState = PreSetupState(this)
+  var controllerState: ControllerState = PreInitGameState(this)
   val undoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DominionModule)
 
@@ -121,7 +121,7 @@ trait ControllerState {
 case class PreInitGameState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     if (input.isEmpty) return
-    controller.controllerState = nextState
+    if (input.contentEquals("local")) { controller.controllerState = nextState }
   }
 
   override def getCurrentControllerMessage: String = {

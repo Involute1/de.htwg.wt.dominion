@@ -29,7 +29,7 @@ class StartPanel(controller: IController) extends BoxPanel(Orientation.Vertical)
   listenTo(quitButton)
 
   reactions += {
-    case ButtonClicked(`localPlayButton`) => controller.eval("n")
+    case ButtonClicked(`localPlayButton`) => controller.eval("local")
     case ButtonClicked(`quitButton`) => System.exit(0)
   }
 

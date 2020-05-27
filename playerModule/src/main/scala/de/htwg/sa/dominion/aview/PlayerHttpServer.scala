@@ -16,7 +16,7 @@ class PlayerHttpServer(controller: IPlayerController) {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  val route: Route = concat(
+  val route: Route = concat(/*
     get {
       path("player" / "save") {
         controller.save()
@@ -52,7 +52,7 @@ class PlayerHttpServer(controller: IPlayerController) {
     post {
       path("player" / "updateActions") {
         decodeRequest {
-          entity(as[String]) {string => {
+          entity(as[String]) { string => {
             val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerContainer.constainerReads).get
             controller.updateActions(updatedController.buys)
             complete("")
@@ -136,7 +136,7 @@ class PlayerHttpServer(controller: IPlayerController) {
       path("player" / "calculateScore") {
         complete(controller.calculateScore.toString())
       }
-    }
+    }*/
   )
 
   println("PlayerModule Server online at http://localhost:8081/")
@@ -148,5 +148,4 @@ class PlayerHttpServer(controller: IPlayerController) {
       .flatMap(_.unbind())
       .onComplete(_ => system.terminate())
   }
-
 }

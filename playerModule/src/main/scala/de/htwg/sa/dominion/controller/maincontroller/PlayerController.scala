@@ -5,8 +5,8 @@ import de.htwg.sa.dominion.controller.IPlayerController
 import de.htwg.sa.dominion.model.fileIoComponent.IPlayerFileIO
 import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
-
-class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) extends IPlayerController {
+// fileIo: IPlayerFileIO
+class PlayerController @Inject()(var player: IPlayer) extends IPlayerController {
 
   override def save(): Unit = ???
 

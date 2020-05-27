@@ -1,5 +1,7 @@
 package de.htwg.sa.dominion
 
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpRequest
 import com.google.inject.{Guice, Injector}
 import de.htwg.sa.dominion.aview.{HttpServer, TUI}
 import de.htwg.sa.dominion.aview.gui.SwingGui
@@ -14,8 +16,12 @@ object Dominion {
   val gui = new SwingGui(controller)
   val httpServer: HttpServer = new HttpServer(controller)
   val introString: String = "Welcome to Dominion! \n Press 'q' to exit and any other key to start "
-  //controller.setControllerMessage(introString)
-  //controller.notifyObservers
+  controller.setControllerMessage(introString)
+  PlayerMain.main(Array())
+  CardMain.main(Array())
+  controller.notifyObservers
+
+
 
   def main(args: Array[String]): Unit = {
     var input: String = ""
@@ -25,6 +31,7 @@ object Dominion {
       input = scala.io.StdIn.readLine()
       tui.processInputLine(input)
     } while (input != "q")
+    httpServer.unbind()
+    //Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/exit"))
   }
-
 }

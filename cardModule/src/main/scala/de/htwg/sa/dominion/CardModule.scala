@@ -13,6 +13,6 @@ class CardModule extends AbstractModule with ScalaModule {
   override def configure(): Unit = {
     bind[ICard].toInstance(Card("", "", Cardtype.KINGDOM, 0, 0, 0, 0, 0, 0, 0))
     bind[ICardFileIO].to[JSONImpl.FileIO]
-    bind[ICardController].to[CardController]
+    //bind[ICardController].to[CardController]
   }
 }
