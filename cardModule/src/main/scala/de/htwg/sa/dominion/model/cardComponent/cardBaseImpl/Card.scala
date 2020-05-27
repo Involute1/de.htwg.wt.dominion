@@ -32,6 +32,26 @@ object Card {
   implicit val cardWrites: OWrites[Card] = Json.writes[Card]
 }
 
+object CardName extends Enumeration {
+  type CardName = Value
+  val COPPER: CardName.Value = Value("Copper")
+  val SILVER: CardName.Value = Value("Silver")
+  val GOLD: CardName.Value = Value("Gold")
+  val ESTATE: CardName.Value = Value("Estate")
+  val DUCHY: CardName.Value = Value("Duchy")
+  val PROVINCE: CardName.Value = Value("Province")
+  val VILLAGE: CardName.Value = Value("Village")
+  val FESTIVAL: CardName.Value = Value("Festival")
+  val CELLAR: CardName.Value = Value("Cellar")
+  val MINE: CardName.Value = Value("Mine")
+  val SMITHY: CardName.Value = Value("Smithy")
+  val REMODEL: CardName.Value = Value("Remodel")
+  val MERCHANT: CardName.Value = Value("Merchant")
+  val WORKSHOP: CardName.Value = Value("Workshop")
+  val GARDENS: CardName.Value = Value("Gardens")
+  val MARKET: CardName.Value = Value("Market")
+}
+
 object Cardtype extends Enumeration {
   import play.api.libs.json._
   type Cardtype = Value
