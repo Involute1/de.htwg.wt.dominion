@@ -164,7 +164,7 @@ class PlayerHttpServer(controller: IPlayerController) {
     }
   )
 
-  println("PlayerModule Server online at http://localhost:8081/")
+  println("PlayerModule Server online at http://localhost:8081/player")
 
   val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 8081)
 
