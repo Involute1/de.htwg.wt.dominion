@@ -1,9 +1,8 @@
 package de.htwg.sa.dominion.model.playercomponent
 
-import de.htwg.sa.dominion.model.cardcomponent.{Card, Cards}
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cards}
+import de.htwg.sa.dominion.model.playercomponent.playerBaseImpl.Player
 import org.scalatest.{Matchers, WordSpec}
-
-import scala.collection.immutable
 
 
 class PlayerSpec extends WordSpec with Matchers {

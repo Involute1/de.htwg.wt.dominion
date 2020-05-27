@@ -1,5 +1,6 @@
-package de.htwg.sa.dominion.model.cardcomponent
+package de.htwg.sa.dominion.model.cardComponent
 
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cardtype}
 import org.scalatest.{Matchers, WordSpec}
 
 class CardSpec extends WordSpec with Matchers {

@@ -1,4 +1,4 @@
-package de.htwg.sa.dominion.model
+package de.htwg.sa.dominion.model.cardComponent
 
 trait ICard {
 

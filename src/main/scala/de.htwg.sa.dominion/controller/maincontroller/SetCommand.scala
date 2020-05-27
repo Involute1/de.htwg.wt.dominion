@@ -1,6 +1,6 @@
 package de.htwg.sa.dominion.controller.maincontroller
 
-import de.htwg.sa.dominion.model.IRoundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
 import de.htwg.sa.dominion.util.Command
 
 class SetCommand(controller: Controller) extends Command {

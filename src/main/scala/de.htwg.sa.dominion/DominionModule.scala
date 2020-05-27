@@ -3,8 +3,9 @@ package de.htwg.sa.dominion
 import com.google.inject.AbstractModule
 import de.htwg.sa.dominion.controller.IController
 import de.htwg.sa.dominion.controller.maincontroller.Controller
-import de.htwg.sa.dominion.model.{ICard, IPlayer, IRoundmanager}
-import de.htwg.sa.dominion.model.roundmanagerComponent.{Roundmanager, RoundmanagerStatus}
+import de.htwg.sa.dominion.model.playercomponent.IPlayer
+import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.{Roundmanager, RoundmanagerStatus}
 import net.codingwell.scalaguice.ScalaModule
 
 class DominionModule extends AbstractModule with ScalaModule {

@@ -3,7 +3,7 @@ package de.htwg.sa.dominion.aview.gui
 import java.awt.{Color, Image}
 
 import de.htwg.sa.dominion.controller.IController
-import de.htwg.sa.dominion.model.cardcomponent.Card
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import javax.swing.{BorderFactory, ImageIcon}
 
 import scala.swing.event.{ButtonClicked, MouseClicked}

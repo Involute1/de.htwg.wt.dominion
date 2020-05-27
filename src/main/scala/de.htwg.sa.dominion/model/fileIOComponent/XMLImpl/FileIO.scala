@@ -1,8 +1,8 @@
-package de.htwg.sa.dominion.model.fileIOComponent.XmlImp
+package de.htwg.sa.dominion.model.fileIOComponent.XMLImpl
 
 import de.htwg.sa.dominion.model.ModelInterface
 import de.htwg.sa.dominion.model.fileIOComponent.FileIOInterface
-import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
 
 import scala.xml.Elem
 

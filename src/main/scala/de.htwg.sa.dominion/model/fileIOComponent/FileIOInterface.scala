@@ -1,7 +1,7 @@
 package de.htwg.sa.dominion.model.fileIOComponent
 
 import de.htwg.sa.dominion.model.ModelInterface
-import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
 
 trait FileIOInterface {
 

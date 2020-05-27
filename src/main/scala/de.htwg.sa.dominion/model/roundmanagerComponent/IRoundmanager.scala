@@ -1,8 +1,8 @@
-package de.htwg.sa.dominion.model
+package de.htwg.sa.dominion.model.roundmanagerComponent
 
-import de.htwg.sa.dominion.model.cardcomponent.Card
-import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
-import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
+import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
 
 import scala.xml.Elem
 

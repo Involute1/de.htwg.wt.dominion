@@ -1,6 +1,8 @@
 package de.htwg.sa.dominion.model.roundmanagerComponent
-import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards}
-import de.htwg.sa.dominion.model.playercomponent.Player
+
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, CardName, Cards}
+import de.htwg.sa.dominion.model.playercomponent.playerBaseImpl.Player
+import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.{Roundmanager, RoundmanagerStatus}
 import org.scalatest.{Matchers, WordSpec}
 
 class RoundmanagerSpec extends WordSpec with Matchers {

@@ -1,10 +1,10 @@
-package de.htwg.sa.dominion.model.roundmanagerComponent
+package de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml
 
-import de.htwg.sa.dominion.model.IRoundmanager
-import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
-import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName, Cards, Cardtype, Deck}
-import de.htwg.sa.dominion.model.playercomponent.Player
-import de.htwg.sa.dominion.model.roundmanagerComponent.RoundmanagerStatus.RoundmanagerStatus
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl._
+import de.htwg.sa.dominion.model.playercomponent.playerBaseImpl.Player
+import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.RoundmanagerStatus.RoundmanagerStatus
 
 import scala.util.Random
 import scala.xml.Elem

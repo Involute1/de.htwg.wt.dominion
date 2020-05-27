@@ -1,5 +1,5 @@
 package de.htwg.sa.dominion.controller
-import de.htwg.sa.dominion.model.cardcomponent.Card
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.util.Observable
 
 trait IController extends Observable {

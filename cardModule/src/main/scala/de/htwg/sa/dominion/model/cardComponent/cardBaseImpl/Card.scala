@@ -1,7 +1,7 @@
-package de.htwg.sa.dominion.model.cardcomponent
+package de.htwg.sa.dominion.model.cardComponent.cardBaseImpl
 
-import de.htwg.sa.dominion.model.ICard
-import de.htwg.sa.dominion.model.cardcomponent.Cardtype.Cardtype
+import de.htwg.sa.dominion.model.cardComponent.ICard
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Cardtype.Cardtype
 
 import scala.xml.Elem
 

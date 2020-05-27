@@ -3,10 +3,9 @@ package de.htwg.sa.dominion.controller.maincontroller
 import com.google.inject.{Guice, Injector}
 import de.htwg.sa.dominion.DominionModule
 import de.htwg.sa.dominion.controller.IController
-import de.htwg.sa.dominion.model.IRoundmanager
-import de.htwg.sa.dominion.model.cardcomponent.{Card, CardName}
-import de.htwg.sa.dominion.model.cardcomponent.CardName.CardName
-import de.htwg.sa.dominion.model.roundmanagerComponent.Roundmanager
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, CardName}
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
+import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
 import de.htwg.sa.dominion.util.{Observer, UndoManager}
 import javax.inject.Inject
 
