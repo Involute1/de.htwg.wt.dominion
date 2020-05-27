@@ -77,32 +77,40 @@ class PlayerHttpServer(controller: IPlayerController) {
       path("player" / "updateMoney") {
         decodeRequest {
           entity(as[String]) {string => {
-            val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerBuys.containerReads).get
-            complete(Json.toJson(controller.updateBuys(updatedController.buys)).toString)
+            complete(Json.toJson(UpdatedActionsContainer(controller.updateMoney(string.toInt))).toString())
           }
           }
         }
       }
     },
-    get{
-      path("player" / "removeHandCardAddToStacker") {
-        // TODO
-        //controller.removeHandCardAddToStacker()
-        complete("")
-      }
-    },
-    get{
-      path("player" / "updateMoney") {
-        // TODO
-        //controller.updateMoney()
-        complete("")
-      }
-    },
-    get{
+    post {
       path("player" / "updateBuys") {
-        // TODO
-        //controller.updateBuys()
-        complete("")
+        decodeRequest {
+          entity(as[String]) {string => {
+            complete(Json.toJson(UpdatedActionsContainer(controller.updateBuys(string.toInt))).toString())
+          }
+          }
+        }
+      }
+    },
+    post {
+      path("player" / "removeHandCardAddToStacker") {
+        decodeRequest {
+          entity(as[String]) {string => {
+            complete(Json.toJson(UpdatedActionsContainer(controller.removeHandCardAddToStacker(string.toInt))).toString())
+          }
+          }
+        }
+      }
+    },
+    post {
+      path("player" / "trashHandCard") {
+        decodeRequest {
+          entity(as[String]) {string => {
+            complete(Json.toJson(UpdatedActionsContainer(controller.trashHandCard(string.toInt))).toString())
+          }
+          }
+        }
       }
     },
     get{
@@ -128,13 +136,6 @@ class PlayerHttpServer(controller: IPlayerController) {
     get{
       path("player" / "checkForTreasure") {
         controller.checkForTreasure()
-        complete("")
-      }
-    },
-    get{
-      path("player" / "trashHandCard") {
-        // TODO
-        //controller.trashHandCard()
         complete("")
       }
     },
