@@ -16,7 +16,7 @@ class DominionModule extends AbstractModule with ScalaModule {
     //bind[RoundmanagerInterface].to[Roundmanager]
     bind[IRoundmanager].toInstance(Roundmanager(Nil, Nil, 0, 1, Nil, 0, gameEnd = false, Nil,
       RoundmanagerStatus.PLAY_CARD_PHASE, 0, Nil))
-    bind[IDominionFileIO].to[JSONImpl.FileIO]
+    //bind[IDominionFileIO].to[JSONImpl.FileIO]
   }
 
 }
