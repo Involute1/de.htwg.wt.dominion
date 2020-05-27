@@ -6,6 +6,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
+import de.htwg.sa.dominion.controller.util.UpdatedPlayerContainer
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -48,10 +49,16 @@ class PlayerHttpServer(controller: IPlayerController) {
         complete(controller.constructPlayerHandString())
       }
     },
-    get {
+    post {
       path("player" / "updateActions") {
-        controller.updateActions()
-        complete("")
+        decodeRequest {
+          entity(as[String]) {string => {
+            val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerContainer.constainerReads).get
+            controller.updateActions(updatedController.buys)
+            complete("")
+          }
+          }
+        }
       }
     },
     get{
