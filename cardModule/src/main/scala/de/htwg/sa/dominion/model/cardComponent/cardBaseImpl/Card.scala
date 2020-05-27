@@ -2,11 +2,12 @@ package de.htwg.sa.dominion.model.cardComponent.cardBaseImpl
 
 import de.htwg.sa.dominion.model.cardComponent.ICard
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Cardtype.Cardtype
+import play.api.libs.json.{JsValue, Json}
 
 import scala.xml.Elem
 
 case class Card(cardName: String, cardDescription: String, cardType: Cardtype, costValue: Int, moneyValue: Int, vpValue: Int
-                , cardDrawValue: Int, additionalBuysValue: Int, additionalActionsValue: Int, additionalMoneyValue: Int) extends ICard {
+                         , cardDrawValue: Int, additionalBuysValue: Int, additionalActionsValue: Int, additionalMoneyValue: Int) extends ICard {
 
   override def constructCardNameString(): String = {
     this.cardName

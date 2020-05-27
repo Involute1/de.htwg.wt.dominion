@@ -17,26 +17,26 @@ class HttpServer(controller: IController) {
   implicit val executionContext: ExecutionContext = system.dispatcher
 
   val route: Route = {get {
-    path("dominion"){
+    path("dominion") {
       toHtml
     }~
-      path("dominion" / "undo"){
+      path("dominion" / "undo") {
         controller.undo()
         toHtml
       }~
-      path("dominion" / "redo"){
+      path("dominion" / "redo") {
         controller.redo()
         toHtml
       }~
-      path("dominion" / "save"){
+      path("dominion" / "save") {
         controller.save()
         toHtml
       }~
-      path("dominion" / "load"){
+      path("dominion" / "load") {
         controller.load()
         toHtml
       }~
-      path("dominion" / Segment){
+      path("dominion" / Segment) {
         input =>
           controller.eval(input)
           toHtml

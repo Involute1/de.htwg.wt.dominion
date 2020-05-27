@@ -3,10 +3,13 @@ package de.htwg.sa.dominion.aview
 import de.htwg.sa.dominion.controller.IPlayerController
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
+import de.htwg.sa.dominion.PlayerMain
 import de.htwg.sa.dominion.controller.util.{UpdatedPlayerActions, UpdatedPlayerBuys}
+import de.htwg.sa.dominion.util.UpdatedActionsContainer
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -17,6 +20,17 @@ class PlayerHttpServer(controller: IPlayerController) {
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   val route: Route = concat(
+    get {
+      path("player") {
+        toHtml("<h1>This is the Player Module Server of Dominion</h1>")
+      }
+    },
+    get {
+      path("player" / "exit") {
+        PlayerMain.shutdown = true
+        toHtml("<h3>Shutting down PlayerModule Webserver</h3>")
+      }
+    },
     get {
       path("player" / "save") {
         controller.save()
@@ -53,8 +67,7 @@ class PlayerHttpServer(controller: IPlayerController) {
       path("player" / "updateActions") {
         decodeRequest {
           entity(as[String]) {string => {
-            val updatedController = Json.fromJson(Json.parse(string))(UpdatedPlayerActions.containerReads).get
-            complete(Json.toJson(controller.updateActions(updatedController.actions)).toString())
+            complete(Json.toJson(UpdatedActionsContainer(controller.updateActions(string.toInt))).toString())
           }
           }
         }
@@ -73,19 +86,22 @@ class PlayerHttpServer(controller: IPlayerController) {
     },
     get{
       path("player" / "removeHandCardAddToStacker") {
-        controller.removeHandCardAddToStacker()
+        // TODO
+        //controller.removeHandCardAddToStacker()
         complete("")
       }
     },
     get{
       path("player" / "updateMoney") {
-        controller.updateMoney()
+        // TODO
+        //controller.updateMoney()
         complete("")
       }
     },
     get{
       path("player" / "updateBuys") {
-        controller.updateBuys()
+        // TODO
+        //controller.updateBuys()
         complete("")
       }
     },
@@ -97,13 +113,15 @@ class PlayerHttpServer(controller: IPlayerController) {
     },
     get{
       path("player" / "calculatePlayerMoneyForBuy") {
-        controller.calculatePlayerMoneyForBuy()
+        // TODO
+        //controller.calculatePlayerMoneyForBuy()
         complete("")
       }
     },
     get{
       path("player" / "discard") {
-        controller.discard()
+        // TODO
+        //controller.discard()
         complete("")
       }
     },
@@ -115,7 +133,8 @@ class PlayerHttpServer(controller: IPlayerController) {
     },
     get{
       path("player" / "trashHandCard") {
-        controller.trashHandCard()
+        // TODO
+        //controller.trashHandCard()
         complete("")
       }
     },
@@ -126,7 +145,8 @@ class PlayerHttpServer(controller: IPlayerController) {
     },
     get{
       path("player" / "removeCompleteHand") {
-        controller.removeCompleteHand()
+        // TODO
+        //controller.removeCompleteHand()
         complete("")
       }
     },
@@ -151,5 +171,9 @@ class PlayerHttpServer(controller: IPlayerController) {
     bindingFuture
       .flatMap(_.unbind())
       .onComplete(_ => system.terminate())
+  }
+
+  def toHtml(s: String): StandardRoute = {
+    complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s))
   }
 }
