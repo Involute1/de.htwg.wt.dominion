@@ -1,15 +1,29 @@
 package de.htwg.sa.dominion.controller.maincontroller
 
+import akka.actor.ActorSystem
+
+import scala.util.{Failure, Success}
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpRequest
+import akka.stream.ActorMaterializer
 import com.google.inject.{Guice, Injector}
 import de.htwg.sa.dominion.DominionModule
 import de.htwg.sa.dominion.controller.IController
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, CardName}
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
+import de.htwg.sa.dominion.model.fileIOComponent.IDominionFileIO
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
 import de.htwg.sa.dominion.util.{Observer, UndoManager}
 import javax.inject.Inject
 
-class Controller @Inject()(var roundmanager: IRoundmanager) extends IController {
+import scala.concurrent.ExecutionContextExecutor
+
+class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFileIO) extends IController {
+
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   var controllerMessage: String = ""
   var controllerState: ControllerState = PreInitGameState(this)
@@ -34,13 +48,28 @@ class Controller @Inject()(var roundmanager: IRoundmanager) extends IController 
   }
 
   override def save(): Unit = {
-    // TODO
-    ???
+    fileIO.save(getControllerStateAsString, roundmanager)
+    Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/save"))
+    notifyObservers
   }
 
   override def load(): Unit = {
-    // TODO
-    ???
+    val result = fileIO.load(roundmanager)
+    val loadedRoundmanager = result match {
+      case Failure(_) => return
+      case Success(loadedTuple) => loadedTuple
+    }
+    controllerState = loadedRoundmanager._1 match {
+      case "PreInitGameState" => PreInitGameState(this)
+      case "PreStetupState" => PreSetupState(this)
+      case "PlayerSetupState" => PlayerSetupState(this)
+      case "ActionState" => ActionPhaseState(this)
+      case "BuyState" => BuyPhaseState(this)
+      case "GameOverState" => GameOverState(this)
+    }
+    roundmanager = loadedRoundmanager._2
+    Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/load"))
+    notifyObservers
   }
 
   override def getControllerMessage: String = {
@@ -49,11 +78,6 @@ class Controller @Inject()(var roundmanager: IRoundmanager) extends IController 
 
   override def setControllerMessage(message: String): Unit = {
     controllerMessage = message
-  }
-
-  override def getHelpPage(): Unit = {
-    // TODO print helpscreen
-    notifyObservers
   }
 
   override def toHTML: String = controllerState.getCurrentControllerMessage.replace("\n", "<br>")

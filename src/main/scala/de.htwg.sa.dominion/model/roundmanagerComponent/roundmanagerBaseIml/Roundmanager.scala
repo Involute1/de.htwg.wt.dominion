@@ -1,141 +1,19 @@
 package de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml
 
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl._
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
-import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.{IRoundmanager, roundmanagerBaseIml}
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.RoundmanagerStatus.RoundmanagerStatus
+import play.api.libs.json.{Format, JsValue, Json}
 
 import scala.util.Random
-import scala.xml.Elem
+import scala.xml.{Elem, Node}
 
 case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(String, Int)],
                         roundStatus: RoundmanagerStatus, playerTurn: Int, trash: List[Card]) extends IRoundmanager {
-
-  override def toXML: Elem = {
-    <RoundManager>
-      <players>{for (i <- players.indices) yield playerToXml(players(i))}</players>
-      <names>{for (i <- names.indices) yield <name>{names(i)}</name>}</names>
-      <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
-      <turn>{turn}</turn>
-      <decks>{for (i <- decks.indices) yield <decks>{cardsListToXML(decks(i))}</decks>}</decks>
-      <emptyDeckCount>{emptyDeckCount}</emptyDeckCount>
-      <gameEnd>{gameEnd}</gameEnd>
-      <score>{score}</score>
-      <roundStatus>{roundStatus}</roundStatus>
-      <playerTurn>{playerTurn}</playerTurn>
-      <trash>{trash}</trash>
-    </RoundManager>
-  }
-
-  def tupleListToXML(l: List[(Int, String)]): List[Elem] = {
-    var list = List.empty[Elem]
-    l.foreach(kv => list = <entry><points>{kv._1}</points><player>{kv._2}</player></entry> :: list)
-    list
-  }
-
-  def cardsListToXML(l: List[Card]): List[Elem] = {
-    var list = List.empty[Elem]
-    l.foreach(c => list = Cards.cardsToXml(c) :: list)
-    list
-  }
-
-  def playerToXml(player: Player): Elem = {
-    <player>
-      <name>{player.name}</name>
-      <value>{player.value}</value>
-      <deck>{for (i <- player.deck.indices) yield Cards.cardsToXml(player.deck(i))}</deck>
-      <stacker>{for (i <- player.stacker.indices) yield Cards.cardsToXml(player.stacker(i))}</stacker>
-      <handCards>{for (i <- player.handCards.indices) yield Cards.cardsToXml(player.handCards(i))}</handCards>
-      <action>{player.actions}</action>
-      <buys>{player.buys}</buys>
-      <money>{player.money}</money>
-    </player>
-  }
-
-  /*override def fromXML(node: Node): Roundmanager = {
-    //var listBuffer1: ListBuffer[List[Cards]] = ListBuffer()
-
-    val playersNode = (node \ "players").head.child
-    val players = (playersNode.map(node => playerFromXML(node))).toList
-
-    val namesNode = (node \ "names").head.child
-    val names = (namesNode.map(node => (node \\ "name").text.trim)).toList
-
-    val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
-
-    val turn = (node \ "turn").text.toInt
-
-    val playingDecksNode = (node \ "playingDecks").head.child
-    for(i <- (node \ "playingDecks" \ "playingDeck").indices) {
-      val decks1: List[Card] = playingDecksNode.toList :+ Cards.ListfromXml(node \ "decks",i)
-    }
-    val finishedDecks = decks.toList
-
-    val emptyDeckCount = (node \ "emptyDeckCount").text.toInt
-
-    val gameEnd = (node \ "gameEnd").text.toBoolean
-
-    val scoreNode = (node \ "score").head.child
-    val score = scoreFromXML(scoreNode)
-
-    val roundStatus =
-
-    val playerTurn = (node \ "playerTurn").text.toInt
-
-    val trash =
-
-    Roundmanager(players, names, numberOfPlayers, turn, finishedDecks, emptyDeckCount, gameEnd, score, roundStatus, playerTurn, trash)
-  }
-
-  def scoreFromXML(node: scala.xml.NodeSeq): List[(Int, String)] = {
-    var list = List.empty[(Int, String)]
-    node.foreach(pp => list = ((node \ "points").text.toInt, (node \ "player").text) :: list)
-    list
-  }
-
-  def playerFromXML(node: scala.xml.Node): Player = {
-    val name= (node \ "name").text.trim
-    val value= (node \ "value").text.toInt
-    val action = (node \ "action").text.toInt
-    val buys = (node \ "buys").text.toInt
-    val stringValue = (node \ "stringValue").text.toInt
-    val money = (node \ "money").text.toInt
-    var listBuffer1: ListBuffer[Cards] = ListBuffer()
-
-    for (i <- 0 until (node \ "deck" \ "card").length) {
-      if (!(node \ "deck" \ "card" \ "costValue").text.equals("")) {
-        listBuffer1 += Cards.fromXML(node \ "deck" \ "card", i)
-      }
-    }
-    val playerdeck: List[Cards] = listBuffer1.toList
-    listBuffer1 = ListBuffer()
-
-    for (f <- 0 until (node \ "stacker" \ "card").length) {
-      if (!(node \ "stacker" \ "card" \ "costValue").text.equals("")) {
-        listBuffer1 += Cards.fromXML(node \ "stacker" \ "card", f)
-      }
-    }
-    val playerstacker: List[Cards] = listBuffer1.toList
-    listBuffer1 = ListBuffer()
-
-    for (i <- 0 until (node \ "hand" \ "card").length) {
-      if (!(node \ "hand" \ "card" \ "costValue").text.equals("")) {
-        listBuffer1 += Cards.fromXML(node \ "hand" \ "card", i)
-      }
-    }
-    val playerhand: List[Cards] = listBuffer1.toList
-    listBuffer1 = ListBuffer()
-
-
-    Player(name,value,playerdeck,playerstacker,playerhand,action,buys,stringValue,money)
-  }*/
-
-
-  /*override def toJson: JsValue = Json.toJson(this)
-
-  override def fromJson(jsValue: JsValue): Roundmanager = {jsValue.validate[Roundmanager].asOpt.get}*/
 
   override def actionPhase(input: String): Roundmanager = {
     this.roundStatus match {
@@ -878,6 +756,140 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val askNameString = "Player " + (this.names.size + 1) + " please enter your name:"
     askNameString
   }
+
+  override def toJson: JsValue = Json.toJson(this)
+
+  override def fromJson(jsValue: JsValue): Roundmanager = jsValue.validate[Roundmanager].asOpt.get
+
+  override def toXML: Elem = {
+    <RoundManager>
+      <players>{for (i <- players.indices) yield playerToXml(players(i))}</players>
+      <names>{for (i <- names.indices) yield <name>{names(i)}</name>}</names>
+      <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
+      <turn>{turn}</turn>
+      <decks>{for (i <- decks.indices) yield <decks>{cardsListToXML(decks(i))}</decks>}</decks>
+      <emptyDeckCount>{emptyDeckCount}</emptyDeckCount>
+      <gameEnd>{gameEnd}</gameEnd>
+      <score>{score}</score>
+      <roundStatus>{roundStatus}</roundStatus>
+      <playerTurn>{playerTurn}</playerTurn>
+      <trash>{trash}</trash>
+    </RoundManager>
+  }
+
+  def tupleListToXML(l: List[(Int, String)]): List[Elem] = {
+    var list = List.empty[Elem]
+    l.foreach(kv => list = <entry><points>{kv._1}</points><player>{kv._2}</player></entry> :: list)
+    list
+  }
+
+  def cardsListToXML(l: List[Card]): List[Elem] = {
+    var list = List.empty[Elem]
+    l.foreach(c => list = Cards.cardsToXml(c) :: list)
+    list
+  }
+
+  def playerToXml(player: Player): Elem = {
+    <player>
+      <name>{player.name}</name>
+      <value>{player.value}</value>
+      <deck>{for (i <- player.deck.indices) yield Cards.cardsToXml(player.deck(i))}</deck>
+      <stacker>{for (i <- player.stacker.indices) yield Cards.cardsToXml(player.stacker(i))}</stacker>
+      <handCards>{for (i <- player.handCards.indices) yield Cards.cardsToXml(player.handCards(i))}</handCards>
+      <action>{player.actions}</action>
+      <buys>{player.buys}</buys>
+      <money>{player.money}</money>
+    </player>
+  }
+
+  override def fromXML(node: Node): IRoundmanager = {
+    ???
+    /*
+    //var listBuffer1: ListBuffer[List[Cards]] = ListBuffer()
+
+    val playersNode = (node \ "players").head.child
+    val players = (playersNode.map(node => playerFromXML(node))).toList
+
+    val namesNode = (node \ "names").head.child
+    val names = (namesNode.map(node => (node \\ "name").text.trim)).toList
+
+    val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
+
+    val turn = (node \ "turn").text.toInt
+
+    val playingDecksNode = (node \ "playingDecks").head.child
+    for(i <- (node \ "playingDecks" \ "playingDeck").indices) {
+      val decks1: List[Card] = playingDecksNode.toList :+ Cards.ListfromXml(node \ "decks",i)
+    }
+    val finishedDecks = decks.toList
+
+    val emptyDeckCount = (node \ "emptyDeckCount").text.toInt
+
+    val gameEnd = (node \ "gameEnd").text.toBoolean
+
+    val scoreNode = (node \ "score").head.child
+    val score = scoreFromXML(scoreNode)
+
+    val roundStatus =
+
+    val playerTurn = (node \ "playerTurn").text.toInt
+
+    val trash =
+
+    Roundmanager(players, names, numberOfPlayers, turn, finishedDecks, emptyDeckCount, gameEnd, score, roundStatus, playerTurn, trash)
+    */
+  }
+  /*
+  def scoreFromXML(node: scala.xml.NodeSeq): List[(Int, String)] = {
+    var list = List.empty[(Int, String)]
+    node.foreach(pp => list = ((node \ "points").text.toInt, (node \ "player").text) :: list)
+    list
+  }
+
+  def playerFromXML(node: scala.xml.Node): Player = {
+    val name= (node \ "name").text.trim
+    val value= (node \ "value").text.toInt
+    val action = (node \ "action").text.toInt
+    val buys = (node \ "buys").text.toInt
+    val stringValue = (node \ "stringValue").text.toInt
+    val money = (node \ "money").text.toInt
+    var listBuffer1: ListBuffer[Cards] = ListBuffer()
+
+    for (i <- 0 until (node \ "deck" \ "card").length) {
+      if (!(node \ "deck" \ "card" \ "costValue").text.equals("")) {
+        listBuffer1 += Cards.fromXML(node \ "deck" \ "card", i)
+      }
+    }
+    val playerdeck: List[Cards] = listBuffer1.toList
+    listBuffer1 = ListBuffer()
+
+    for (f <- 0 until (node \ "stacker" \ "card").length) {
+      if (!(node \ "stacker" \ "card" \ "costValue").text.equals("")) {
+        listBuffer1 += Cards.fromXML(node \ "stacker" \ "card", f)
+      }
+    }
+    val playerstacker: List[Cards] = listBuffer1.toList
+    listBuffer1 = ListBuffer()
+
+    for (i <- 0 until (node \ "hand" \ "card").length) {
+      if (!(node \ "hand" \ "card" \ "costValue").text.equals("")) {
+        listBuffer1 += Cards.fromXML(node \ "hand" \ "card", i)
+      }
+    }
+    val playerhand: List[Cards] = listBuffer1.toList
+    listBuffer1 = ListBuffer()
+
+
+    Player(name,value,playerdeck,playerstacker,playerhand,action,buys,stringValue,money)
+  }*/
+
+
+}
+
+object Roundmanager {
+  import play.api.libs.json._
+  implicit val playerReads: Reads[Roundmanager] = Json.reads[Roundmanager]
+  implicit val playerWrites: OWrites[Roundmanager] = Json.writes[Roundmanager]
 }
 
 object RoundmanagerStatus extends Enumeration {
@@ -888,4 +900,6 @@ object RoundmanagerStatus extends Enumeration {
   MINE_NO_ACTION_BUY_PHASE, MINE_END_ACTION, REMODEL_NO_ACTION_BUY_PHASE, REMODEL_ACTION_INPUT_PHASE, REMODEL_END_ACTION,
   REMODEL_BUY_PHASE, REMODEL_ACTION_PHASE, WORKSHOP_INPUT_ACTION_PHASE, WORKSHOP_BUY_PHASE, WORKSHOP_ACTION_PHASE,
   START_BUY_PHASE, WRONG_INPUT_BUY_PHASE, NO_BUYS_LEFT, INIT_BUY_PHASE, CONTINUE_BUY_PHASE, BUY_AGAIN, NEXT_PLAYER_TURN = Value
+
+  implicit val format: Format[roundmanagerBaseIml.RoundmanagerStatus.Value] = Json.formatEnum(this)
 }

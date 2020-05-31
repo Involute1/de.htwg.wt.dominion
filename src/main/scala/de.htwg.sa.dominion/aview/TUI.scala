@@ -12,7 +12,8 @@ class TUI(controller: IController) extends Observer {
       case "q" =>
       case "u" => controller.undo()
       case "r" => controller.redo()
-      case "h" => controller.getHelpPage
+      case "s" => controller.save()
+      case "l" => controller.load()
       case _ => controller.eval(input)
     }
   }

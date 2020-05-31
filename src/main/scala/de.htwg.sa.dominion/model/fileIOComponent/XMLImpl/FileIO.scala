@@ -1,22 +1,25 @@
 package de.htwg.sa.dominion.model.fileIOComponent.XMLImpl
 
-import de.htwg.sa.dominion.model.ModelInterface
-import de.htwg.sa.dominion.model.fileIOComponent.IDominionFileIO
-import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
 
+import de.htwg.sa.dominion.model.fileIOComponent.IDominionFileIO
+import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
+
+import scala.util.Try
 import scala.xml.Elem
 
 class FileIO extends IDominionFileIO {
 
-  override def load(modelInterface: ModelInterface): (String, Roundmanager) = {
-    val saveState = scala.xml.XML.loadFile("roundmanager.xml")
-    val controllerStateString = (saveState \ "state").text.trim
-    val state = controllerStateString
-    val roundManager = modelInterface.fromXML((saveState \ "RoundManager").head)
-    (state, roundManager)
+  override def load(modelInterface: IRoundmanager): Try[(String, IRoundmanager)] = {
+    Try {
+      val saveState = scala.xml.XML.loadFile("roundmanager.xml")
+      val controllerStateString = (saveState \ "state").text.trim
+      val state = controllerStateString
+      val roundManager = modelInterface.fromXML((saveState \ "RoundManager").head)
+      (state, roundManager)
+    }
   }
 
-  override def save(controllerState: String, modelInterface: ModelInterface): Unit = {
+  override def save(controllerState: String, modelInterface: IRoundmanager): Try[Boolean] = {
     def gameToXml: Elem = {
       <Game>
         <state>
@@ -24,9 +27,12 @@ class FileIO extends IDominionFileIO {
         </state>{modelInterface.toXML}
       </Game>
     }
-    import java.io._
-    val pw = new PrintWriter(new File("roundmanager.xml"))
-    pw.write(gameToXml.toString())
-    pw.close()
+    Try {
+      import java.io._
+      val pw = new PrintWriter(new File("roundmanager.xml"))
+      pw.write(gameToXml.toString())
+      pw.close()
+      true
+    }
   }
 }

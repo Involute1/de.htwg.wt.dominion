@@ -20,8 +20,6 @@ trait IController extends Observable {
 
   def getControllerStateAsString: String
 
-  def getHelpPage(): Unit
-
   def getCurrentPlayerTurn: Int
 
   def getNameListSize: Int

@@ -122,21 +122,10 @@ object Cards {
     // TODO
 
   }*/
-
-  /*import play.api.libs.json._
-  implicit val cardsWrites: OWrites[Card] = Json.writes[Card]
-  implicit val cardsReads: Reads[Card] = Json.reads[Card]
- */
 }
 
 object Deck {
   val startDeck: List[Card] = List(Cards.estate, Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper,
     Cards.copper, Cards.estate, Cards.estate, Cards.estate)
-
-  //val startDeck : List[Card] = List(Cards.village, Cards.festival, Cards.cellar, Cards.mine, Cards.smithy, Cards.remodel,
-  //Cards.merchant, Cards.workshop, Cards.market, Cards.village)
-
-
-  //val startDeck : List[Card] = List(Cards.workshop, Cards.workshop, Cards.workshop, Cards.workshop, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver, Cards.silver)
 }
 

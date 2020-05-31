@@ -2,7 +2,9 @@ package de.htwg.sa.dominion.model.roundmanagerComponent
 
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
+import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
+import play.api.libs.json.JsValue
 
 import scala.xml.Elem
 
@@ -38,8 +40,6 @@ trait IRoundmanager {
 
   def checkForNextPlayer: Boolean
 
-  def toXML: Elem
-
   def getCurrentPlayerTurn: Int
 
   def getNameListSize: Int
@@ -63,4 +63,12 @@ trait IRoundmanager {
   def getScore: List[(String, Int)]
 
   def getTurn: Int
+
+  def toJson: JsValue
+
+  def fromJson(jsValue: JsValue): IRoundmanager
+
+  def toXML: Elem
+
+  def fromXML(node: scala.xml.Node): IRoundmanager
 }
