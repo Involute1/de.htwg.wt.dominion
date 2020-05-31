@@ -11,7 +11,7 @@ import scala.util.Try
 
 class FileIO extends IDominionFileIO {
 
-  override def load(modelInterface: IRoundmanager): Try[(String, IRoundmanager)] = {
+  override def load(IRoundmanager: IRoundmanager): Try[(String, IRoundmanager)] = {
     Try {
       val source = Source.fromFile("roundmanager.json")
       val sourceString = source.getLines.mkString
@@ -19,15 +19,15 @@ class FileIO extends IDominionFileIO {
       val json = Json.parse(sourceString)
 
       val controllerStateString = (json \ "controllerState").get.as[String]
-      val roundManager = modelInterface.fromJson((json \ "RoundManager").get)
+      val roundManager = IRoundmanager.fromJson((json \ "RoundManager").get)
       (controllerStateString, roundManager)
     }
   }
 
-  override def save(controllerState: String, modelInterface: IRoundmanager): Try[Boolean] = {
+  override def save(controllerState: String, IRoundmanager: IRoundmanager): Try[Boolean] = {
     val savedGame = Json.obj (
       "controllerState" -> controllerState,
-      "RoundManager" -> modelInterface.toJson
+      "RoundManager" -> IRoundmanager.toJson
     )
 
     Try {

@@ -5,8 +5,8 @@ import scala.util.Try
 
 trait IDominionFileIO {
 
-  def load(modelInterface: IRoundmanager): Try[(String, IRoundmanager)]
+  def load(IRoundmanager: IRoundmanager): Try[(String, IRoundmanager)]
 
-  def save(controllerState: String, modelInterface: IRoundmanager): Try[Boolean]
+  def save(controllerState: String, IRoundmanager: IRoundmanager): Try[Boolean]
 
 }

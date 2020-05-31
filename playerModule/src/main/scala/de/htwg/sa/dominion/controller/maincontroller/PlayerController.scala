@@ -5,12 +5,21 @@ import de.htwg.sa.dominion.controller.IPlayerController
 import de.htwg.sa.dominion.model.fileIoComponent.IPlayerFileIO
 import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
-// fileIo: IPlayerFileIO
-class PlayerController @Inject()(var player: IPlayer) extends IPlayerController {
 
-  override def save(): Unit = ???
+import scala.util.{Failure, Success}
 
-  override def load(): Unit = ???
+class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) extends IPlayerController {
+
+  override def save(): Unit = {
+    fileIo.save(player, "playerModule")
+  }
+
+  override def load(): Unit = {
+    player = fileIo.load(player, "playerModule") match {
+      case Failure(_) => return
+      case Success(value) => value
+    }
+  }
 
   override def constructPlayerNameString(): String = player.constructPlayerNameString()
 
