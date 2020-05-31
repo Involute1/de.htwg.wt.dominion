@@ -30,6 +30,46 @@ object Card {
   import play.api.libs.json._
   implicit val cardReads: Reads[Card] = Json.reads[Card]
   implicit val cardWrites: OWrites[Card] = Json.writes[Card]
+
+  def toXml(card: Card): Elem = {
+    <card>
+      <cardName>{card.cardName}</cardName>
+      <cardDescription>{card.cardDescription}</cardDescription>
+      <cardType>{card.cardType}</cardType>
+      <costValue>{card.costValue}</costValue>
+      <moneyValue>{card.moneyValue}</moneyValue>
+      <vpValue>{card.vpValue}</vpValue>
+      <cardDrawValue>{card.cardDrawValue}</cardDrawValue>
+      <additionalBuysValue>{card.additionalBuysValue}</additionalBuysValue>
+      <additionalActionsValue>{card.additionalActionsValue}</additionalActionsValue>
+      <additionalMoneyValue>{card.additionalMoneyValue}</additionalMoneyValue>
+    </card>
+  }
+
+  def fromXML(node: scala.xml.NodeSeq, i: Int): Card = {
+    // TODO add cardType
+    val cardName = (node \ "cardName")(i).text.trim
+    val cardDescription = (node \ "cardDescription")(i).text.trim
+    val cardType = (node \ "cardType")(i).text
+    val costValue = (node  \ "costValue")(i).text.toInt
+    val moneyValue = (node \ "moneyValue")(i).text.toInt
+    val vpValue = (node \ "vpValue")(i).text.toInt
+    val cardDrawValue = (node \ "cardDrawValue")(i).text.toInt
+    val additionalBuysValue = (node \ "additionalBuysValue")(i).text.toInt
+    val additionalActionsValue = (node \ "additionalActionsValue")(i).text.toInt
+    val additionalMoneyValue = (node \ "additionalMoneyValue")(i).text.toInt
+    val transformedCardType = cardType match {
+      case "Kingdom" => Cardtype.KINGDOM
+      case "Money" => Cardtype.MONEY
+      case "VP" => Cardtype.VICTORYPOINT
+    }
+    Card(cardName, cardDescription, transformedCardType, costValue, moneyValue,vpValue, cardDrawValue, additionalBuysValue, additionalActionsValue, additionalMoneyValue)
+  }
+
+  def listFromXml(node: scala.xml.NodeSeq, i: Int): List[Card] = {
+  // TODO
+    ???
+  }
 }
 
 object CardName extends Enumeration {
@@ -84,44 +124,6 @@ object Cards {
   val workshop: Card = Card("Workshop", "Gain a card costing up to 4", Cardtype.KINGDOM, 3, 0, 0, 0, 0, 0, 0)
   val gardens: Card = Card("Gardens", "Worth 1 WinningPoint per 10 cards you have(round down)", Cardtype.VICTORYPOINT, 4, 0, 0, 0, 0, 0, 0)
   val market: Card = Card("Market", "+1 Card, +1 Action, +1 Buy, +1 Money", Cardtype.KINGDOM, 5, 0, 0, 1, 1, 1, 1)
-
-
-  //toXML Funktion
-  def cardsToXml(cards: Card): Elem = {
-    <card>
-      <cardName>{cards.cardName}</cardName>
-      <cardDescription>{cards.cardDescription}</cardDescription>
-      <cardType>{cards.cardType}</cardType>
-      <costValue>{cards.costValue}</costValue>
-      <moneyValue>{cards.moneyValue}</moneyValue>
-      <vpValue>{cards.vpValue}</vpValue>
-      <cardDrawValue>{cards.cardDrawValue}</cardDrawValue>
-      <additionalBuysValue>{cards.additionalBuysValue}</additionalBuysValue>
-      <additionalActionsValue>{cards.additionalActionsValue}</additionalActionsValue>
-      <additionalMoneyValue>{cards.additionalMoneyValue}</additionalMoneyValue>
-    </card>
-  }
-
-  //fromXml Funktion
-  /*def fromXML(node: scala.xml.NodeSeq, i: Int): Card = {
-    // TODO add cardType
-    val cardName = (node \ "cardName")(i).text.trim
-    val cardDescription = (node \ "cardDescription")(i).text.trim
-    val cardType = (node \ "cardType")(i).text
-    val costValue = (node  \ "costValue")(i).text.toInt
-    val moneyValue = (node \ "moneyValue")(i).text.toInt
-    val vpValue = (node \ "vpValue")(i).text.toInt
-    val cardDrawValue = (node \ "cardDrawValue")(i).text.toInt
-    val additionalBuysValue = (node \ "additionalBuysValue")(i).text.toInt
-    val additionalActionsValue = (node \ "additionalActionsValue")(i).text.toInt
-    val additionalMoneyValue = (node \ "additionalMoneyValue")(i).text.toInt
-    Card(cardName, cardDescription, cardType, costValue, moneyValue,vpValue, cardDrawValue, additionalBuysValue, additionalActionsValue, additionalMoneyValue)
-  }*/
-
-  /*def ListfromXml(node: scala.xml.NodeSeq, i: Int): List[Cards] = {
-    // TODO
-
-  }*/
 }
 
 object Deck {
