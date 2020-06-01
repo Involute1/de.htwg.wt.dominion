@@ -450,9 +450,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def updateMoneyForRoundmanager(playerList: List[Player]): List[Player] = {
-    /*val updatePlayerJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/calculatePlayerMoneyForBuy"))
-    val jsonStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[List[Player])*/
-    playerList.patch(this.playerTurn, Seq(this.players(this.playerTurn).calculatePlayerMoneyForBuy), 1)
+      val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost8081/player/calculatePlayerMoneyForBuy"))
+      val jsonPlayerFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Player])
+      //val test2 = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+    playerList.patch(this.playerTurn, Seq(jsonPlayerFuture.value), 1)
   }
 
   def addToPlayerMoney(moneyToAdd: Int, playerList: List[Player]): List[Player] = {

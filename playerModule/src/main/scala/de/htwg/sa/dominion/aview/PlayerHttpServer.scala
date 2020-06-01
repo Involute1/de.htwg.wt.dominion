@@ -121,8 +121,8 @@ class PlayerHttpServer(controller: IPlayerController) {
     },
     get{
       path("player" / "calculatePlayerMoneyForBuy") {
-        controller.calculatePlayerMoneyForBuy
-        complete("")
+        //controller.calculatePlayerMoneyForBuy
+        complete(controller.calculatePlayerMoneyForBuy)
       }
     },
     post {
