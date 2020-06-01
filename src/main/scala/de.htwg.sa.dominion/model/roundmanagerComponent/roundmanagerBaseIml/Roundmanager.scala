@@ -795,7 +795,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def toXml: Elem = {
     <Roundmanager>
-      <players>{for (player <- this.players) yield player.toXml}</players>
+      <players>{for (player <- this.players) yield player.toXml}</players> // TODO call player.toxml
       <names>{for (name <- this.names) yield <name>{name}</name>}</names>
       <numberOfPlayers>{this.numberOfPlayers}</numberOfPlayers>
       <turn>{this.turn}</turn>
@@ -821,8 +821,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def fromXml(node: Node): IRoundmanager = {
     val playersNode = (node \ "players").head.child
+
     //val players = playersNode.map(node => ) // TODO call player.fromXml
-    val players = Nil
 
     val names = (node \ "names").head.child.map(node => (node \\ "name").text.trim).toList
     val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
