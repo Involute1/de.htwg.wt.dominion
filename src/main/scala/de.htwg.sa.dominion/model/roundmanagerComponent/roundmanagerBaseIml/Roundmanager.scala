@@ -1,19 +1,34 @@
 package de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml
 
+import java.util.concurrent.TimeUnit
+
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.unmarshalling.Unmarshal
+import akka.stream.ActorMaterializer
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl._
+import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.{IRoundmanager, roundmanagerBaseIml}
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.RoundmanagerStatus.RoundmanagerStatus
-import play.api.libs.json.{Format, JsValue, Json}
+import play.api.libs.json.{Format, JsObject, JsValue, Json}
+import akka.http.scaladsl.client.RequestBuilding._
 
+import scala.concurrent.{Await, ExecutionContextExecutor}
+import scala.concurrent.duration.Duration
 import scala.util.Random
 import scala.xml.{Elem, Node}
 
 case class Roundmanager(players: List[Player], names: List[String], numberOfPlayers: Int, turn: Int, decks: List[List[Card]],
                         emptyDeckCount: Int, gameEnd: Boolean, score: List[(String, Int)],
                         roundStatus: RoundmanagerStatus, playerTurn: Int, trash: List[Card]) extends IRoundmanager {
+
+  implicit val system: ActorSystem = ActorSystem("my-system")
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   override def actionPhase(input: String): Roundmanager = {
     this.roundStatus match {
@@ -335,7 +350,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val playerWithNewCards: List[Player] = drawXAmountOfCards(1, this.players(this.playerTurn))
     val updatedPlayerList: List[Player] = addToPlayerActions(2 - 1, playerWithNewCards)
     val finalPlayerList: List[Player] = addToPlayerMoney(2, updatedPlayerList)
-    finalPlayerList.patch(this.playerTurn, Seq(finalPlayerList(this.playerTurn).removeHandCardAddToStacker(input)), 1)
+    val updatedPlayer = {
+      val response = Http().singleRequest(Post("http://localhost8081/player/removeHandCardAddToStacker"))
+      val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
+      Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+    }
+    finalPlayerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
   }
 
   def cellarActionStart(input: Int): List[Player] = {
@@ -397,7 +417,11 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def merchantCheckForSilver(playerList: List[Player]): List[Player] = {
-    val updatedPlayer: Player = playerList(this.playerTurn).checkForFirstSilver()
+    val updatedPlayer = {
+      val response = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/checkForFirstSilver"))
+      val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
+      Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+    }
     playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
   }
 
@@ -426,7 +450,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def updateMoneyForRoundmanager(playerList: List[Player]): List[Player] = {
-    playerList.patch(this.playerTurn, Seq(playerList(this.playerTurn).calculatePlayerMoneyForBuy), 1)
+    /*val updatePlayerJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/calculatePlayerMoneyForBuy"))
+    val jsonStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[List[Player])*/
+    playerList.patch(this.playerTurn, Seq(this.players(this.playerTurn).calculatePlayerMoneyForBuy), 1)
   }
 
   def addToPlayerMoney(moneyToAdd: Int, playerList: List[Player]): List[Player] = {
@@ -655,9 +681,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     this.gameEnd
   }
 
+
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
-    val actionDefaultString = handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n" + checkActionCard()
+    val updatePlayerJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/constructPlayerHandString"))
+    val jsonPlayerStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
+    val updateTrashJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/constructCellarTrashString"))
+    val jsonTrashStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
+    val actionDefaultString = handDefaultString + jsonPlayerStringFuture + "\n" + checkActionCard()
     val villageActionString = "You drew 1 Card and gained 2 Actions\n"
     val festivalActionString = "You drew 1 Card, gained 2 Actions and 2 Money\n"
     val smithyActionString = "You drew 3 Cards\n"
@@ -682,14 +713,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       case RoundmanagerStatus.MERCHANT_ACTION_PHASE => merchantActionString + actionDefaultString
       case RoundmanagerStatus.MERCHANT_BUY_PHASE => merchantActionString + buyPhaseString
       case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE => cellarFirstActionString + handDefaultString +
-        this.players(this.playerTurn).constructPlayerHandString() + "\nPlease enter the Cards you want to discard separated with a ','"
+        jsonPlayerStringFuture + "\nPlease enter the Cards you want to discard separated with a ','"
       case RoundmanagerStatus.CELLAR_END_ACTION => cellarEndActionString + actionDefaultString
       case RoundmanagerStatus.CELLAR_BUY_PHASE => cellarEndActionString + buyPhaseString
-      case RoundmanagerStatus.MINE_ACTION_INPUT_PHASE => this.players(this.playerTurn).constructCellarTrashString() + "\nSelect which Treasure to trash:\n"
+      case RoundmanagerStatus.MINE_ACTION_INPUT_PHASE => jsonTrashStringFuture + "\nSelect which Treasure to trash:\n"
       case RoundmanagerStatus.MINE_NO_ACTION_PHASE => "You dont have any Treasure on hand\n" + actionDefaultString
       case RoundmanagerStatus.MINE_NO_ACTION_BUY_PHASE => "You dont have any Treasure on hand\n" + buyPhaseString
       case RoundmanagerStatus.MINE_END_ACTION => constructCellarTreasureString() + "\nChoose one of the treasures:\n"
-      case RoundmanagerStatus.REMODEL_ACTION_INPUT_PHASE => handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\nSelect which Card to trash:"
+      case RoundmanagerStatus.REMODEL_ACTION_INPUT_PHASE => handDefaultString + jsonPlayerStringFuture + "\nSelect which Card to trash:"
       case RoundmanagerStatus.REMODEL_NO_ACTION_BUY_PHASE => "You dont have any Cards to trash\n" + buyPhaseString
       case RoundmanagerStatus.REMODEL_END_ACTION => constructRemodelString() + "\nSelect which Card to add to your stacker:\n"
       case RoundmanagerStatus.REMODEL_ACTION_PHASE => remodelActionString + actionDefaultString

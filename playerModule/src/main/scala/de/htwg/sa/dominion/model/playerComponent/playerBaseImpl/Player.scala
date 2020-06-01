@@ -3,12 +3,13 @@ package de.htwg.sa.dominion.model.playerComponent.playerBaseImpl
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cards, Cardtype}
 import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import play.api.libs.json.{JsValue, Json}
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 
 import scala.util.Random
 import scala.xml.{Elem, NodeSeq}
 
 case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card], handCards: List[Card],
-                  actions: Int, buys: Int, money: Int) extends IPlayer {
+                  actions: Int, buys: Int, money: Int) extends IPlayer with PlayJsonSupport  {
 
   override def constructPlayerNameString(): String = {
     this.name

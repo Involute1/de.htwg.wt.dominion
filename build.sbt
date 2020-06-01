@@ -15,7 +15,8 @@ val commonDependencies = Seq(
   "com.typesafe.play" %% "play-json" % "2.8.1",
   "com.typesafe.akka" %% "akka-http" % "10.1.12",
   "com.typesafe.akka" %% "akka-stream" % "2.6.5",
-  "com.typesafe.akka" %% "akka-testkit" % "2.6.5" % Test
+  "com.typesafe.akka" %% "akka-testkit" % "2.6.5" % Test,
+  "de.heikoseeberger" %% "akka-http-play-json" % "1.32.0"
 )
 
 lazy val root = (project in file(".")).settings(
