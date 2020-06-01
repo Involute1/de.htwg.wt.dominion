@@ -13,7 +13,7 @@ trait IPlayer {
 
   def constructPlayerStackerString(): String
 
-  def constructPlayerHandString(): String
+  def constructPlayerHandString(player: Player): String
 
   def updateActions(updatedActionValue: Int): Player
 

@@ -14,7 +14,7 @@ trait IPlayerController {
 
   def constructPlayerStackerString(): String
 
-  def constructPlayerHandString(): String
+  def constructPlayerHandString(playerToUpdate: Player): String
 
   def updateActions(updatedActionValue: Int): Player
 

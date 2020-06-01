@@ -27,7 +27,7 @@ class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) ext
 
   override def constructPlayerStackerString(): String = player.constructPlayerStackerString()
 
-  override def constructPlayerHandString(): String = player.constructPlayerHandString()
+  override def constructPlayerHandString(playerToUpdate: Player): String = player.constructPlayerHandString(playerToUpdate)
 
   override def updateActions(updatedActionValue: Int): Player = player.updateActions(updatedActionValue)
 
