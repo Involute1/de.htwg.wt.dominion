@@ -453,6 +453,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost8081/player/calculatePlayerMoneyForBuy"))
       val jsonPlayerFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Player])
       val test2 = Await.result(jsonPlayerFuture, Duration(1, TimeUnit.SECONDS))
+    // TODO await /future problem lösen
     playerList.patch(this.playerTurn, Seq(test2), 1)
   }
 
