@@ -450,7 +450,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def updateMoneyForRoundmanager(playerList: List[Player]): List[Player] = {
-      val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost8081/player/calculatePlayerMoneyForBuy"))
+      val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost:8081/player/calculatePlayerMoneyForBuy"))
       val jsonPlayerFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Player])
       val test2 = Await.result(jsonPlayerFuture, Duration(1, TimeUnit.SECONDS))
     // TODO await /future problem lösen
@@ -689,7 +689,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val updatePlayerJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/constructPlayerHandString"))
     val jsonPlayerStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
     val updateTrashJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/constructCellarTrashString"))
-    val jsonTrashStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
+    val jsonTrashStringFuture = updateTrashJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
     val actionDefaultString = handDefaultString + jsonPlayerStringFuture + "\n" + checkActionCard()
     val villageActionString = "You drew 1 Card and gained 2 Actions\n"
     val festivalActionString = "You drew 1 Card, gained 2 Actions and 2 Money\n"
@@ -703,7 +703,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val buyPhaseString = "You can spend (" + this.players(this.playerTurn).money + ") Gold in (" + this.players(this.playerTurn).buys + ") Buys \n----AVAILABLE CARDS----\n" + constructBuyableString() + "\nWhich Card do you wanna buy?\n"
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
-      => handDefaultString + this.players(this.playerTurn).constructPlayerHandString() + "\n----ACTION PHASE----\n" + checkActionCard()
+      => handDefaultString + jsonPlayerStringFuture + "\n----ACTION PHASE----\n" + checkActionCard()
       case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString + actionDefaultString
       case RoundmanagerStatus.VILLAGE_BUY_PHASE => villageActionString + buyPhaseString
       case RoundmanagerStatus.FESTIVAL_ACTION_PHASE => festivalActionString + actionDefaultString
