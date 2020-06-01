@@ -24,52 +24,53 @@ case class Card(cardName: String, cardDescription: String, cardType: Cardtype, c
   override def toJson: JsValue = Json.toJson(this)
 
   override def fromJson(jsValue: JsValue): ICard = {jsValue.validate[Card].asOpt.get}
+
+  override def toXml: Elem = {
+    <Card>
+      <cardName>{this.cardName}</cardName>
+      <cardDescription>{this.cardDescription}</cardDescription>
+      <cardType>{this.cardType}</cardType>
+      <costValue>{this.costValue}</costValue>
+      <moneyValue>{this.moneyValue}</moneyValue>
+      <vpValue>{this.vpValue}</vpValue>
+      <cardDrawValue>{this.cardDrawValue}</cardDrawValue>
+      <additionalBuysValue>{this.additionalBuysValue}</additionalBuysValue>
+      <additionalActionsValue>{this.additionalActionsValue}</additionalActionsValue>
+      <additionalMoneyValue>{this.additionalMoneyValue}</additionalMoneyValue>
+    </Card>
+  }
+
+  override def fromXML(node: scala.xml.NodeSeq): ICard = {
+    val cardName = (node \ "cardName").text.trim
+    val cardDescription = (node \ "cardDescription").text.trim
+    val cardType = (node \ "cardType").text
+    val costValue = (node  \ "costValue").text.toInt
+    val moneyValue = (node \ "moneyValue").text.toInt
+    val vpValue = (node \ "vpValue").text.toInt
+    val cardDrawValue = (node \ "cardDrawValue").text.toInt
+    val additionalBuysValue = (node \ "additionalBuysValue").text.toInt
+    val additionalActionsValue = (node \ "additionalActionsValue").text.toInt
+    val additionalMoneyValue = (node \ "additionalMoneyValue").text.toInt
+
+    val transformedCardType = cardType match {
+      case "Kingdom" => Cardtype.KINGDOM
+      case "Money" => Cardtype.MONEY
+      case "VP" => Cardtype.VICTORYPOINT
+    }
+
+    Card(cardName, cardDescription, transformedCardType, costValue, moneyValue,vpValue, cardDrawValue, additionalBuysValue, additionalActionsValue, additionalMoneyValue)
+  }
+
+  override def listFromXml(node: scala.xml.NodeSeq): List[ICard] = {
+    val cards: Seq[ICard] = for (card <- node \ "Card") yield fromXML(card)
+    cards.toList
+  }
 }
 
 object Card {
   import play.api.libs.json._
   implicit val cardReads: Reads[Card] = Json.reads[Card]
   implicit val cardWrites: OWrites[Card] = Json.writes[Card]
-
-  def toXml(card: Card): Elem = {
-    <card>
-      <cardName>{card.cardName}</cardName>
-      <cardDescription>{card.cardDescription}</cardDescription>
-      <cardType>{card.cardType}</cardType>
-      <costValue>{card.costValue}</costValue>
-      <moneyValue>{card.moneyValue}</moneyValue>
-      <vpValue>{card.vpValue}</vpValue>
-      <cardDrawValue>{card.cardDrawValue}</cardDrawValue>
-      <additionalBuysValue>{card.additionalBuysValue}</additionalBuysValue>
-      <additionalActionsValue>{card.additionalActionsValue}</additionalActionsValue>
-      <additionalMoneyValue>{card.additionalMoneyValue}</additionalMoneyValue>
-    </card>
-  }
-
-  def fromXML(node: scala.xml.NodeSeq, i: Int): Card = {
-    // TODO add cardType
-    val cardName = (node \ "cardName")(i).text.trim
-    val cardDescription = (node \ "cardDescription")(i).text.trim
-    val cardType = (node \ "cardType")(i).text
-    val costValue = (node  \ "costValue")(i).text.toInt
-    val moneyValue = (node \ "moneyValue")(i).text.toInt
-    val vpValue = (node \ "vpValue")(i).text.toInt
-    val cardDrawValue = (node \ "cardDrawValue")(i).text.toInt
-    val additionalBuysValue = (node \ "additionalBuysValue")(i).text.toInt
-    val additionalActionsValue = (node \ "additionalActionsValue")(i).text.toInt
-    val additionalMoneyValue = (node \ "additionalMoneyValue")(i).text.toInt
-    val transformedCardType = cardType match {
-      case "Kingdom" => Cardtype.KINGDOM
-      case "Money" => Cardtype.MONEY
-      case "VP" => Cardtype.VICTORYPOINT
-    }
-    Card(cardName, cardDescription, transformedCardType, costValue, moneyValue,vpValue, cardDrawValue, additionalBuysValue, additionalActionsValue, additionalMoneyValue)
-  }
-
-  def listFromXml(node: scala.xml.NodeSeq, i: Int): List[Card] = {
-  // TODO
-    ???
-  }
 }
 
 object CardName extends Enumeration {

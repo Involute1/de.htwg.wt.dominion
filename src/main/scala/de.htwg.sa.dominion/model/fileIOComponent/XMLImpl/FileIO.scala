@@ -14,7 +14,7 @@ class FileIO extends IDominionFileIO {
       val saveState = scala.xml.XML.loadFile("roundmanager.xml")
       val controllerStateString = (saveState \ "state").text.trim
       val state = controllerStateString
-      val roundManager = IRoundmanager.fromXML((saveState \ "RoundManager").head)
+      val roundManager = IRoundmanager.fromXml((saveState \ "RoundManager").head)
       (state, roundManager)
     }
   }
@@ -24,7 +24,7 @@ class FileIO extends IDominionFileIO {
       <Game>
         <state>
           {controllerState}
-        </state>{IRoundmanager.toXML}
+        </state>{IRoundmanager.toXml}
       </Game>
     }
     Try {

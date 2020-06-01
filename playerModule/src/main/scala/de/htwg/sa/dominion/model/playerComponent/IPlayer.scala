@@ -3,6 +3,8 @@ package de.htwg.sa.dominion.model.playerComponent
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 import play.api.libs.json.JsValue
 
+import scala.xml.Elem
+
 trait IPlayer {
 
   def constructPlayerNameString(): String
@@ -44,4 +46,8 @@ trait IPlayer {
   def toJson: JsValue
 
   def fromJson(jsValue: JsValue): IPlayer
+
+  def toXml: Elem
+
+  def fromXml(node: scala.xml.NodeSeq): IPlayer
 }

@@ -68,7 +68,7 @@ trait IRoundmanager {
 
   def fromJson(jsValue: JsValue): IRoundmanager
 
-  def toXML: Elem
+  def toXml: Elem
 
-  def fromXML(node: scala.xml.Node): IRoundmanager
+  def fromXml(node: scala.xml.Node): IRoundmanager
 }

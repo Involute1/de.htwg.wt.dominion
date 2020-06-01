@@ -5,6 +5,7 @@ import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import play.api.libs.json.{JsValue, Json}
 
 import scala.util.Random
+import scala.xml.{Elem, NodeSeq}
 
 case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card], handCards: List[Card],
                   actions: Int, buys: Int, money: Int) extends IPlayer {
@@ -129,6 +130,34 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   override def toJson: JsValue = Json.toJson(this)
 
   override def fromJson(jsValue: JsValue): IPlayer = {jsValue.validate[Player].asOpt.get}
+
+  override def fromXml(node: NodeSeq): IPlayer = {
+    val name = (node \ "name").text.trim
+    val value = (node \ "value").text.toInt
+    // TODO call Card.listFromXml
+    val deck = (node \ "deck")
+    val stacker = (node \ "stacker").text
+    val hand = (node \ "hand").text
+
+    val actions = (node \ "actions").text.toInt
+    val buys = (node \ "buys").text.toInt
+    val money = (node \ "money").text.toInt
+
+    Player(name, value, Nil, Nil, Nil, actions, buys, money)
+  }
+
+  override def toXml: Elem = {
+    <Player>
+      <name>{this.name}</name>
+      <value>{this.value}</value>
+      <deck>{for (card <- this.deck) yield card.toXml}</deck>
+      <stacker>{for (card <- this.stacker) yield card.toXml}</stacker>
+      <hand>{for (card <- this.handCards) yield card.toXml}</hand>
+      <actions>{this.actions}</actions>
+      <buys>{this.buys}</buys>
+      <money>{this.money}</money>
+    </Player>
+  }
 }
 
 object Player {

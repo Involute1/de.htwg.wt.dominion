@@ -3,6 +3,8 @@ package de.htwg.sa.dominion.model.cardComponent
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import play.api.libs.json.JsValue
 
+import scala.xml.Elem
+
 trait ICard {
 
   def constructCardNameString(): String
@@ -12,4 +14,10 @@ trait ICard {
   def toJson: JsValue
 
   def fromJson(jsValue: JsValue): ICard
+
+  def toXml: Elem
+
+  def fromXML(node: scala.xml.NodeSeq): ICard
+
+  def listFromXml(node: scala.xml.NodeSeq): List[ICard]
 }
