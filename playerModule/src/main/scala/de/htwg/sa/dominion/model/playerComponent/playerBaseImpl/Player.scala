@@ -134,6 +134,7 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   override def fromXml(node: NodeSeq): IPlayer = {
     val name = (node \ "name").text.trim
     val value = (node \ "value").text.toInt
+
     // TODO call Card.listFromXml
     val deck = (node \ "deck")
     val stacker = (node \ "stacker").text

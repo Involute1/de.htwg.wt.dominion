@@ -789,7 +789,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def fromXml(node: Node): IRoundmanager = {
     val playersNode = (node \ "players").head.child
-    val players = playersNode.map(node => ) // TODO call player.fromXml
+    //val players = playersNode.map(node => ) // TODO call player.fromXml
+    val players = Nil
 
     val names = (node \ "names").head.child.map(node => (node \\ "name").text.trim).toList
     val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
@@ -797,12 +798,11 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
     val playingDecksNode = (node \ "playingDecks").head.child // TODO call cards.fromXml
 
-
     val emptyDeckCount = (node \ "emptyDeckCount").text.toInt
     val gameEnd = (node \ "gameEnd").text.toBoolean
 
     val scoreNode = (node \ "score").head.child
-    val score = scoreFromXML(scoreNode) // TODO def scorefromxml
+    val score = scoreFromXML(scoreNode)
 
     val roundStatusNode = (node \ "roudStatus").text
     val roundStatus = roundStatusFromXml(roundStatusNode)
@@ -810,8 +810,13 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val playerTurn = (node \ "playerTurn").text.toInt
 
     val trashNode = (node \ "trash").head.child // TODO call cards.fromXml
-    //Roundmanager(players, names, numberOfPlayers, turn, decks, emptyDeckCount, gameEnd, score, roundStatus, playerTurn, trash)
-    ???
+
+    Roundmanager(players, names, numberOfPlayers, turn, decks, emptyDeckCount, gameEnd, score, roundStatus, playerTurn, trash)
+  }
+
+  def scoreFromXML(node: scala.xml.NodeSeq): List[(String, Int)] = {
+    val list = for (entry <- node) yield ((node \ "player").text, (node \ "points").text.toInt)
+    list.toList
   }
 
   def roundStatusFromXml(roundStatusString: String): RoundmanagerStatus = {
