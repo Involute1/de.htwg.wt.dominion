@@ -25,8 +25,8 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     stackerStringList.mkString("\n")
   }
 
-  override def constructPlayerHandString(): String = {
-    val handStringList: List[String] = for ((card, idx) <- this.handCards.zipWithIndex) yield card.cardName + " (" + idx + ")"
+  override def constructPlayerHandString(player: Player): String = {
+    val handStringList: List[String] = for ((card, idx) <- player.handCards.zipWithIndex) yield card.cardName + " (" + idx + ")"
     handStringList.mkString("\n")
   }
 

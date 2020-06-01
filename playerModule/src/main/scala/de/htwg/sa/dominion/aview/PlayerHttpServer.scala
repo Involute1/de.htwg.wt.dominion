@@ -9,12 +9,13 @@ import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.dominion.PlayerMain
 import de.htwg.sa.dominion.controller.util.{UpdatedPlayerActions, UpdatedPlayerBuys}
-import de.htwg.sa.dominion.util.{IntListContainer, UpdatedActionsContainer}
+import de.htwg.sa.dominion.util.{IntListContainer, PlayerHandStringContainer, UpdatedActionsContainer}
 import play.api.libs.json.Json
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-class PlayerHttpServer(controller: IPlayerController) {
+case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSupport {
   implicit val system: ActorSystem = ActorSystem("my-system")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher

@@ -684,11 +684,15 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
-    val updatePlayerJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/constructPlayerHandString"))
-    val jsonPlayerStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
+    val handString = {
+      val updatePlayerJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/constructPlayerHandString"))
+      val jsonPlayerStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[String])
+      Await.result(jsonPlayerStringFuture, Duration(1, TimeUnit.SECONDS))
+    }
+
     val updateTrashJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/constructCellarTrashString"))
     val jsonTrashStringFuture = updateTrashJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
-    val actionDefaultString = handDefaultString + jsonPlayerStringFuture + "\n" + checkActionCard()
+    val actionDefaultString = handDefaultString + handString + "\n" + checkActionCard()
     val villageActionString = "You drew 1 Card and gained 2 Actions\n"
     val festivalActionString = "You drew 1 Card, gained 2 Actions and 2 Money\n"
     val smithyActionString = "You drew 3 Cards\n"
@@ -701,7 +705,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val buyPhaseString = "You can spend (" + this.players(this.playerTurn).money + ") Gold in (" + this.players(this.playerTurn).buys + ") Buys \n----AVAILABLE CARDS----\n" + constructBuyableString() + "\nWhich Card do you wanna buy?\n"
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
-      => handDefaultString + jsonPlayerStringFuture + "\n----ACTION PHASE----\n" + checkActionCard()
+      => handDefaultString + handString + "\n----ACTION PHASE----\n" + checkActionCard()
       case RoundmanagerStatus.VILLAGE_ACTION_PHASE => villageActionString + actionDefaultString
       case RoundmanagerStatus.VILLAGE_BUY_PHASE => villageActionString + buyPhaseString
       case RoundmanagerStatus.FESTIVAL_ACTION_PHASE => festivalActionString + actionDefaultString
@@ -713,14 +717,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       case RoundmanagerStatus.MERCHANT_ACTION_PHASE => merchantActionString + actionDefaultString
       case RoundmanagerStatus.MERCHANT_BUY_PHASE => merchantActionString + buyPhaseString
       case RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE => cellarFirstActionString + handDefaultString +
-        jsonPlayerStringFuture + "\nPlease enter the Cards you want to discard separated with a ','"
+        handString + "\nPlease enter the Cards you want to discard separated with a ','"
       case RoundmanagerStatus.CELLAR_END_ACTION => cellarEndActionString + actionDefaultString
       case RoundmanagerStatus.CELLAR_BUY_PHASE => cellarEndActionString + buyPhaseString
       case RoundmanagerStatus.MINE_ACTION_INPUT_PHASE => jsonTrashStringFuture + "\nSelect which Treasure to trash:\n"
       case RoundmanagerStatus.MINE_NO_ACTION_PHASE => "You dont have any Treasure on hand\n" + actionDefaultString
       case RoundmanagerStatus.MINE_NO_ACTION_BUY_PHASE => "You dont have any Treasure on hand\n" + buyPhaseString
       case RoundmanagerStatus.MINE_END_ACTION => constructCellarTreasureString() + "\nChoose one of the treasures:\n"
-      case RoundmanagerStatus.REMODEL_ACTION_INPUT_PHASE => handDefaultString + jsonPlayerStringFuture + "\nSelect which Card to trash:"
+      case RoundmanagerStatus.REMODEL_ACTION_INPUT_PHASE => handDefaultString + handString + "\nSelect which Card to trash:"
       case RoundmanagerStatus.REMODEL_NO_ACTION_BUY_PHASE => "You dont have any Cards to trash\n" + buyPhaseString
       case RoundmanagerStatus.REMODEL_END_ACTION => constructRemodelString() + "\nSelect which Card to add to your stacker:\n"
       case RoundmanagerStatus.REMODEL_ACTION_PHASE => remodelActionString + actionDefaultString
