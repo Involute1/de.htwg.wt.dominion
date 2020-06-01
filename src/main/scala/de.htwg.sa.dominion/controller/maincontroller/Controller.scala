@@ -49,7 +49,7 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
 
   override def save(): Unit = {
     fileIO.save(getControllerStateAsString, roundmanager)
-    Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/save"))
+    Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/save"))
     notifyObservers
   }
 
@@ -68,7 +68,7 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
       case "GameOverState" => GameOverState(this)
     }
     roundmanager = loadedRoundmanager._2
-    Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/load"))
+    Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/load"))
     notifyObservers
   }
 
