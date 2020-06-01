@@ -2,8 +2,8 @@ package de.htwg.sa.dominion.controller.maincontroller
 
 import com.google.inject.Inject
 import de.htwg.sa.dominion.controller.ICardController
+import de.htwg.sa.dominion.model.cardFileIoComponent.ICardFileIO
 import de.htwg.sa.dominion.model.cardComponent.ICard
-import de.htwg.sa.dominion.model.fileIoComponent.ICardFileIO
 
 import scala.util.{Failure, Success}
 

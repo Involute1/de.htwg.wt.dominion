@@ -1,4 +1,4 @@
-package de.htwg.sa.dominion.model.fileIoComponent
+package de.htwg.sa.dominion.model.cardFileIoComponent
 
 import de.htwg.sa.dominion.model.cardComponent.ICard
 

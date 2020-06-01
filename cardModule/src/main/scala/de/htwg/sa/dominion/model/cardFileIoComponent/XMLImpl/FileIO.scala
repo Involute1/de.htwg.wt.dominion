@@ -1,7 +1,7 @@
-package de.htwg.sa.dominion.model.fileIoComponent.XMLImpl
+package de.htwg.sa.dominion.model.cardFileIoComponent.XMLImpl
 
+import de.htwg.sa.dominion.model.cardFileIoComponent.ICardFileIO
 import de.htwg.sa.dominion.model.cardComponent.ICard
-import de.htwg.sa.dominion.model.fileIoComponent.ICardFileIO
 
 import scala.util.Try
 import scala.xml.{Elem, XML}

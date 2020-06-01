@@ -1,29 +1,30 @@
-package de.htwg.sa.dominion.model.fileIoComponent.JSONImpl
+package de.htwg.sa.dominion.model.playerFileIoComponent.JSONImpl
 
 import java.io.{File, PrintWriter}
 
 import de.htwg.sa.dominion.model.cardComponent.ICard
-import de.htwg.sa.dominion.model.fileIoComponent.ICardFileIO
+import de.htwg.sa.dominion.model.playerFileIoComponent.IPlayerFileIO
+import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import play.api.libs.json.Json
 
 import scala.io.Source
 import scala.util.Try
 
-class FileIO extends ICardFileIO {
-  override def load(card: ICard, path: String): Try[ICard] = {
+class FileIO extends IPlayerFileIO {
+  override def load(player: IPlayer, path: String): Try[IPlayer] = {
     Try {
       val source = Source.fromFile(path + ".json")
       val string = source.getLines().mkString
       source.close
       val json = Json.parse(string)
-      card.fromJson(json)
+      player.fromJson(json)
     }
   }
 
-  override def save(card: ICard, path: String): Try[Boolean] = {
+  override def save(player: IPlayer, path: String): Try[Boolean] = {
     Try {
       val printWriter = new PrintWriter(new File(path + ".json"))
-      printWriter.write(Json.prettyPrint(card.toJson))
+      printWriter.write(Json.prettyPrint(player.toJson))
       printWriter.close()
       true
     }

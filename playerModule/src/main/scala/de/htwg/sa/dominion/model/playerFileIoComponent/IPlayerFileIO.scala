@@ -1,4 +1,4 @@
-package de.htwg.sa.dominion.model.fileIoComponent
+package de.htwg.sa.dominion.model.playerFileIoComponent
 
 import de.htwg.sa.dominion.model.playerComponent.IPlayer
 

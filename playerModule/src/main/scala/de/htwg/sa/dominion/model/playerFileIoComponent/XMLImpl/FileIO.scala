@@ -1,6 +1,6 @@
-package de.htwg.sa.dominion.model.fileIoComponent.XMLImpl
+package de.htwg.sa.dominion.model.playerFileIoComponent.XMLImpl
 
-import de.htwg.sa.dominion.model.fileIoComponent.IPlayerFileIO
+import de.htwg.sa.dominion.model.playerFileIoComponent.IPlayerFileIO
 import de.htwg.sa.dominion.model.playerComponent.IPlayer
 
 import scala.util.Try

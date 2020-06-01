@@ -7,10 +7,8 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl._
-import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.{IRoundmanager, roundmanagerBaseIml}
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.RoundmanagerStatus.RoundmanagerStatus
@@ -450,7 +448,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def updateMoneyForRoundmanager(playerList: List[Player]): List[Player] = {
-      val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost8081/player/calculatePlayerMoneyForBuy"))
+      val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost:8081/player/calculatePlayerMoneyForBuy"))
       val jsonPlayerFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Player])
       val test2 = Await.result(jsonPlayerFuture, Duration(1, TimeUnit.SECONDS))
     // TODO await /future problem lösen
@@ -686,9 +684,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
-    val updatePlayerJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/constructPlayerHandString"))
+    val updatePlayerJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/constructPlayerHandString"))
     val jsonPlayerStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
-    val updateTrashJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/constructCellarTrashString"))
+    val updateTrashJsonFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/constructCellarTrashString"))
     val jsonTrashStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
     val actionDefaultString = handDefaultString + jsonPlayerStringFuture + "\n" + checkActionCard()
     val villageActionString = "You drew 1 Card and gained 2 Actions\n"
@@ -699,7 +697,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val cellarFirstActionString = "You gained 1 Action\n"
     val cellarEndActionString = "You discarded x Cards, and drew as many\n"
     val remodelActionString = "You gained a card\n"
-    val workshioActionString = "You gained a card that costs up to 4\n"
+    val workshopActionString = "You gained a card that costs up to 4\n"
     val buyPhaseString = "You can spend (" + this.players(this.playerTurn).money + ") Gold in (" + this.players(this.playerTurn).buys + ") Buys \n----AVAILABLE CARDS----\n" + constructBuyableString() + "\nWhich Card do you wanna buy?\n"
     this.roundStatus match {
       case RoundmanagerStatus.PLAY_CARD_PHASE
@@ -728,8 +726,8 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       case RoundmanagerStatus.REMODEL_ACTION_PHASE => remodelActionString + actionDefaultString
       case RoundmanagerStatus.REMODEL_BUY_PHASE => remodelActionString + buyPhaseString
       case RoundmanagerStatus.WORKSHOP_INPUT_ACTION_PHASE => constructWorkshopString() + "\nSelect which Card to add to your Stacker:"
-      case RoundmanagerStatus.WORKSHOP_ACTION_PHASE => workshioActionString + actionDefaultString
-      case RoundmanagerStatus.WORKSHOP_BUY_PHASE => workshioActionString + buyPhaseString
+      case RoundmanagerStatus.WORKSHOP_ACTION_PHASE => workshopActionString + actionDefaultString
+      case RoundmanagerStatus.WORKSHOP_BUY_PHASE => workshopActionString + buyPhaseString
       case RoundmanagerStatus.START_BUY_PHASE => buyPhaseString
       case RoundmanagerStatus.WRONG_INPUT_BUY_PHASE => "Wrong input try again\n"
       case RoundmanagerStatus.NO_BUYS_LEFT => "No more buys left press a key to continue"
@@ -795,8 +793,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def fromJson(jsValue: JsValue): Roundmanager = jsValue.validate[Roundmanager].asOpt.get
 
   override def toXml: Elem = {
+    //TODO call player.toxml
     <Roundmanager>
-      <players>{for (player <- this.players) yield player.toXml}</players> // TODO call player.toxml
+      <players>{for (player <- this.players) yield player.toXml}</players>
       <names>{for (name <- this.names) yield <name>{name}</name>}</names>
       <numberOfPlayers>{this.numberOfPlayers}</numberOfPlayers>
       <turn>{this.turn}</turn>
@@ -811,6 +810,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def cardsListToXml(cardList: List[Card]): List[Elem] = {
+    //TODO call card.toxml AKKA
     val elemList = for (card <- cardList) yield card.toXml
     elemList
   }
