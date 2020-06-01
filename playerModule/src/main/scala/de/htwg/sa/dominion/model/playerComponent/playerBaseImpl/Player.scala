@@ -149,6 +149,7 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   }
 
   override def toXml: Elem = {
+    // TODO card.toxml
     <Player>
       <name>{this.name}</name>
       <value>{this.value}</value>
@@ -159,6 +160,10 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
       <buys>{this.buys}</buys>
       <money>{this.money}</money>
     </Player>
+  }
+
+  override def test(): String = {
+    "TEST"
   }
 }
 

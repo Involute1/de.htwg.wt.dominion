@@ -56,4 +56,6 @@ class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) ext
   override def moveAllCardsToDeckForScore(): Player = player.moveAllCardsToDeckForScore()
 
   override def calculateScore: Int = player.calculateScore
+
+  override def test(): String = player.test()
 }

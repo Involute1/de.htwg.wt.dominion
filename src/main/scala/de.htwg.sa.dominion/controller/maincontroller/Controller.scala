@@ -1,5 +1,7 @@
 package de.htwg.sa.dominion.controller.maincontroller
 
+import java.util.concurrent.TimeUnit
+
 import akka.actor.ActorSystem
 
 import scala.util.{Failure, Success}
@@ -13,7 +15,13 @@ import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, CardName}
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
 import de.htwg.sa.dominion.model.fileIOComponent.IDominionFileIO
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
-import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.unmarshalling.Unmarshal
+
+import scala.concurrent.{Await, ExecutionContextExecutor}
+import scala.concurrent.duration.Duration
+import akka.http.scaladsl.client.RequestBuilding._
 import de.htwg.sa.dominion.util.{Observer, UndoManager}
 import javax.inject.Inject
 
@@ -34,6 +42,9 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
     undoManager.doStep(new SetCommand(this))
     controllerState.evaluate(input)
     setControllerMessage(controllerState.getCurrentControllerMessage)
+    val a = Http().singleRequest(Get("http://localhost:8081/player/test"))
+    val b = a.flatMap(r => Unmarshal(r.entity).to[String])
+    val c = Await.result(b, Duration(1, TimeUnit.SECONDS))
     notifyObservers
   }
 

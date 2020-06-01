@@ -16,7 +16,8 @@ class HttpServer(controller: IController) {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContext = system.dispatcher
 
-  val route: Route = {get {
+  val route: Route = {
+    get {
     path("dominion") {
       toHtml
     }~
