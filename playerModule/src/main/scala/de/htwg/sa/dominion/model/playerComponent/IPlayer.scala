@@ -7,35 +7,35 @@ import scala.xml.Elem
 
 trait IPlayer {
 
-  def constructPlayerNameString(): String
+  def constructPlayerNameString(playerToUpdate: Player): String
 
-  def constructPlayerDeckString(): String
+  def constructPlayerDeckString(playerToUpdate: Player): String
 
-  def constructPlayerStackerString(): String
+  def constructPlayerStackerString(playerToUpdate: Player): String
 
   def constructPlayerHandString(player: Player): String
 
-  def updateActions(updatedActionValue: Int): Player
+  def updateActions(updatedActionValue: Int, playerToUpdate: Player): Player
 
   def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player
 
-  def removeHandCardAddToStacker(cardIndex: Int): Player
+  def removeHandCardAddToStacker(cardIndex: Int, playerToUpdate: Player): Player
 
-  def updateMoney(updateMoneyValue: Int): Player
+  def updateMoney(updateMoneyValue: Int, playerToUpdate: Player): Player
 
-  def updateBuys(updatedBuyValue: Int): Player
+  def updateBuys(updatedBuyValue: Int, playerToUpdate: Player): Player
 
-  def checkForFirstSilver(): Player
+  def checkForFirstSilver(playerToUpdate: Player): Player
 
-  def calculatePlayerMoneyForBuy: Player
+  def calculatePlayerMoneyForBuy(playerToUpdate: Player): Player
 
-  def discard(indexesToDiscard: List[Int]): Player
+  def discard(indexesToDiscard: List[Int], playerToUpdate: Player): Player
 
-  def checkForTreasure(): Boolean
+  def checkForTreasure(playerToUpdate: Player): Boolean
 
-  def trashHandCard(cardIdx: Int): Player
+  def trashHandCard(cardIdx: Int, playerToUpdate: Player): Player
 
-  def constructCellarTrashString(): String
+  def constructCellarTrashString(playerToUpdate: Player): String
 
   def removeCompleteHand(player: Player, index: Int): Player
 

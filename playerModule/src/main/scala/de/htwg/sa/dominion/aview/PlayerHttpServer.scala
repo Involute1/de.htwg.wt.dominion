@@ -83,7 +83,7 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
             }
             }
           }
-        } ~
+        }
         /*post {
           path("player" / "removeHandCardAddToStacker") {
               parameterMap { params =>
@@ -92,16 +92,6 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
               }
           }
         } ~*/
-        get {
-          path("player" / "test") {
-            decodeRequest {
-              entity(as[String]) { string => {
-                complete(Json.toJson(controller.test(string)))
-              }}
-            }
-
-          }
-        }
     } ~
       post {
         path("player" / "updateActions") {
