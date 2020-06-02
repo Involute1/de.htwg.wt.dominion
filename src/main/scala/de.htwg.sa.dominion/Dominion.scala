@@ -24,7 +24,7 @@ object Dominion {
 
   val introString: String = "Welcome to Dominion! \n Press 'q' to exit and any other key to start "
   controller.setControllerMessage(introString)
-  PlayerMain.main(Array())
+  //PlayerMain.main(Array())
   //CardMain.main(Array())
   controller.notifyObservers
 
@@ -37,7 +37,7 @@ object Dominion {
       tui.processInputLine(input)
     } while (input != "q")
     httpServer.unbind()
-    Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/exit"))
+    //Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/exit"))
     //Http().singleRequest(HttpRequest(uri = "http://localhost:8082/card/exit"))
   }
 }

@@ -2,16 +2,16 @@ version: '1'
 services:
   main:
     image: main-sbt
-    working_dir: /src/
+    working_dir: /src/main/scala/de.htwg.sa.dominion/Dominion.scala
     depends_on:
       - player
       - card
     stdin_open: true
   player:
     image: player-sbt
-    working_dir: /playerModule/Playermain.scala
+    working_dir: /playerModule/src/main/scala/de.htwg.sa.dominion/PlayerMain.scala
     stdin_open: true
   card:
     image: card-sbt
-    working_dir: /cardModule/
+    working_dir: /cardModule/src/main/scala/de.htwg.sa.dominion/CardMain.scala
     stdin_open: true
