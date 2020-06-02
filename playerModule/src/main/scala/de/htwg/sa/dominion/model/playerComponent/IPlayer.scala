@@ -7,35 +7,35 @@ import scala.xml.Elem
 
 trait IPlayer {
 
-  def constructPlayerNameString(): String
+  def constructPlayerNameString(player: Player): String
 
-  def constructPlayerDeckString(): String
+  def constructPlayerDeckString(player: Player): String
 
-  def constructPlayerStackerString(): String
+  def constructPlayerStackerString(player: Player): String
 
   def constructPlayerHandString(player: Player): String
 
-  def updateActions(updatedActionValue: Int): Player
+  def updateActions(updatedActionValue: Int, player: Player): Player
 
   def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player
 
-  def removeHandCardAddToStacker(cardIndex: Int): Player
+  def removeHandCardAddToStacker(cardIndex: Int, player: Player): Player
 
-  def updateMoney(updateMoneyValue: Int): Player
+  def updateMoney(updateMoneyValue: Int, player: Player): Player
 
-  def updateBuys(updatedBuyValue: Int): Player
+  def updateBuys(updatedBuyValue: Int, player: Player): Player
 
-  def checkForFirstSilver(): Player
+  def checkForFirstSilver(player: Player): Player
 
-  def calculatePlayerMoneyForBuy: Player
+  def calculatePlayerMoneyForBuy(player: Player): Player
 
-  def discard(indexesToDiscard: List[Int]): Player
+  def discard(indexesToDiscard: List[Int], player: Player): Player
 
-  def checkForTreasure(): Boolean
+  def checkForTreasure(player: Player): Boolean
 
-  def trashHandCard(cardIdx: Int): Player
+  def trashHandCard(cardIdx: Int, player: Player): Player
 
-  def constructCellarTrashString(): String
+  def constructCellarTrashString(player: Player): String
 
   def removeCompleteHand(player: Player, index: Int): Player
 
@@ -51,5 +51,5 @@ trait IPlayer {
 
   def fromXml(node: scala.xml.NodeSeq): IPlayer
 
-  def test(): String
+  def test(string: String): String
 }

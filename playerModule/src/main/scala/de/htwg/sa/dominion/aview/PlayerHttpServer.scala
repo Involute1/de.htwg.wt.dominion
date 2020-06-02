@@ -5,13 +5,15 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{Route, StandardRoute}
+import akka.http.scaladsl.server.{Directive1, Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.dominion.PlayerMain
 import de.htwg.sa.dominion.controller.util.{UpdatedPlayerActions, UpdatedPlayerBuys}
 import de.htwg.sa.dominion.util.{IntListContainer, PlayerHandStringContainer, UpdatedActionsContainer}
 import play.api.libs.json.Json
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+import de.htwg.sa.dominion.model.playerComponent.IPlayer
+import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -19,6 +21,7 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
   implicit val system: ActorSystem = ActorSystem("my-system")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+
 
   val route: Route = {
     get {
@@ -45,27 +48,60 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
         } ~
         get {
           path("player" / "constructPlayerNameString") {
-            complete(controller.constructPlayerNameString())
+            entity(as[Player]) { params => {
+              complete(controller.constructPlayerNameString(params))
+            }
+            }
           }
         } ~
         get {
           path("player" / "constructPlayerDeck") {
-            complete(controller.constructPlayerDeckString())
+            entity(as[Player]) { params => {
+              complete(controller.constructPlayerDeckString(params))
+            }
+            }
           }
         } ~
         get {
           path("player" / "constructPlayerStackerString") {
-            complete(controller.constructPlayerStackerString())
+            entity(as[Player]) { params => {
+              complete(controller.constructPlayerStackerString(params))
+            }
+            }
+          }
+        } ~
+        get {
+          path("player" / "constructCellarTrashString") {
+            entity(as[Player]) { params => {
+              complete(controller.constructCellarTrashString(params))
+            }
+            }
           }
         } ~
         get {
           path("player" / "constructPlayerHandString") {
-            complete(controller.constructPlayerHandString())
+            entity(as[Player]) { params => {
+              complete(controller.constructPlayerHandString(params))
+            }
+            }
           }
         } ~
-        get {
+        /*post {
+          path("player" / "removeHandCardAddToStacker") {
+              parameterMap { params =>
+                def paramStuff(param: (Int, Player)): Player = controller.removeHandCardAddToStacker(param._1, param._2)
+                complete(controller.removeHandCardAddToStacker()
+              }
+          }
+        } ~*/
+      get {
           path("player" / "test") {
-            complete(controller.test())
+            decodeRequest {
+              entity(as[String]) { string => {
+                complete(Json.toJson(controller.test(string)))
+              }}
+            }
+
           }
         }
     } ~
@@ -73,7 +109,7 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
         path("player" / "updateActions") {
           decodeRequest {
             entity(as[String]) { string => {
-              complete(Json.toJson(UpdatedActionsContainer(controller.updateActions(string.toInt))).toString())
+              complete("")
             }
             }
           }
@@ -83,7 +119,7 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
         path("player" / "updateMoney") {
           decodeRequest {
             entity(as[String]) { string => {
-              complete(Json.toJson(UpdatedActionsContainer(controller.updateMoney(string.toInt))).toString())
+              complete("")
             }
             }
           }
@@ -93,13 +129,13 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
         path("player" / "updateBuys") {
           decodeRequest {
             entity(as[String]) { string => {
-              complete(Json.toJson(UpdatedActionsContainer(controller.updateBuys(string.toInt))).toString())
+              complete("")
             }
             }
           }
         }
       } ~
-      post {
+      /*post {
         path("player" / "removeHandCardAddToStacker") {
           decodeRequest {
             entity(as[String]) { string => {
@@ -108,12 +144,12 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
             }
           }
         }
-      } ~
+      } ~*/
       post {
         path("player" / "trashHandCard") {
           decodeRequest {
             entity(as[String]) { string => {
-              complete(Json.toJson(UpdatedActionsContainer(controller.trashHandCard(string.toInt))).toString())
+              complete("")
             }
             }
           }
@@ -121,13 +157,12 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
       } ~
       get {
         path("player" / "CheckForFirstSilver") {
-          controller.checkForFirstSilver()
           complete("")
         }
       } ~
       get {
         path("player" / "calculatePlayerMoneyForBuy") {
-          controller.calculatePlayerMoneyForBuy
+
           complete("")
         }
       } ~
@@ -136,7 +171,7 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
           decodeRequest {
             entity(as[String]) { string => {
               val container = Json.fromJson(Json.parse(string))(IntListContainer.containerReads).get
-              controller.discard(container.list)
+
               complete("")
             }
             }
@@ -145,13 +180,8 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
       } ~
       get {
         path("player" / "checkForTreasure") {
-          controller.checkForTreasure()
+
           complete("")
-        }
-      } ~
-      get {
-        path("player" / "constructCellarTrashstring") {
-          complete(controller.constructCellarTrashString())
         }
       } ~
       post {

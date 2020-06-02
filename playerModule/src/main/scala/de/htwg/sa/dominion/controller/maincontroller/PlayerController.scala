@@ -21,35 +21,35 @@ class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) ext
     }
   }
 
-  override def constructPlayerNameString(): String = player.constructPlayerNameString()
+  override def constructPlayerNameString(playerToUpdate: Player): String = player.constructPlayerNameString(playerToUpdate)
 
-  override def constructPlayerDeckString(): String = player.constructPlayerDeckString()
+  override def constructPlayerDeckString(playerToUpdate: Player): String = player.constructPlayerDeckString(playerToUpdate)
 
-  override def constructPlayerStackerString(): String = player.constructPlayerStackerString()
+  override def constructPlayerStackerString(playerToUpdate: Player): String = player.constructPlayerStackerString(playerToUpdate)
 
   override def constructPlayerHandString(playerToUpdate: Player): String = player.constructPlayerHandString(playerToUpdate)
 
-  override def updateActions(updatedActionValue: Int): Player = player.updateActions(updatedActionValue)
+  override def updateActions(updatedActionValue: Int, playerToUpdate: Player): Player = player.updateActions(updatedActionValue, playerToUpdate)
 
   override def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player = player.updateHand(cardsToDraw, playerToUpdate)
 
-  override def removeHandCardAddToStacker(cardIndex: Int): Player = player.removeHandCardAddToStacker(cardIndex)
+  override def removeHandCardAddToStacker(cardIndex: Int, playerToUpdate: Player): Player = player.removeHandCardAddToStacker(cardIndex, playerToUpdate)
 
-  override def updateMoney(updateMoneyValue: Int): Player = player.updateMoney(updateMoneyValue)
+  override def updateMoney(updateMoneyValue: Int, playerToUpdate: Player): Player = player.updateMoney(updateMoneyValue, playerToUpdate)
 
-  override def updateBuys(updatedBuyValue: Int): Player = player.updateBuys(updatedBuyValue)
+  override def updateBuys(updatedBuyValue: Int, playerToUpdate: Player): Player = player.updateBuys(updatedBuyValue, playerToUpdate)
 
-  override def checkForFirstSilver(): Player = player.checkForFirstSilver()
+  override def checkForFirstSilver(playerToUpdate: Player): Player = player.checkForFirstSilver(playerToUpdate)
 
-  override def calculatePlayerMoneyForBuy: Player = player.calculatePlayerMoneyForBuy
+  override def calculatePlayerMoneyForBuy(playerToUpdate: Player): Player = player.calculatePlayerMoneyForBuy(playerToUpdate)
 
-  override def discard(indexesToDiscard: List[Int]): Player = player.discard(indexesToDiscard)
+  override def discard(indexesToDiscard: List[Int], playerToUpdate: Player): Player = player.discard(indexesToDiscard, playerToUpdate)
 
-  override def checkForTreasure(): Boolean = player.checkForTreasure()
+  override def checkForTreasure(playerToUpdate: Player): Boolean = player.checkForTreasure(playerToUpdate)
 
-  override def trashHandCard(cardIdx: Int): Player = player.trashHandCard(cardIdx)
+  override def trashHandCard(cardIdx: Int, playerToUpdate: Player): Player = player.trashHandCard(cardIdx, playerToUpdate)
 
-  override def constructCellarTrashString(): String = player.constructCellarTrashString()
+  override def constructCellarTrashString(playerToUpdate: Player): String = player.constructCellarTrashString(playerToUpdate)
 
   override def removeCompleteHand(playerToUpdate: Player, index: Int): Player = player.removeCompleteHand(playerToUpdate, index)
 
@@ -57,5 +57,5 @@ class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) ext
 
   override def calculateScore: Int = player.calculateScore
 
-  override def test(): String = player.test()
+  override def test(string: String): String = player.test(string)
 }
