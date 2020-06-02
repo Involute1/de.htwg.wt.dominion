@@ -5,13 +5,14 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{Route, StandardRoute}
+import akka.http.scaladsl.server.{Directive1, Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.dominion.PlayerMain
 import de.htwg.sa.dominion.controller.util.{UpdatedPlayerActions, UpdatedPlayerBuys}
 import de.htwg.sa.dominion.util.{IntListContainer, PlayerHandStringContainer, UpdatedActionsContainer}
 import play.api.libs.json.Json
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -60,12 +61,9 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
         } ~
         get {
           path("player" / "constructPlayerHandString") {
-            complete(controller.constructPlayerHandString())
-          }
-        } ~
-        get {
-          path("player" / "test") {
-            complete(controller.test())
+
+            //complete(controller.constructPlayerHandString())
+            complete("")
           }
         }
     } ~

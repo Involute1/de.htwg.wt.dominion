@@ -161,10 +161,6 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
       <money>{this.money}</money>
     </Player>
   }
-
-  override def test(): String = {
-    "TEST"
-  }
 }
 
 object Player {

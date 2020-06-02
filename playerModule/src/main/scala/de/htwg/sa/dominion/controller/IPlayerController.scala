@@ -43,6 +43,4 @@ trait IPlayerController {
   def moveAllCardsToDeckForScore(): Player
 
   def calculateScore: Int
-
-  def test(): String
 }

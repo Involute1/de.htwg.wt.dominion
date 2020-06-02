@@ -50,6 +50,4 @@ trait IPlayer {
   def toXml: Elem
 
   def fromXml(node: scala.xml.NodeSeq): IPlayer
-
-  def test(): String
 }

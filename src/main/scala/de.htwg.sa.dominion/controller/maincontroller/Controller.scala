@@ -42,9 +42,6 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
     undoManager.doStep(new SetCommand(this))
     controllerState.evaluate(input)
     setControllerMessage(controllerState.getCurrentControllerMessage)
-    val a = Http().singleRequest(Get("http://localhost:8081/player/test"))
-    val b = a.flatMap(r => Unmarshal(r.entity).to[String])
-    val c = Await.result(b, Duration(1, TimeUnit.SECONDS))
     notifyObservers
   }
 
@@ -60,7 +57,7 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
 
   override def save(): Unit = {
     fileIO.save(getControllerStateAsString, roundmanager)
-    Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/save"))
+    //Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/save"))
     notifyObservers
   }
 
@@ -79,7 +76,7 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
       case "GameOverState" => GameOverState(this)
     }
     roundmanager = loadedRoundmanager._2
-    Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/load"))
+    //Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/load"))
     notifyObservers
   }
 
