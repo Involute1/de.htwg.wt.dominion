@@ -11,6 +11,8 @@ services:
     image: player-sbt
     working_dir: /playerModule/src/main/scala/de.htwg.sa.dominion/PlayerMain.scala
     stdin_open: true
+    depends_on:
+      - card
   card:
     image: card-sbt
     working_dir: /cardModule/src/main/scala/de.htwg.sa.dominion/CardMain.scala
