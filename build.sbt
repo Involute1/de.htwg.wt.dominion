@@ -52,7 +52,7 @@ lazy val cardModule = project.settings(
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
   },
-  mainClass in assembly := Some("de.htwg.sa.dominion.cardModule.CardMain")
+  mainClass in assembly := Some("de.htwg.sa.dominion.CardMain")
 )
 
 lazy val playerModule = project.settings(
@@ -70,5 +70,5 @@ lazy val playerModule = project.settings(
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
   },
-  mainClass in assembly := Some("de.htwg.sa.dominion.playerModule.PlayerMain")
+  mainClass in assembly := Some("de.htwg.sa.dominion.PlayerMain")
 ).aggregate(cardModule).dependsOn(cardModule)
