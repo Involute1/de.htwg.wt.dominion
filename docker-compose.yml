@@ -1,0 +1,17 @@
+version: '1'
+services:
+  main:
+    image: main-sbt
+    working_dir: /src/
+    depends_on:
+      - player
+      - card
+    stdin_open: true
+  player:
+    image: player-sbt
+    working_dir: /playerModule/Playermain.scala
+    stdin_open: true
+  card:
+    image: card-sbt
+    working_dir: /cardModule/
+    stdin_open: true
