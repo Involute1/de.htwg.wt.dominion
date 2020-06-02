@@ -1,19 +1,26 @@
-version: '1'
+version: '3.8'
 services:
   main:
-    image: main-sbt
+    image: main-sbt:latest
     working_dir: /src/main/scala/de.htwg.sa.dominion/Dominion.scala
     depends_on:
       - player
       - card
     stdin_open: true
+    ports:
+      - "8080:8080"
   player:
-    image: player-sbt
+    image: player-sbt:latest
     working_dir: /playerModule/src/main/scala/de.htwg.sa.dominion/PlayerMain.scala
     stdin_open: true
     depends_on:
       - card
+    ports:
+      - "8081:8081"
   card:
-    image: card-sbt
+    image: card-sbt:latest
     working_dir: /cardModule/src/main/scala/de.htwg.sa.dominion/CardMain.scala
     stdin_open: true
+    ports:
+      - "8082:8082"
+
