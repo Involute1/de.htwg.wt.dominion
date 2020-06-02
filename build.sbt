@@ -22,17 +22,17 @@ val commonDependencies = Seq(
 lazy val root = (project in file(".")).settings(
   name := "de.htwg.sa.dominion",
   libraryDependencies ++= commonDependencies,
-  mainClass in (Compile, run) :=Some("src/main/scala/de.htwg.sa.dominion.Dominion")
+  //mainClass in (Compile, run) :=Some("src/main/scala/de.htwg.sa.dominion.Dominion")
 ).aggregate(cardModule, playerModule).dependsOn(cardModule, playerModule)
 
 lazy val cardModule = project.settings(
   name := "cardModule",
   libraryDependencies ++= commonDependencies,
-  mainClass in (Compile, run) :=Some("cardModule/src/main/scala/de.htwg.sa.dominion.CardMain")
+  //mainClass in (Compile, run) :=Some("cardModule/src/main/scala/de.htwg.sa.dominion.CardMain")
 )
 
 lazy val playerModule = project.settings(
   name := "playerModule",
   libraryDependencies ++= commonDependencies,
-  mainClass in (Compile, run) :=Some("playerModule/src/main/scala/de.htwg.sa.dominion.PlayerMain")
+  //mainClass in (Compile, run) :=Some("playerModule/src/main/scala/de.htwg.sa.dominion.PlayerMain")
 ).aggregate(cardModule).dependsOn(cardModule)

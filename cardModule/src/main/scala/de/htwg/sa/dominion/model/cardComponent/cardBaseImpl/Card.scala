@@ -38,6 +38,7 @@ case class Card(cardName: String, cardDescription: String, cardType: Cardtype, c
       <additionalActionsValue>{this.additionalActionsValue}</additionalActionsValue>
       <additionalMoneyValue>{this.additionalMoneyValue}</additionalMoneyValue>
     </Card>
+
   }
 
   override def fromXML(node: scala.xml.NodeSeq): ICard = {

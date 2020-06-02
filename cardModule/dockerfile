@@ -1,6 +1,5 @@
 FROM hseeberger/scala-sbt:8u222_1.3.5_2.13.1
 EXPOSE 8082
 WORKDIR /dominion
-ADD target/scala-2.13/cardModule-assembly-SAR-6.jar /dominion
-ENV DOCKERENV="TRUE"
-CMD java .jar cardModule-assembly-SAR-6.jar
+ADD . /dominion
+CMD sbt run

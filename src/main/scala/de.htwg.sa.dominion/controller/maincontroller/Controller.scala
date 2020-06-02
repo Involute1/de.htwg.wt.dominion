@@ -207,7 +207,7 @@ case class PreSetupState(controller: Controller) extends ControllerState {
 
 case class ActionPhaseState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
-    if (input.isBlank) return
+    if (input.isEmpty()) return
     controller.roundmanager = controller.roundmanager.actionPhase(input)
     if (controller.roundmanager.checkIfActionPhaseDone) controller.controllerState = nextState
   }
@@ -219,7 +219,7 @@ case class ActionPhaseState(controller: Controller) extends ControllerState {
 
 case class BuyPhaseState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
-    if (input.isBlank) return
+    if (input.isEmpty()) return
     controller.roundmanager = controller.roundmanager.buyPhase(input)
     if (controller.roundmanager.checkForNextPlayer) controller.controllerState = ActionPhaseState(controller)
     if (controller.roundmanager.checkForGameEnd()) controller.controllerState = nextState
