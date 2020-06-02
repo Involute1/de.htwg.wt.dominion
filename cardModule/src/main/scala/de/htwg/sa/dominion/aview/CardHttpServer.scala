@@ -44,7 +44,7 @@ class CardHttpServer(controller: ICardController) {
 
   println("CardModule Server online at http://localhost:8082/card")
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 8082)
+  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "0.0.0.0", 8082)
 
   def shutdownWebServer() : Unit = {
     bindingFuture

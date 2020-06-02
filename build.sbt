@@ -23,16 +23,52 @@ lazy val root = (project in file(".")).settings(
   name := "de.htwg.sa.dominion",
   libraryDependencies ++= commonDependencies,
   //mainClass in (Compile, run) :=Some("src/main/scala/de.htwg.sa.dominion.Dominion")
+  assemblyMergeStrategy in assembly := {
+    case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
+    case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+    case "application.conf"                            => MergeStrategy.concat
+    case "module-info.class"                           => MergeStrategy.concat
+    case "CHANGELOG.adoc"                              => MergeStrategy.concat
+    case "unwanted.txt"                                => MergeStrategy.discard
+    case x =>
+      val oldStrategy = (assemblyMergeStrategy in assembly).value
+      oldStrategy(x)
+  },
+  mainClass in assembly := Some("de.htwg.sa.dominion.Dominion")
 ).aggregate(cardModule, playerModule).dependsOn(cardModule, playerModule)
 
 lazy val cardModule = project.settings(
   name := "cardModule",
   libraryDependencies ++= commonDependencies,
   //mainClass in (Compile, run) :=Some("cardModule/src/main/scala/de.htwg.sa.dominion.CardMain")
+  assemblyMergeStrategy in assembly := {
+    case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
+    case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+    case "application.conf"                            => MergeStrategy.concat
+    case "module-info.class"                           => MergeStrategy.concat
+    case "CHANGELOG.adoc"                              => MergeStrategy.concat
+    case "unwanted.txt"                                => MergeStrategy.discard
+    case x =>
+      val oldStrategy = (assemblyMergeStrategy in assembly).value
+      oldStrategy(x)
+  },
+  mainClass in assembly := Some("de.htwg.sa.dominion.cardModule.CardMain")
 )
 
 lazy val playerModule = project.settings(
   name := "playerModule",
   libraryDependencies ++= commonDependencies,
   //mainClass in (Compile, run) :=Some("playerModule/src/main/scala/de.htwg.sa.dominion.PlayerMain")
+  assemblyMergeStrategy in assembly := {
+    case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
+    case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+    case "application.conf"                            => MergeStrategy.concat
+    case "module-info.class"                           => MergeStrategy.concat
+    case "CHANGELOG.adoc"                              => MergeStrategy.concat
+    case "unwanted.txt"                                => MergeStrategy.discard
+    case x =>
+      val oldStrategy = (assemblyMergeStrategy in assembly).value
+      oldStrategy(x)
+  },
+  mainClass in assembly := Some("de.htwg.sa.dominion.playerModule.PlayerMain")
 ).aggregate(cardModule).dependsOn(cardModule)

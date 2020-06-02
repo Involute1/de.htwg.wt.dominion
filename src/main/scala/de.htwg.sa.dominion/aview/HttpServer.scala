@@ -58,7 +58,7 @@ class HttpServer(controller: IController) {
 
   println(s"Dominion Module Server online at http://localhost:8080/dominion")
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 8080)
+  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "0.0.0.0", 8080)
 
   def unbind(): Unit = {
     bindingFuture
