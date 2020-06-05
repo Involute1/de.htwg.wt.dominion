@@ -74,10 +74,10 @@ class PlayerSpec extends WordSpec with Matchers {
         Luca.removeCompleteHand(Luca, Luca.handCards.length-1) should be (Luca.copy(handCards = Nil, stacker = handLuca))
       }
       "have a moveAllCardsToDeckForScore method" in {
-        Luca.moveAllCardsToDeckForScore() should be (Luca.copy(handCards = Nil, deck = List(Cards.copper, Cards.copper,Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)))
+        Luca.moveAllCardsToDeckForScore(Luca) should be (Luca.copy(handCards = Nil, deck = List(Cards.copper, Cards.copper,Cards.copper, Cards.copper, Cards.copper, Cards.copper, Cards.copper)))
       }
       "have a calculateScore method" in {
-        Luca.calculateScore should be (0)
+        Luca.calculateScore(Luca) should be (0)
       }
 
     }
