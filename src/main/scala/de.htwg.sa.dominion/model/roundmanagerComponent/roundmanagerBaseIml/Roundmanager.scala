@@ -447,9 +447,14 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def buyCard(input: String): List[Player] = {
-    // TODO LUCA MAKE AKKA CALL, I WONT TOUCH THIS, KEIN BOCK, MUSS LOS
     val updatedPlayerList: List[Player] = this.players.patch(this.playerTurn, Seq(buyPhaseAddCardToStackerFromPlayingDecks(input.toInt)), 1)
-    updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).updateMoney(updatedPlayerList(this.playerTurn).money - this.decks(input.toInt).head.costValue, this.players(this.playerTurn))), 1)
+    val updatedPlayer: Player = {
+      val money: Int = updatedPlayerList(this.playerTurn).money - this.decks(input.toInt).head.costValue
+      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/updateMoney", (money, updatedPlayerList(this.playerTurn))))
+      val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
+      Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
+    }
+    updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
   }
 
   def buyPhaseAddCardToStackerFromPlayingDecks(index: Int): Player = {
@@ -854,7 +859,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def toXml: Elem = {
     //TODO call player.toxml
     <Roundmanager>
-      <players>{for (player <- this.players) yield player.toXml}</players>
+      <players>{for (player <- this.players) yield {
+        player.toXml
+      }}</players>
       <names>{for (name <- this.names) yield <name>{name}</name>}</names>
       <numberOfPlayers>{this.numberOfPlayers}</numberOfPlayers>
       <turn>{this.turn}</turn>
@@ -870,7 +877,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   def cardsListToXml(cardList: List[Card]): List[Elem] = {
     //TODO call card.toxml AKKA
-    val elemList = for (card <- cardList) yield card.toXml
+    val elemList = for (card <- cardList) yield {
+
+      card.toXml
+    }
     elemList
   }
 

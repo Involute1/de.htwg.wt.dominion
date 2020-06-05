@@ -8,52 +8,52 @@ import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 
 import scala.util.{Failure, Success}
 
-class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) extends IPlayerController {
+class PlayerController @Inject()(var playerInterface: IPlayer, fileIoInterface: IPlayerFileIO) extends IPlayerController {
 
   override def save(): Unit = {
-    fileIo.save(player, "playerModule")
+    fileIoInterface.save(playerInterface, "playerModule")
   }
 
   override def load(): Unit = {
-    player = fileIo.load(player, "playerModule") match {
+    playerInterface = fileIoInterface.load(playerInterface, "playerModule") match {
       case Failure(_) => return
       case Success(value) => value
     }
   }
 
-  override def constructPlayerNameString(playerToUpdate: Player): String = player.constructPlayerNameString(playerToUpdate)
+  override def constructPlayerNameString(playerToUpdate: Player): String = playerInterface.constructPlayerNameString(playerToUpdate)
 
-  override def constructPlayerDeckString(playerToUpdate: Player): String = player.constructPlayerDeckString(playerToUpdate)
+  override def constructPlayerDeckString(playerToUpdate: Player): String = playerInterface.constructPlayerDeckString(playerToUpdate)
 
-  override def constructPlayerStackerString(playerToUpdate: Player): String = player.constructPlayerStackerString(playerToUpdate)
+  override def constructPlayerStackerString(playerToUpdate: Player): String = playerInterface.constructPlayerStackerString(playerToUpdate)
 
-  override def constructPlayerHandString(playerToUpdate: Player): String = player.constructPlayerHandString(playerToUpdate)
+  override def constructPlayerHandString(playerToUpdate: Player): String = playerInterface.constructPlayerHandString(playerToUpdate)
 
-  override def updateActions(updatedActionValue: Int, playerToUpdate: Player): Player = player.updateActions(updatedActionValue, playerToUpdate)
+  override def updateActions(updatedActionValue: Int, playerToUpdate: Player): Player = playerInterface.updateActions(updatedActionValue, playerToUpdate)
 
-  override def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player = player.updateHand(cardsToDraw, playerToUpdate)
+  override def updateHand(cardsToDraw: Int, playerToUpdate: Player): Player = playerInterface.updateHand(cardsToDraw, playerToUpdate)
 
-  override def removeHandCardAddToStacker(cardIndex: Int, playerToUpdate: Player): Player = player.removeHandCardAddToStacker(cardIndex, playerToUpdate)
+  override def removeHandCardAddToStacker(cardIndex: Int, playerToUpdate: Player): Player = playerInterface.removeHandCardAddToStacker(cardIndex, playerToUpdate)
 
-  override def updateMoney(updateMoneyValue: Int, playerToUpdate: Player): Player = player.updateMoney(updateMoneyValue, playerToUpdate)
+  override def updateMoney(updateMoneyValue: Int, playerToUpdate: Player): Player = playerInterface.updateMoney(updateMoneyValue, playerToUpdate)
 
-  override def updateBuys(updatedBuyValue: Int, playerToUpdate: Player): Player = player.updateBuys(updatedBuyValue, playerToUpdate)
+  override def updateBuys(updatedBuyValue: Int, playerToUpdate: Player): Player = playerInterface.updateBuys(updatedBuyValue, playerToUpdate)
 
-  override def checkForFirstSilver(playerToUpdate: Player): Player = player.checkForFirstSilver(playerToUpdate)
+  override def checkForFirstSilver(playerToUpdate: Player): Player = playerInterface.checkForFirstSilver(playerToUpdate)
 
-  override def calculatePlayerMoneyForBuy(playerToUpdate: Player): Player = player.calculatePlayerMoneyForBuy(playerToUpdate)
+  override def calculatePlayerMoneyForBuy(playerToUpdate: Player): Player = playerInterface.calculatePlayerMoneyForBuy(playerToUpdate)
 
-  override def discard(indexesToDiscard: List[Int], playerToUpdate: Player): Player = player.discard(indexesToDiscard, playerToUpdate)
+  override def discard(indexesToDiscard: List[Int], playerToUpdate: Player): Player = playerInterface.discard(indexesToDiscard, playerToUpdate)
 
-  override def checkForTreasure(playerToUpdate: Player): Boolean = player.checkForTreasure(playerToUpdate)
+  override def checkForTreasure(playerToUpdate: Player): Boolean = playerInterface.checkForTreasure(playerToUpdate)
 
-  override def trashHandCard(cardIdx: Int, playerToUpdate: Player): Player = player.trashHandCard(cardIdx, playerToUpdate)
+  override def trashHandCard(cardIdx: Int, playerToUpdate: Player): Player = playerInterface.trashHandCard(cardIdx, playerToUpdate)
 
-  override def constructCellarTrashString(playerToUpdate: Player): String = player.constructCellarTrashString(playerToUpdate)
+  override def constructCellarTrashString(playerToUpdate: Player): String = playerInterface.constructCellarTrashString(playerToUpdate)
 
-  override def removeCompleteHand(playerToUpdate: Player, index: Int): Player = player.removeCompleteHand(playerToUpdate, index)
+  override def removeCompleteHand(playerToUpdate: Player, index: Int): Player = playerInterface.removeCompleteHand(playerToUpdate, index)
 
-  override def moveAllCardsToDeckForScore(playerToUpdate: Player): Player = player.moveAllCardsToDeckForScore(playerToUpdate)
+  override def moveAllCardsToDeckForScore(playerToUpdate: Player): Player = playerInterface.moveAllCardsToDeckForScore(playerToUpdate)
 
-  override def calculateScore(playerToUpdate: Player): Int = player.calculateScore(playerToUpdate)
+  override def calculateScore(playerToUpdate: Player): Int = playerInterface.calculateScore(playerToUpdate)
 }
