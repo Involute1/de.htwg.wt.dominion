@@ -3,7 +3,9 @@ import sbt.Keys.libraryDependencies
 ThisBuild / version       := "0.1"
 ThisBuild / scalaVersion  := "2.13.1"
 ThisBuild / trapExit := false
+scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
+resolvers += Resolver.jcenterRepo
 
 val commonDependencies = Seq(
   "org.scalactic" %% "scalactic" % "3.1.1",
@@ -16,7 +18,9 @@ val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-http" % "10.1.12",
   "com.typesafe.akka" %% "akka-stream" % "2.6.5",
   "com.typesafe.akka" %% "akka-testkit" % "2.6.5" % Test,
-  "de.heikoseeberger" %% "akka-http-play-json" % "1.32.0"
+  "de.heikoseeberger" %% "akka-http-play-json" % "1.32.0",
+  "com.typesafe.slick" %% "slick" % "3.3.2",
+  "org.slf4j" % "slf4j-nop" % "1.7.26"
 )
 
 lazy val root = (project in file(".")).settings(
