@@ -40,7 +40,7 @@ trait IPlayerController {
 
   def removeCompleteHand(player: Player, index: Int): Player
 
-  def moveAllCardsToDeckForScore(): Player
+  def moveAllCardsToDeckForScore(player: Player): Player
 
-  def calculateScore: Int
+  def calculateScore(player: Player): Int
 }

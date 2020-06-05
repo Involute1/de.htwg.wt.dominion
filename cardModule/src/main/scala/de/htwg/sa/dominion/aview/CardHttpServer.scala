@@ -30,14 +30,12 @@ class CardHttpServer(controller: ICardController) {
     },
     get {
       path("card" / "cardname") {
-        controller.constructCardNameString()
-        complete("")
+        complete(controller.constructCardNameString())
       }
     },
     get {
       path("card" / "cardinfo") {
-        controller.constructCardInfoString()
-        complete("")
+        complete(controller.constructCardInfoString())
       }
     }
   )

@@ -22,12 +22,13 @@ import akka.http.scaladsl.unmarshalling.Unmarshal
 import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration.Duration
 import akka.http.scaladsl.client.RequestBuilding._
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.dominion.util.{Observer, UndoManager}
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContextExecutor
 
-class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFileIO) extends IController {
+class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFileIO) extends IController with PlayJsonSupport {
 
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()

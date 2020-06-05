@@ -9,7 +9,6 @@ import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.dominion.PlayerMain
 import de.htwg.sa.dominion.controller.util.{UpdatedPlayerActions, UpdatedPlayerBuys}
-import de.htwg.sa.dominion.util.{IntListContainer, PlayerHandStringContainer, UpdatedActionsContainer}
 import play.api.libs.json.Json
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
@@ -39,7 +38,7 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
           }
         } ~
         get {
-          path("player" / "load") {
+          path("player" / "´load") {
             controller.load()
             complete("")
           }
@@ -48,151 +47,127 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
           path("player" / "constructPlayerNameString") {
             entity(as[Player]) { params => {
               complete(controller.constructPlayerNameString(params))
-            }
-            }
+            }}
           }
         } ~
         get {
-          path("player" / "constructPlayerDeck") {
+          path("player" / "constructPlayerDeckString") {
             entity(as[Player]) { params => {
               complete(controller.constructPlayerDeckString(params))
-            }
-            }
+            }}
           }
         } ~
         get {
           path("player" / "constructPlayerStackerString") {
             entity(as[Player]) { params => {
               complete(controller.constructPlayerStackerString(params))
-            }
-            }
-          }
-        } ~
-        get {
-          path("player" / "constructCellarTrashString") {
-            entity(as[Player]) { params => {
-              complete(controller.constructCellarTrashString(params))
-            }
-            }
+            }}
           }
         } ~
         get {
           path("player" / "constructPlayerHandString") {
             entity(as[Player]) { params => {
               complete(controller.constructPlayerHandString(params))
-            }
-            }
+            }}
           }
-        }
-        /*post {
+        } ~
+        get {
+          path("player" / "updateActions") {
+            entity(as[(Int, Player)]) { params => {
+              complete(controller.updateActions(params._1, params._2))
+            }}
+          }
+        } ~
+        get {
+          path("player" / "updateHand") {
+            entity(as[(Int, Player)]) { params => {
+              complete(controller.updateHand(params._1, params._2))
+            }}
+          }
+        } ~
+        get {
           path("player" / "removeHandCardAddToStacker") {
-              parameterMap { params =>
-                def paramStuff(param: (Int, Player)): Player = controller.removeHandCardAddToStacker(param._1, param._2)
-                complete(controller.removeHandCardAddToStacker()
-              }
+            entity(as[(Int, Player)]) { params => {
+              complete(controller.removeHandCardAddToStacker(params._1, params._2))
+            }}
           }
-        } ~*/
-
-    } ~
-      post {
-        path("player" / "updateActions") {
-          decodeRequest {
-            entity(as[String]) { string => {
-              complete("")
-            }
-            }
+        } ~
+        get {
+          path("player" / "updateMoney") {
+            entity(as[(Int, Player)]) { params => {
+              complete(controller.updateMoney(params._1, params._2))
+            }}
           }
-        }
-      } ~
-      post {
-        path("player" / "updateMoney") {
-          decodeRequest {
-            entity(as[String]) { string => {
-              complete("")
-            }
-            }
+        } ~
+        get {
+          path("player" / "updateBuys") {
+            entity(as[(Int, Player)]) { params => {
+              complete(controller.updateBuys(params._1, params._2))
+            }}
           }
-        }
-      } ~
-      post {
-        path("player" / "updateBuys") {
-          decodeRequest {
-            entity(as[String]) { string => {
-              complete("")
-            }
-            }
+        } ~
+        get {
+          path("player" / "checkForFirstSilver") {
+            entity(as[Player]) { params => {
+              complete(controller.checkForFirstSilver(params))
+            }}
           }
-        }
-      } ~
-      /*post {
-        path("player" / "removeHandCardAddToStacker") {
-          decodeRequest {
-            entity(as[String]) { string => {
-              complete(Json.toJson(UpdatedActionsContainer(controller.removeHandCardAddToStacker(string.toInt))).toString())
-            }
-            }
+        } ~
+        get {
+          path("player" / "calculatePlayerMoneyForBuy") {
+            entity(as[Player]) { params => {
+              complete(controller.calculatePlayerMoneyForBuy(params))
+            }}
           }
-        }
-      } ~*/
-      post {
-        path("player" / "trashHandCard") {
-          decodeRequest {
-            entity(as[String]) { string => {
-              complete("")
-            }
-            }
+        } ~
+        get {
+          path("player" / "discard") {
+            entity(as[(List[Int], Player)]) { params => {
+              complete(controller.discard(params._1, params._2))
+            }}
           }
-        }
-      } ~
-      get {
-        path("player" / "CheckForFirstSilver") {
-          complete("")
-        }
-      } ~
-      get {
-        path("player" / "calculatePlayerMoneyForBuy") {
-
-          complete("")
-        }
-      } ~
-      post {
-        path("player" / "discard") {
-          decodeRequest {
-            entity(as[String]) { string => {
-              val container = Json.fromJson(Json.parse(string))(IntListContainer.containerReads).get
-
-              complete("")
-            }
-            }
+        } ~
+        get {
+          path("player" / "checkForTreasure") {
+            entity(as[Player]) { params => {
+              complete(controller.checkForTreasure(params))
+            }}
           }
-        }
-      } ~
-      get {
-        path("player" / "checkForTreasure") {
-
-          complete("")
-        }
-      } ~
-      post {
-        path("player" / "removeCompleteHand") {
-          decodeRequest {
-            entity(as[String]) { string => {
-              val playerContainer = Json.fromJson(Json.parse(string))(UpdatedActionsContainer.containerReads).get
-              complete(Json.toJson(UpdatedActionsContainer(controller.removeCompleteHand(playerContainer, string.toInt))).toString())
-            }
-            }
+        } ~
+        get {
+          path("player" / "trashHandCard") {
+            entity(as[(Int, Player)]) { params => {
+              complete(controller.trashHandCard(params._1, params._2))
+            }}
           }
-        }
-      } ~
-      get {
-        path("player" / "moveAllCardsToDeckForScore") {
-          controller.moveAllCardsToDeckForScore()
-          complete("")
-        }
-      } ~
-      get {
-        path("player" / "calculateScore") {
-          complete(controller.calculateScore.toString())
+        } ~
+        get {
+          path("player" / "constructCellarTrashString") {
+            entity(as[Player]) { params => {
+              complete(controller.constructCellarTrashString(params))
+            }}
+          }
+        } ~
+        get {
+          path("player" / "removeCompleteHand") {
+            entity(as[(Player, Int)]) { params => {
+              complete(controller.removeCompleteHand(params._1, params._2))
+            }}
+          }
+        } ~
+        get {
+          path("player" / "moveAllCardsToDeckForScore") {
+            entity(as[Player]) { params => {
+              complete(controller.moveAllCardsToDeckForScore(params))
+            }}
+          }
+        } ~
+        get {
+          path("player" / "calculateScore") {
+            entity(as[Player]) { params => {
+              complete(controller.calculateScore(params))
+            }}
+          }
         }
       }
   }

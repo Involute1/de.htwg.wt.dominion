@@ -53,7 +53,7 @@ class PlayerController @Inject()(var player: IPlayer, fileIo: IPlayerFileIO) ext
 
   override def removeCompleteHand(playerToUpdate: Player, index: Int): Player = player.removeCompleteHand(playerToUpdate, index)
 
-  override def moveAllCardsToDeckForScore(): Player = player.moveAllCardsToDeckForScore()
+  override def moveAllCardsToDeckForScore(playerToUpdate: Player): Player = player.moveAllCardsToDeckForScore(playerToUpdate)
 
-  override def calculateScore: Int = player.calculateScore
+  override def calculateScore(playerToUpdate: Player): Int = player.calculateScore(playerToUpdate)
 }

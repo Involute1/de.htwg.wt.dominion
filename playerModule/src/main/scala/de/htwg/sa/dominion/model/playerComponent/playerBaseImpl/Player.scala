@@ -116,15 +116,15 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
     }
   }
 
-  override def moveAllCardsToDeckForScore(): Player = {
-    val updatedDeck: List[Card] = List.concat(this.deck, this.stacker, this.handCards)
+  override def moveAllCardsToDeckForScore(player: Player): Player = {
+    val updatedDeck: List[Card] = List.concat(player.deck, player.stacker, player.handCards)
     this.copy(deck = updatedDeck, handCards = Nil, stacker = Nil)
   }
 
-  override def calculateScore: Int = {
-    val scoreList: List[Int] = for (card <- this.deck) yield card.vpValue
+  override def calculateScore(player: Player): Int = {
+    val scoreList: List[Int] = for (card <- player.deck) yield card.vpValue
     val deckSizeForGarden: Int = deck.size % 10
-    val gardenAmount: Int = this.deck.count(x => x.cardName == "Gardens")
+    val gardenAmount: Int = player.deck.count(x => x.cardName == "Gardens")
     scoreList.sum + (gardenAmount * deckSizeForGarden)
   }
 

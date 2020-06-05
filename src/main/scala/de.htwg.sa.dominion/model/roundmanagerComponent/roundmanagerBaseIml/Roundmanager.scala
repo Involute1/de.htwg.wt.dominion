@@ -340,6 +340,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def villageAction(input: Int): List[Player] = {
+    // TODO AKKA CALL
     val playerWithNewCards: List[Player] = drawXAmountOfCards(1, this.players(this.playerTurn))
     val updatedPlayerList: List[Player] = addToPlayerActions(2 - 1, playerWithNewCards)
     updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).removeHandCardAddToStacker(input,this.players(this.playerTurn))), 1)
@@ -368,6 +369,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def mineActionStart(input: Int): List[Player] = {
+    // TODO AKKA CALL
     val updatedPlayerList: List[Player] = addToPlayerActions(-1, this.players)
     updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).removeHandCardAddToStacker(input, this.players(this.playerTurn))), 1)
   }
@@ -392,6 +394,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def workshopStartAction(input: Int): List[Player] = {
+    // TODO AKKA CALL
     val updatedPlayerList: List[Player] = addToPlayerActions(-1, this.players)
     updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).removeHandCardAddToStacker(input, this.players(this.playerTurn))), 1)
   }
@@ -401,6 +404,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def marketAction(input: Int): List[Player] = {
+    // TODO AKKA CALL
     val playerWithNewCards: List[Player] = drawXAmountOfCards(1, this.players(this.playerTurn))
     val updatedPlayerList: List[Player] = addToPlayerActions(1 - 1, playerWithNewCards)
     val finalPlayerList: List[Player] = addToPlayerMoney(1, updatedPlayerList)
@@ -416,8 +420,9 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def merchantCheckForSilver(playerList: List[Player]): List[Player] = {
+    // TODO AKKA CALL
     val updatedPlayer = {
-      val response = Http().singleRequest(HttpRequest(uri = "http://localhost8081/player/checkForFirstSilver"))
+      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/checkForFirstSilver"))
       val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -439,6 +444,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def buyCard(input: String): List[Player] = {
+    // TODO AKKA CALL
     val updatedPlayerList: List[Player] = this.players.patch(this.playerTurn, Seq(buyPhaseAddCardToStackerFromPlayingDecks(input.toInt)), 1)
     updatedPlayerList.patch(this.playerTurn, Seq(updatedPlayerList(this.playerTurn).updateMoney(updatedPlayerList(this.playerTurn).money - this.decks(input.toInt).head.costValue, this.players(this.playerTurn))), 1)
   }
@@ -449,20 +455,22 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def updateMoneyForRoundmanager(playerList: List[Player]): List[Player] = {
-      val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost:8081/player/calculatePlayerMoneyForBuy"))
-      val jsonPlayerFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Player])
-      val test2 = Await.result(jsonPlayerFuture, Duration(1, TimeUnit.SECONDS))
-    // TODO await /future problem lösen
+    // TODO AKKA CALL
+    val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost:8081/player/calculatePlayerMoneyForBuy"))
+    val jsonPlayerFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[Player])
+    val test2 = Await.result(jsonPlayerFuture, Duration(1, TimeUnit.SECONDS))
     playerList.patch(this.playerTurn, Seq(test2), 1)
   }
 
   def addToPlayerMoney(moneyToAdd: Int, playerList: List[Player]): List[Player] = {
+    // TODO AKKA CALL
     val updatedMoney: Int = moneyToAdd + playerList(this.playerTurn).money
     val updatedPlayer: Player = playerList(this.playerTurn).updateMoney(updatedMoney, this.players(this.playerTurn))
     playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
   }
 
   def addToPlayerActions(actionsToAdd: Int, playerList: List[Player]): List[Player] = {
+    // TODO AKKA CALL
     val updateActions = actionsToAdd + playerList(this.playerTurn).actions
     val updatedPlayer: Player = playerList(this.playerTurn).updateActions(updateActions, this.players(this.playerTurn))
     playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
@@ -476,6 +484,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   }
 
   def addToPlayerBuys(buysToAdd: Int, playerList: List[Player]): List[Player] = {
+    // TODO AKKA CALL
     val updatedBuys = buysToAdd + playerList(this.playerTurn).buys
     val updatedPlayer: Player = playerList(this.playerTurn).updateBuys(updatedBuys, this.players(this.playerTurn))
     playerList.patch(this.playerTurn, Seq(updatedPlayer), 1)
