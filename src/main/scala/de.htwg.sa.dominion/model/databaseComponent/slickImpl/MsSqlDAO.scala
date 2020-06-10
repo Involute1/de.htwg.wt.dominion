@@ -12,4 +12,10 @@ class MsSqlDAO extends IDominionDatabase {
   override def update: Try[Boolean] = ???
 
   override def delete: Try[Boolean] = ???
+
+  def getDbConnection: Unit = {
+
+    val db = Database.forConfig("mydb")
+    db
+  }
 }
