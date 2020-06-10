@@ -23,12 +23,13 @@ import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration.Duration
 import akka.http.scaladsl.client.RequestBuilding._
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
 import de.htwg.sa.dominion.util.{Observer, UndoManager}
 import javax.inject.Inject
 
 import scala.concurrent.ExecutionContextExecutor
 
-class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFileIO) extends IController with PlayJsonSupport {
+class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFileIO, dbInterface: IDominionDatabase) extends IController with PlayJsonSupport {
 
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
@@ -43,6 +44,7 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
     undoManager.doStep(new SetCommand(this))
     controllerState.evaluate(input)
     setControllerMessage(controllerState.getCurrentControllerMessage)
+    dbInterface.create
     notifyObservers
   }
 
