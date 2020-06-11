@@ -5,10 +5,13 @@ import de.htwg.sa.dominion.controller.IPlayerController
 import de.htwg.sa.dominion.model.playerFileIoComponent.IPlayerFileIO
 import de.htwg.sa.dominion.model.playerComponent.IPlayer
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
+import de.htwg.sa.dominion.model.playerDatabaseComponent.IPlayerDatabase
 
 import scala.util.{Failure, Success}
 
-class PlayerController @Inject()(var playerInterface: IPlayer, fileIoInterface: IPlayerFileIO) extends IPlayerController {
+class PlayerController @Inject()(var playerInterface: IPlayer, fileIoInterface: IPlayerFileIO, playerDbInterface: IPlayerDatabase) extends IPlayerController {
+
+  playerDbInterface.create
 
   override def save(): Unit = {
     fileIoInterface.save(playerInterface, "playerModule")

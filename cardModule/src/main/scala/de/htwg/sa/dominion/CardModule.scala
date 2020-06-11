@@ -7,6 +7,8 @@ import de.htwg.sa.dominion.model.cardFileIoComponent.ICardFileIO
 import de.htwg.sa.dominion.model.cardFileIoComponent.JSONImpl.FileIO
 import de.htwg.sa.dominion.model.cardComponent.ICard
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cardtype}
+import de.htwg.sa.dominion.model.cardDatabaseComponent.ICardDatabase
+import de.htwg.sa.dominion.model.cardDatabaseComponent.slickImpl.CardMsSqlDAO
 import net.codingwell.scalaguice.ScalaModule
 
 class CardModule extends AbstractModule with ScalaModule {
@@ -14,5 +16,6 @@ class CardModule extends AbstractModule with ScalaModule {
     bind[ICard].toInstance(Card("", "", Cardtype.KINGDOM, 0, 0, 0, 0, 0, 0, 0))
     bind[ICardController].to[CardController]
     bind[ICardFileIO].to[FileIO]
+    bind[ICardDatabase].to[CardMsSqlDAO]
   }
 }
