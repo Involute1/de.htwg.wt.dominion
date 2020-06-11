@@ -1,7 +1,7 @@
 package de.htwg.sa.dominion.model.databaseComponent.slickImpl
 
 import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
-import de.htwg.sa.dominion.model.databaseComponent.RoundManagerTables.{NameTable, RoundmanagerTable, ScoreTable}
+import de.htwg.sa.dominion.util.RoundManagerTables.{NameTable, RoundmanagerTable, ScoreTable}
 import slick.jdbc.{JdbcProfile, SQLServerProfile}
 import slick.lifted.TableQuery
 import slick.jdbc.SQLServerProfile.api._
@@ -19,9 +19,8 @@ class MsSqlDAO extends IDominionDatabase {
   override def create: Try[Boolean] = {
     Try {
       // for debugging
-      (roundManagerTable.schema ++ namesTable.schema ++ scoreTable.schema).createIfNotExists.statements.foreach(println)
+      //(roundManagerTable.schema ++ namesTable.schema ++ scoreTable.schema).createIfNotExists.statements.foreach(println)
       val setup = DBIO.seq((roundManagerTable.schema ++ namesTable.schema ++ scoreTable.schema).createIfNotExists)
-
       db.run(setup)
       true
     }

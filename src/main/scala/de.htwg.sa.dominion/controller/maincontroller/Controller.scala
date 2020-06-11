@@ -40,11 +40,12 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
   val undoManager = new UndoManager
   val injector: Injector = Guice.createInjector(new DominionModule)
 
+  dbInterface.create
+
   override def eval(input: String): Unit = {
     undoManager.doStep(new SetCommand(this))
     controllerState.evaluate(input)
     setControllerMessage(controllerState.getCurrentControllerMessage)
-    dbInterface.create
     notifyObservers
   }
 
