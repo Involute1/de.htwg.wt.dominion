@@ -23,7 +23,8 @@ object RoundManagerTables {
 
     def namesIdFKey: Rep[Option[Int]] = column[Option[Int]]("NAMES_ID_FKEY")
 
-    def * : ProvenShape[(Int, Option[Int], Option[Int], Option[Int], Option[Boolean], Option[String], Option[Int], Option[Int], Option[Int])] = (id, numberOfPlayers, turn, emptyDeckCount, gameEnd, roundStatus, playerTurn, scoreIdFKey, namesIdFKey)
+    def * : ProvenShape[(Int, Option[Int], Option[Int], Option[Int], Option[Boolean], Option[String], Option[Int], Option[Int], Option[Int])]
+    = (id, numberOfPlayers, turn, emptyDeckCount, gameEnd, roundStatus, playerTurn, scoreIdFKey, namesIdFKey)
   }
 
   class NameTable(tag: Tag) extends Table[(Int, Option[String], Option[String], Option[String], Option[String], Option[String])](tag, "ROUNDMANAGER_NAMES") {
@@ -39,7 +40,8 @@ object RoundManagerTables {
 
     def player5Name: Rep[Option[String]] = column[Option[String]]("PLAYER_5_NAME", O.SqlType("NVARCHAR(20)"))
 
-    def * : ProvenShape[(Int, Option[String], Option[String], Option[String], Option[String], Option[String])] = (namesId, player1Name, player2Name, player3Name, player4Name, player5Name)
+    def * : ProvenShape[(Int, Option[String], Option[String], Option[String], Option[String], Option[String])]
+    = (namesId, player1Name, player2Name, player3Name, player4Name, player5Name)
   }
 
   class ScoreTable(tag: Tag) extends Table[(Int, Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])](tag, "ROUNDMANAGER_SCORE") {

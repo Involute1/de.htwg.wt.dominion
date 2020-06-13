@@ -1,11 +1,15 @@
 package de.htwg.sa.dominion.model.databaseComponent.slickImpl
 
+import java.util.concurrent.TimeUnit
+
 import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
 import de.htwg.sa.dominion.util.RoundManagerTables.{NameTable, RoundmanagerTable, ScoreTable}
 import slick.jdbc.{JdbcProfile, SQLServerProfile}
 import slick.lifted.TableQuery
 import slick.jdbc.SQLServerProfile.api._
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
 
 class MsSqlDAO extends IDominionDatabase {

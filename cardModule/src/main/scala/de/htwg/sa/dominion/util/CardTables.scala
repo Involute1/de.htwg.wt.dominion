@@ -7,13 +7,12 @@ object CardTables {
 
   val cards = TableQuery[CardTable]
 
-  class CardTable(tag: Tag) extends Table[(Int, Option[String], Option[String], Option[String], Option[Int],
-    Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])](tag, "CARD") {
+  class CardTable(tag: Tag) extends Table[(Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])](tag, "CARD") {
     def cardId: Rep[Int] = column[Int]("CARD_ID", O.PrimaryKey, O.AutoInc)
 
     def name: Rep[Option[String]] = column[Option[String]]("NAME", O.SqlType("NVARCHAR(30)"))
 
-    def description: Rep[Option[String]] = column[Option[String]]("DESCRIPTION", O.SqlType("NVARCHAR(50)"))
+    def description: Rep[Option[String]] = column[Option[String]]("DESCRIPTION", O.SqlType("NVARCHAR(100)"))
 
     def cardType: Rep[Option[String]] = column[Option[String]]("TYPE", O.SqlType("NVARCHAR(30)"))
 
@@ -33,6 +32,7 @@ object CardTables {
 
     def * : ProvenShape[(Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])]
     = (cardId, name, description, cardType, cost, money, vp, draw, buys, actions, additionalMoney)
+
   }
 
   class PlayingCardsTable(tag: Tag) extends Table[(Int, Int, Option[Int])](tag, "CARD_PLAYING_DECKS") {
@@ -44,7 +44,7 @@ object CardTables {
 
     def * : ProvenShape[(Int, Int, Option[Int])] = (id, cardFk, amount)
 
-    def playingCardsCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])] = foreignKey("CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
+    def playingCardsCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])] = foreignKey("PLAYING_CARDS_CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
   }
 
   class HandCardsTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "CARD_PLAYER_HAND_CARDS") {
@@ -56,9 +56,7 @@ object CardTables {
 
     def * : ProvenShape[(Int, Int, Int)] = (handCardsId, playerFk, cardFk)
 
-    def handCardsCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int],
-      Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])]
-    = foreignKey("CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
+    def handCardsCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])] = foreignKey("HAND_CARDS_CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
 
     //def handCardsPlayerFk = foreignKey("PLAYER_FK", playerFk, )
   }
@@ -72,9 +70,7 @@ object CardTables {
 
     def * : ProvenShape[(Int, Int, Int)] = (deckId, playerFk, cardFk)
 
-    def handCardsCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int],
-      Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])]
-    = foreignKey("CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
+    def deckCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])] = foreignKey("DECK_CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
 
     //def handCardsPlayerFk = foreignKey("PLAYER_FK", playerFk, )
   }
@@ -88,9 +84,7 @@ object CardTables {
 
     def * : ProvenShape[(Int, Int, Int)] = (stackerId, playerFk, cardFk)
 
-    def handCardsCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int],
-      Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])]
-    = foreignKey("CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
+    def stackerCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])] = foreignKey("STACKER_CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
 
     //def handCardsPlayerFk = foreignKey("PLAYER_FK", playerFk, )
   }
