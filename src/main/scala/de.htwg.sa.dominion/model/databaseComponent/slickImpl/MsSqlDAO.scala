@@ -34,7 +34,6 @@ class MsSqlDAO extends IDominionDatabase {
   override def read(): Roundmanager = ???
 
   override def update(controllerState: String, roundmanager: IRoundmanager): Try[Boolean] = {
-    //TODO: insertorupdate
     Try {
       val currentRoundmanger: Roundmanager = roundmanager.getCurrentInstance
       val namesTuple = currentRoundmanger.names match {
@@ -53,6 +52,8 @@ class MsSqlDAO extends IDominionDatabase {
       }
       val scoreInsert = (scoreTable returning scoreTable.map(_.scoreId) += (scoreTuple))
 
+      db.run(scoreTable.delete)
+      db.run(namesTable.delete)
       val scoreId = Await.result(db.run(scoreInsert), Duration(1, TimeUnit.SECONDS))
       val namesId = Await.result(db.run(namesInsert), Duration(1, TimeUnit.SECONDS))
 
@@ -62,6 +63,7 @@ class MsSqlDAO extends IDominionDatabase {
         Option(currentRoundmanger.gameEnd), Option(currentRoundmanger.roundStatus.toString), Option(currentRoundmanger.playerTurn),
         Option(controllerState), Option(scoreId), Option(namesId))
 
+      db.run(roundManagerTable.delete)
       db.run(roundmanagerInsert)
       true
     }

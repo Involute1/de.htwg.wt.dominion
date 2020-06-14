@@ -60,7 +60,7 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
     //fileIO.save(getControllerStateAsString, roundmanager)
     dbInterface.update(getControllerStateAsString, roundmanager)
     Http().singleRequest(Get("http://0.0.0.0:8081/player/save", roundManagerToSave.players))
-    Http().singleRequest(Get("http://0.0.0.0:8082/card/savePlayingDecks", (roundManagerToSave.decks)))
+    Http().singleRequest(Get("http://0.0.0.0:8082/card/savePlayingDecks", roundManagerToSave.decks))
     notifyObservers
   }
 

@@ -29,6 +29,7 @@ class CardMsSqlDAO extends ICardDatabase {
         (cards.schema ++ handCards.schema ++ playingDecks.schema ++ stackers.schema ++ playerDecks.schema).createIfNotExists
       )
       db.run(setup)
+      db.run(cards.delete)
       val insertActions = DBIO.seq(
         cards.map(c => (c.name, c.description, c.cardType, c.cost, c.money, c.vp, c.draw, c.buys, c.actions, c.additionalMoney)) ++= Seq(
           (Option(Cards.copper.cardName), Option(Cards.copper.cardDescription), Option(Cards.copper.cardType.toString),
@@ -107,6 +108,7 @@ class CardMsSqlDAO extends ICardDatabase {
                       deckCardsList: Option[List[Card]], playerId: Option[Int]): Try[Boolean] = {
     Try {
       if (playingDecksList.isDefined) {
+        db.run(playingDecks.delete)
         for (deck <- playingDecksList.head) {
           val deckSize = deck.size
           val card = deck.head.cardName
@@ -116,7 +118,25 @@ class CardMsSqlDAO extends ICardDatabase {
         }
         true
       } else {
-
+        val deletePlayerCardsQuery = DBIO.seq(handCards.filter(_.playerFk === playerId.head).delete,
+          stackers.filter(_.playerFk === playerId.head).delete,
+          playerDecks.filter(_.playerFk === playerId.head).delete)
+        db.run(deletePlayerCardsQuery)
+        for (card <- handCardsList.head) {
+          val cardIdToInsert: Seq[Int] = Await.result(db.run(cards.filter(_.name === card.cardName).map(_.cardId).result), Duration(1, TimeUnit.SECONDS))
+          val handCardsInsert = handCards.map(c => (c.playerFk, c.cardFk)) += (playerId.head, cardIdToInsert.head)
+          db.run(handCardsInsert)
+        }
+        for (card <- stackerCardsList.head) {
+          val cardIdToInsert: Seq[Int] = Await.result(db.run(cards.filter(_.name === card.cardName).map(_.cardId).result), Duration(1, TimeUnit.SECONDS))
+          val stackerCardsInsert = stackers.map(c => (c.playerFk, c.cardFk)) += (playerId.head, cardIdToInsert.head)
+          db.run(stackerCardsInsert)
+        }
+        for (card <- deckCardsList.head) {
+          val cardIdToInsert: Seq[Int] = Await.result(db.run(cards.filter(_.name === card.cardName).map(_.cardId).result), Duration(1, TimeUnit.SECONDS))
+          val deckCardsInsert = playerDecks.map(c => (c.playerFk, c.cardFk)) += (playerId.head, cardIdToInsert.head)
+          db.run(deckCardsInsert)
+        }
         true
       }
     }

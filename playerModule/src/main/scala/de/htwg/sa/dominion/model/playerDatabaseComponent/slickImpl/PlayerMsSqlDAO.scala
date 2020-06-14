@@ -40,9 +40,10 @@ class PlayerMsSqlDAO extends IPlayerDatabase with PlayJsonSupport {
   override def read(): Unit = ???
 
   override def update(playerList: List[Player]): Try[Boolean] = {
-    //TODO: insertOrUpdate
     Try {
       for (player <- playerList) {
+        val deletePlayerQuery = playerTable.filter(_.name === player.name).delete
+        db.run(deletePlayerQuery)
         val playerInsert = (playerTable returning playerTable.map(_.id)) += (0, Option(player.name), Option(player.value),
           Option(player.actions), Option(player.buys), Option(player.money))
         val playerId = Await.result(db.run(playerInsert), Duration(1, TimeUnit.SECONDS))
