@@ -66,11 +66,10 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
 
   override def load(): Unit = {
     /*val result = fileIO.load(roundmanager)
-    val loadedRoundmanager = result match {
-      case Failure(_) => return
-      case Success(loadedTuple) => loadedTuple
-    }
-    controllerState = loadedRoundmanager._1 match {
+    roundmanager = loadedRoundmanager._2*/
+
+    val loadedResult = dbInterface.read()
+    controllerState = loadedResult._1 match {
       case "PreInitGameState" => PreInitGameState(this)
       case "PreStetupState" => PreSetupState(this)
       case "PlayerSetupState" => PlayerSetupState(this)
@@ -78,9 +77,7 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
       case "BuyState" => BuyPhaseState(this)
       case "GameOverState" => GameOverState(this)
     }
-    roundmanager = loadedRoundmanager._2*/
-    dbInterface.read()
-    //Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/load"))
+    roundmanager = loadedResult._2
     notifyObservers
   }
 
