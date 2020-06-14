@@ -7,8 +7,6 @@ import de.htwg.sa.dominion.model.cardComponent.ICard
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.cardDatabaseComponent.ICardDatabase
 
-import scala.util.{Failure, Success}
-
 class CardController @Inject()(var card: ICard, fileIO: ICardFileIO, cardDbInterface: ICardDatabase) extends ICardController {
 
   cardDbInterface.create
