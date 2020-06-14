@@ -19,7 +19,7 @@ object Dominion {
   val controller: IController = injector.getInstance(classOf[Controller])
 
   val tui = new TUI(controller)
-  //val gui = new SwingGui(controller)
+  val gui = new SwingGui(controller)
   val httpServer: HttpServer = new HttpServer(controller)
 
   val introString: String = "Welcome to Dominion! \n Press 'q' to exit and any other key to start "
@@ -37,7 +37,7 @@ object Dominion {
       tui.processInputLine(input)
     } while (input != "q")
     httpServer.unbind()
-    //Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/exit"))
-    //Http().singleRequest(HttpRequest(uri = "http://localhost:8082/card/exit"))
+    Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/exit"))
+    Http().singleRequest(HttpRequest(uri = "http://localhost:8082/card/exit"))
   }
 }

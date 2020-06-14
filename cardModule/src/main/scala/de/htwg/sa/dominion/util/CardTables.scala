@@ -50,7 +50,7 @@ object CardTables {
   class HandCardsTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "CARD_PLAYER_HAND_CARDS") {
     def handCardsId: Rep[Int] = column[Int]("HAND_CARD_ID", O.PrimaryKey, O.AutoInc)
 
-    def playerFk: Rep[Int] = column[Int]("PLAYER_FKEY")
+    def playerFk: Rep[Int] = column[Int]("PLAYER")
 
     def cardFk: Rep[Int] = column[Int]("CARD_FKEY")
 
@@ -64,7 +64,7 @@ object CardTables {
   class DeckTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "CARD_PLAYER_DECK") {
     def deckId: Rep[Int] = column[Int]("DECK_ID", O.PrimaryKey, O.AutoInc)
 
-    def playerFk: Rep[Int] = column[Int]("PLAYER_FKEY")
+    def playerFk: Rep[Int] = column[Int]("PLAYER")
 
     def cardFk: Rep[Int] = column[Int]("CARD_FKEY")
 
@@ -78,7 +78,7 @@ object CardTables {
   class StackerTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "CARD_PLAYER_STACKER") {
     def stackerId: Rep[Int] = column[Int]("STACKER_ID", O.PrimaryKey, O.AutoInc)
 
-    def playerFk: Rep[Int] = column[Int]("PLAYER_FKEY")
+    def playerFk: Rep[Int] = column[Int]("PLAYER")
 
     def cardFk: Rep[Int] = column[Int]("CARD_FKEY")
 

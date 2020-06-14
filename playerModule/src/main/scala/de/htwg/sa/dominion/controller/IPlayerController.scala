@@ -4,7 +4,7 @@ import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 
 trait IPlayerController {
 
-  def save(): Unit
+  def save(playerList: List[Player]): Unit
 
   def load(): Unit
 

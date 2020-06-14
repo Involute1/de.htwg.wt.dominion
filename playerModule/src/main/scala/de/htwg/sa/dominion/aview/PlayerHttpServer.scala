@@ -8,8 +8,6 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.dominion.PlayerMain
-import de.htwg.sa.dominion.controller.util.{UpdatedPlayerActions, UpdatedPlayerBuys}
-import play.api.libs.json.Json
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 
@@ -33,8 +31,10 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
         } ~
         get {
           path("player" / "save") {
-            controller.save()
-            complete("")
+            entity(as[List[Player]]) { params => {
+              controller.save(params)
+              complete("")
+            }}
           }
         } ~
         get {

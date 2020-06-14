@@ -234,6 +234,10 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     }
   }
 
+  override def getCurrentInstance: Roundmanager = {
+    this
+  }
+
   def validateBuySelectInput(input: String): Boolean = {
     val number = input.toIntOption
     if (number.isEmpty || number.get >= this.decks.size || this.decks(input.toInt).isEmpty || this.players(this.playerTurn).money < this.decks(number.get).head.costValue) {
@@ -738,7 +742,6 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def checkForGameEnd(): Boolean = {
     this.gameEnd
   }
-
 
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"

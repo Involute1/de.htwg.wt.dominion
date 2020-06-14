@@ -4,7 +4,7 @@ import slick.lifted.ProvenShape
 import slick.jdbc.MySQLProfile.api._
 
 object RoundManagerTables {
-  class RoundmanagerTable(tag: Tag) extends Table[(Int, Option[Int], Option[Int], Option[Int], Option[Boolean], Option[String], Option[Int], Option[Int], Option[Int])](tag, "ROUNDMANAGER") {
+  class RoundmanagerTable(tag: Tag) extends Table[(Int, Option[Int], Option[Int], Option[Int], Option[Boolean], Option[String], Option[Int], Option[String], Option[Int], Option[Int])](tag, "ROUNDMANAGER") {
     def id: Rep[Int] = column[Int]("ROUND_MANAGER_ID", O.PrimaryKey, O.AutoInc)
 
     def numberOfPlayers: Rep[Option[Int]] = column[Option[Int]]("NUMBER_OF_PLAYERS")
@@ -19,12 +19,14 @@ object RoundManagerTables {
 
     def playerTurn: Rep[Option[Int]] = column[Option[Int]]("PLAYER_TURN")
 
+    def controllerSate: Rep[Option[String]] = column[Option[String]]("CONTROLLER_STATE", O.SqlType("NVARCHAR(80)"))
+
     def scoreIdFKey: Rep[Option[Int]] = column[Option[Int]]("SCORE_ID_FKEY")
 
     def namesIdFKey: Rep[Option[Int]] = column[Option[Int]]("NAMES_ID_FKEY")
 
-    def * : ProvenShape[(Int, Option[Int], Option[Int], Option[Int], Option[Boolean], Option[String], Option[Int], Option[Int], Option[Int])]
-    = (id, numberOfPlayers, turn, emptyDeckCount, gameEnd, roundStatus, playerTurn, scoreIdFKey, namesIdFKey)
+    def * : ProvenShape[(Int, Option[Int], Option[Int], Option[Int], Option[Boolean], Option[String], Option[Int], Option[String], Option[Int], Option[Int])]
+    = (id, numberOfPlayers, turn, emptyDeckCount, gameEnd, roundStatus, playerTurn, controllerSate, scoreIdFKey, namesIdFKey)
   }
 
   class NameTable(tag: Tag) extends Table[(Int, Option[String], Option[String], Option[String], Option[String], Option[String])](tag, "ROUNDMANAGER_NAMES") {

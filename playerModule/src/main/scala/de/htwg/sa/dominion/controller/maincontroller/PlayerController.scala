@@ -13,8 +13,9 @@ class PlayerController @Inject()(var playerInterface: IPlayer, fileIoInterface: 
 
   playerDbInterface.create
 
-  override def save(): Unit = {
-    fileIoInterface.save(playerInterface, "playerModule")
+  override def save(playerList: List[Player]): Unit = {
+    //fileIoInterface.save(playerInterface, "playerModule")
+    playerDbInterface.update(playerList)
   }
 
   override def load(): Unit = {

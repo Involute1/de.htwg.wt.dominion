@@ -1,6 +1,8 @@
 package de.htwg.sa.dominion.model.cardDatabaseComponent.slickImpl
 
-import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Cards, Cardtype}
+import java.util.concurrent.TimeUnit
+
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cards, Cardtype}
 import de.htwg.sa.dominion.model.cardDatabaseComponent.ICardDatabase
 import de.htwg.sa.dominion.util.CardTables.{CardTable, DeckTable, HandCardsTable, PlayingCardsTable, StackerTable}
 import slick.jdbc.SQLServerProfile
@@ -101,7 +103,26 @@ class CardMsSqlDAO extends ICardDatabase {
 
   override def read(): Unit = ???
 
-  override def update: Try[Boolean] = ???
+  override def update(playingDecksList: Option[List[List[Card]]], handCardsList: Option[List[Card]], stackerCardsList: Option[List[Card]],
+                      deckCardsList: Option[List[Card]], playerId: Option[Int]): Try[Boolean] = {
+    Try {
+      if (playingDecksList.isDefined) {
+        for (deck <- playingDecksList.head) {
+          val deckSize = deck.size
+          val card = deck.head.cardName
+          val cardIdToInsert: Seq[Int] = Await.result(db.run(cards.filter(_.name === card).map(_.cardId).result), Duration(1, TimeUnit.SECONDS))
+          val deckInsert = playingDecks.map(c => (c.cardFk, c.amount)) += (cardIdToInsert.head, Option(deckSize))
+          db.run(deckInsert)
+        }
+        true
+      } else {
 
-  override def delete: Try[Boolean] = ???
+        true
+      }
+    }
+  }
+
+  override def delete: Try[Boolean] = {
+    ???
+  }
 }

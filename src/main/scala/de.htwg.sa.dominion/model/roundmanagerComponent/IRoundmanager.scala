@@ -64,6 +64,8 @@ trait IRoundmanager {
 
   def getTurn: Int
 
+  def getCurrentInstance: Roundmanager
+
   def toJson: JsValue
 
   def fromJson(jsValue: JsValue): IRoundmanager

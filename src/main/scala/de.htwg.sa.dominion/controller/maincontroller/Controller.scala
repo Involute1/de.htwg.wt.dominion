@@ -16,11 +16,7 @@ import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
 import de.htwg.sa.dominion.model.fileIOComponent.IDominionFileIO
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.unmarshalling.Unmarshal
 
-import scala.concurrent.{Await, ExecutionContextExecutor}
-import scala.concurrent.duration.Duration
 import akka.http.scaladsl.client.RequestBuilding._
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
@@ -60,8 +56,11 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
   }
 
   override def save(): Unit = {
-    fileIO.save(getControllerStateAsString, roundmanager)
-    //Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/save"))
+    val roundManagerToSave = roundmanager.getCurrentInstance
+    //fileIO.save(getControllerStateAsString, roundmanager)
+    dbInterface.update(getControllerStateAsString, roundmanager)
+    Http().singleRequest(Get("http://0.0.0.0:8081/player/save", roundManagerToSave.players))
+    Http().singleRequest(Get("http://0.0.0.0:8082/card/savePlayingDecks", (roundManagerToSave.decks)))
     notifyObservers
   }
 

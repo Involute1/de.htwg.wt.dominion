@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import de.htwg.sa.dominion.controller.ICardController
 import de.htwg.sa.dominion.model.cardFileIoComponent.ICardFileIO
 import de.htwg.sa.dominion.model.cardComponent.ICard
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.cardDatabaseComponent.ICardDatabase
 
 import scala.util.{Failure, Success}
@@ -12,8 +13,9 @@ class CardController @Inject()(var card: ICard, fileIO: ICardFileIO, cardDbInter
 
   cardDbInterface.create
 
-  override def save(): Unit = {
-    fileIO.save(card, "cardModule")
+  override def save(playingDecks: Option[List[List[Card]]], handCards: Option[List[Card]], stackerCards: Option[List[Card]], deckCards: Option[List[Card]], playerId: Option[Int]): Unit = {
+    //fileIO.save(card, "cardModule")
+    cardDbInterface.update(playingDecks, handCards, stackerCards, deckCards, playerId)
   }
 
   override def load(): Unit = {

@@ -6,20 +6,32 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.dominion.controller.ICardController
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-class CardHttpServer(controller: ICardController) {
+class CardHttpServer(controller: ICardController) extends PlayJsonSupport {
   implicit val system: ActorSystem = ActorSystem("my-system")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   val route: Route = concat(
     get {
+      path("card" / "savePlayingDecks") {
+        entity(as[List[List[Card]]]) { params => {
+          controller.save(Option(params), None, None, None, None)
+          complete("")
+        }}
+      }
+    },
+    get {
       path("card" / "save") {
-        controller.save()
-        complete("")
+        entity(as[(List[Card], List[Card], List[Card], Int)]) { params => {
+          controller.save(None, Option(params._1), Option(params._2), Option(params._3), Option(params._4))
+          complete("")
+        }}
       }
     },
     get {

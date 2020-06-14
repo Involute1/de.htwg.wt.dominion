@@ -1,5 +1,7 @@
 package de.htwg.sa.dominion.model.playerDatabaseComponent
 
+import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
+
 import scala.util.Try
 
 trait IPlayerDatabase {
@@ -8,7 +10,7 @@ trait IPlayerDatabase {
 
   def read(): Unit
 
-  def update: Try[Boolean]
+  def update(playerList: List[Player]): Try[Boolean]
 
   def delete: Try[Boolean]
 
