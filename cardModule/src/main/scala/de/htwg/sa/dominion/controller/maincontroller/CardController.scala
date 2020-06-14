@@ -24,7 +24,7 @@ class CardController @Inject()(var card: ICard, fileIO: ICardFileIO, cardDbInter
       case Failure(_) => return
       case Success(value) => value
     }*/
-    ???
+    cardDbInterface.read(playerId)
   }
 
   override def constructCardNameString(): String = card.constructCardNameString()

@@ -126,6 +126,25 @@ object Cards {
   val workshop: Card = Card("Workshop", "Gain a card costing up to 4", Cardtype.KINGDOM, 3, 0, 0, 0, 0, 0, 0)
   val gardens: Card = Card("Gardens", "Worth 1 WinningPoint per 10 cards you have(round down)", Cardtype.VICTORYPOINT, 4, 0, 0, 0, 0, 0, 0)
   val market: Card = Card("Market", "+1 Card, +1 Action, +1 Buy, +1 Money", Cardtype.KINGDOM, 5, 0, 0, 1, 1, 1, 1)
+
+  def matchCardNameToCard(cardName: String): Card = cardName match {
+    case "Copper" => copper
+    case "Silver" => silver
+    case "Gold" => gold
+    case "Estate" => estate
+    case "Duchy" => duchy
+    case "Province" => province
+    case "Village" => village
+    case "Festival" => festival
+    case "Cellar" => cellar
+    case "Mine" => mine
+    case "Smithy" => smithy
+    case "Remodel" => remodel
+    case "Merchant" => merchant
+    case "Workshop" => workshop
+    case "Gardens" => gardens
+    case "Market" => market
+  }
 }
 
 object Deck {

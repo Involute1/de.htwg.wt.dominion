@@ -108,7 +108,53 @@ class CardMsSqlDAO extends ICardDatabase {
   }
 
   override def read(playerId: Option[Int]): (List[List[Card]], List[Card], List[Card], List[Card], List[Card]) = {
-    ???
+    try {
+      if (playerId.isEmpty) {
+        val loadPlayingDecksQuery = for {
+          (pd, c) <- playingDecks joinLeft cards on (_.cardFk === _.cardId)
+        } yield (c.map(_.name), pd.amount)
+        val loadPlayingDecksTuple = Await.result(db.run(loadPlayingDecksQuery.result), Duration(1, TimeUnit.SECONDS))
+        val loadedPlayingDecks = for (pd <- loadPlayingDecksTuple.indices) yield {
+          List.fill(loadPlayingDecksTuple(pd)._2.get)(Cards.matchCardNameToCard(loadPlayingDecksTuple(pd)._1.get.get))
+        }
+
+        val loadTrashQuery = for {
+          (t, c) <- trash joinLeft cards on (_.cardFk === _.cardId)
+        } yield c.map(_.name)
+        val loadedTrashTuple = Await.result(db.run(loadTrashQuery.result), Duration(1, TimeUnit.SECONDS))
+        val loadedTrash = for (c <- loadedTrashTuple) yield {
+          Cards.matchCardNameToCard(c.get.get)
+        }
+        (loadedPlayingDecks.toList, loadedTrash.toList, List(), List(), List())
+      } else {
+        // hand, stacker, deck
+        val loadHandQuery = for {
+          (h, c) <- handCards joinLeft cards on (_.cardFk === _.cardId)
+          if h.playerFk === playerId.get
+        } yield c.map(_.name)
+        val loadStackerQuery = for {
+          (s, c) <- stackers joinLeft cards on (_.cardFk === _.cardId)
+          if s.playerFk === playerId.get
+        } yield c.map(_.name)
+        val loadDeckQuery = for {
+          (p, c) <- playerDecks joinLeft cards on (_.cardFk === _.cardId)
+          if p.playerFk === playerId.get
+        } yield c.map(_.name)
+
+        val loadedHandTuple = Await.result(db.run(loadHandQuery.result), Duration(1, TimeUnit.SECONDS))
+        val loadedStackerTuple = Await.result(db.run(loadStackerQuery.result), Duration(1, TimeUnit.SECONDS))
+        val loadedDeckTuple = Await.result(db.run(loadDeckQuery.result), Duration(1, TimeUnit.SECONDS))
+
+        val loadedHand = for (c <- loadedHandTuple) yield Cards.matchCardNameToCard(c.get.get)
+        val loadedStacker = for (c <- loadedStackerTuple) yield Cards.matchCardNameToCard(c.get.get)
+        val loadedDeck = for (c <- loadedDeckTuple) yield Cards.matchCardNameToCard(c.get.get)
+        (List(), List(), loadedHand.toList, loadedStacker.toList, loadedDeck.toList)
+      }
+    } catch {
+      case error: Error =>
+        println("Database error: ", error)
+        (List(), List(), List(), List(), List())
+    }
   }
 
   override def update(playingDecksList: Option[List[List[Card]]], trashList: Option[List[Card]], handCardsList: Option[List[Card]], stackerCardsList: Option[List[Card]],
