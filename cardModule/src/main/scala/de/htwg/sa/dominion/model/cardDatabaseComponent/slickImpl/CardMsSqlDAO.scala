@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.{Card, Cards, Cardtype}
 import de.htwg.sa.dominion.model.cardDatabaseComponent.ICardDatabase
-import de.htwg.sa.dominion.util.CardTables.{CardTable, DeckTable, HandCardsTable, PlayingCardsTable, StackerTable}
+import de.htwg.sa.dominion.util.CardTables.{CardTable, DeckTable, HandCardsTable, PlayingCardsTable, StackerTable, TrashCardsTable}
 import slick.jdbc.SQLServerProfile
 import slick.lifted.TableQuery
 import slick.jdbc.SQLServerProfile.api._
@@ -20,13 +20,14 @@ class CardMsSqlDAO extends ICardDatabase {
   val playingDecks = TableQuery[PlayingCardsTable]
   val stackers = TableQuery[StackerTable]
   val playerDecks = TableQuery[DeckTable]
+  val trash = TableQuery[TrashCardsTable]
 
   val db: SQLServerProfile.backend.Database = Database.forConfig("mymssqldb")
 
   override def create: Boolean = {
     try {
       val setup = DBIO.seq(
-        (cards.schema ++ handCards.schema ++ playingDecks.schema ++ stackers.schema ++ playerDecks.schema).createIfNotExists
+        (cards.schema ++ handCards.schema ++ playingDecks.schema ++ stackers.schema ++ playerDecks.schema ++ trash.schema).createIfNotExists
       )
       db.run(setup)
       db.run(cards.delete)
@@ -100,25 +101,33 @@ class CardMsSqlDAO extends ICardDatabase {
       db.run(insertActions)
       true
     } catch {
-      case error: Error => println("Database error: ", error) false
+      case error: Error =>
+        println("Database error: ", error)
+        false
     }
   }
 
-  override def read(playerId: Option[Int]): (Option[List[List[Card]]], Option[List[Card]], Option[List[Card]], Option[List[Card]]) = {
+  override def read(playerId: Option[Int]): (List[List[Card]], List[Card], List[Card], List[Card], List[Card]) = {
     ???
   }
 
-  override def update(playingDecksList: Option[List[List[Card]]], handCardsList: Option[List[Card]], stackerCardsList: Option[List[Card]],
+  override def update(playingDecksList: Option[List[List[Card]]], trashList: Option[List[Card]], handCardsList: Option[List[Card]], stackerCardsList: Option[List[Card]],
                       deckCardsList: Option[List[Card]], playerId: Option[Int]): Boolean = {
     try {
       if (playingDecksList.isDefined) {
         db.run(playingDecks.delete)
+        db.run(trash.delete)
         for (deck <- playingDecksList.head) {
           val deckSize = deck.size
           val card = deck.head.cardName
           val cardIdToInsert: Seq[Int] = Await.result(db.run(cards.filter(_.name === card).map(_.cardId).result), Duration(1, TimeUnit.SECONDS))
           val deckInsert = playingDecks.map(c => (c.cardFk, c.amount)) += (cardIdToInsert.head, Option(deckSize))
           db.run(deckInsert)
+        }
+        for (card <- trashList.head) {
+          val cardIdToInsert: Seq[Int] = Await.result(db.run(cards.filter(_.name === card.cardName).map(_.cardId).result), Duration(1, TimeUnit.SECONDS))
+          val trashInsert = trash.map(c => c.cardFk) += cardIdToInsert.head
+          db.run(trashInsert)
         }
         true
       } else {
@@ -144,7 +153,9 @@ class CardMsSqlDAO extends ICardDatabase {
         true
       }
     } catch {
-      case error: Error => println("Database error: ", error) false
+      case error: Error =>
+        println("Database error: ", error)
+        false
     }
   }
 

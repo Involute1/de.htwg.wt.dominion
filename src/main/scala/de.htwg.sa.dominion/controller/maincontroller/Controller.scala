@@ -60,12 +60,12 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
     //fileIO.save(getControllerStateAsString, roundmanager)
     dbInterface.update(getControllerStateAsString, roundmanager)
     Http().singleRequest(Get("http://0.0.0.0:8081/player/save", roundManagerToSave.players))
-    Http().singleRequest(Get("http://0.0.0.0:8082/card/savePlayingDecks", roundManagerToSave.decks))
+    Http().singleRequest(Get("http://0.0.0.0:8082/card/savePlayingDecks", (roundManagerToSave.decks, roundManagerToSave.trash)))
     notifyObservers
   }
 
   override def load(): Unit = {
-    val result = fileIO.load(roundmanager)
+    /*val result = fileIO.load(roundmanager)
     val loadedRoundmanager = result match {
       case Failure(_) => return
       case Success(loadedTuple) => loadedTuple
@@ -78,7 +78,8 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
       case "BuyState" => BuyPhaseState(this)
       case "GameOverState" => GameOverState(this)
     }
-    roundmanager = loadedRoundmanager._2
+    roundmanager = loadedRoundmanager._2*/
+    dbInterface.read()
     //Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/load"))
     notifyObservers
   }

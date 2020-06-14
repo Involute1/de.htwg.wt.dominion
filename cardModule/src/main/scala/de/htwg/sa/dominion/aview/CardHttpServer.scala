@@ -20,8 +20,8 @@ class CardHttpServer(controller: ICardController) extends PlayJsonSupport {
   val route: Route = concat(
     get {
       path("card" / "savePlayingDecks") {
-        entity(as[List[List[Card]]]) { params => {
-          controller.save(Option(params), None, None, None, None)
+        entity(as[(List[List[Card]], List[Card])]) { params => {
+          controller.save(Option(params._1), Option(params._2), None, None, None, None)
           complete("")
         }}
       }
@@ -29,7 +29,7 @@ class CardHttpServer(controller: ICardController) extends PlayJsonSupport {
     get {
       path("card" / "save") {
         entity(as[(List[Card], List[Card], List[Card], Int)]) { params => {
-          controller.save(None, Option(params._1), Option(params._2), Option(params._3), Option(params._4))
+          controller.save(None, None, Option(params._1), Option(params._2), Option(params._3), Option(params._4))
           complete("")
         }}
       }

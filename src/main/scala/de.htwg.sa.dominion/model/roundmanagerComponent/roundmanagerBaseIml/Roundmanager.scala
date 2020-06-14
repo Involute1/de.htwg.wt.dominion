@@ -910,7 +910,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val score = scoreFromXML(scoreNode)
 
     val roundStatusNode = (node \ "roudStatus").text
-    val roundStatus = roundStatusFromXml(roundStatusNode)
+    val roundStatus = RoundmanagerStatus.roundStatusMapFromString(roundStatusNode)
 
     val playerTurn = (node \ "playerTurn").text.toInt
 
@@ -922,45 +922,6 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   def scoreFromXML(node: scala.xml.NodeSeq): List[(String, Int)] = {
     val list = for (entry <- node) yield ((node \ "player").text, (node \ "points").text.toInt)
     list.toList
-  }
-
-  def roundStatusFromXml(roundStatusString: String): RoundmanagerStatus = {
-    // TODO string
-    roundStatusString match {
-      case "" => RoundmanagerStatus.PLAY_CARD_PHASE
-      case "" => RoundmanagerStatus.VILLAGE_ACTION_PHASE
-      case "" => RoundmanagerStatus.VILLAGE_BUY_PHASE
-      case "" => RoundmanagerStatus.FESTIVAL_ACTION_PHASE
-      case "" => RoundmanagerStatus.FESTIVAL_BUY_PHASE
-      case "" => RoundmanagerStatus.SMITHY_ACTION_PHASE
-      case "" => RoundmanagerStatus.SMITHY_BUY_PHASE
-      case "" => RoundmanagerStatus.MARKET_ACTION_PHASE
-      case "" => RoundmanagerStatus.MARKET_BUY_PHASE
-      case "" => RoundmanagerStatus.MERCHANT_ACTION_PHASE
-      case "" => RoundmanagerStatus.MERCHANT_BUY_PHASE
-      case "" => RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE
-      case "" => RoundmanagerStatus.CELLAR_END_ACTION
-      case "" => RoundmanagerStatus.CELLAR_BUY_PHASE
-      case "" => RoundmanagerStatus.MINE_ACTION_INPUT_PHASE
-      case "" => RoundmanagerStatus.MINE_NO_ACTION_PHASE
-      case "" => RoundmanagerStatus.MINE_NO_ACTION_BUY_PHASE
-      case "" => RoundmanagerStatus.MINE_END_ACTION
-      case "" => RoundmanagerStatus.REMODEL_NO_ACTION_BUY_PHASE
-      case "" => RoundmanagerStatus.REMODEL_ACTION_INPUT_PHASE
-      case "" => RoundmanagerStatus.REMODEL_END_ACTION
-      case "" => RoundmanagerStatus.REMODEL_BUY_PHASE
-      case "" => RoundmanagerStatus.REMODEL_ACTION_PHASE
-      case "" => RoundmanagerStatus.WORKSHOP_INPUT_ACTION_PHASE
-      case "" => RoundmanagerStatus.WORKSHOP_BUY_PHASE
-      case "" => RoundmanagerStatus.WORKSHOP_ACTION_PHASE
-      case "" => RoundmanagerStatus.START_BUY_PHASE
-      case "" => RoundmanagerStatus.WRONG_INPUT_BUY_PHASE
-      case "" => RoundmanagerStatus.NO_BUYS_LEFT
-      case "" => RoundmanagerStatus.INIT_BUY_PHASE
-      case "" => RoundmanagerStatus.CONTINUE_BUY_PHASE
-      case "" => RoundmanagerStatus.BUY_AGAIN
-      case "" => RoundmanagerStatus.NEXT_PLAYER_TURN
-    }
   }
 
 }
@@ -981,4 +942,42 @@ object RoundmanagerStatus extends Enumeration {
   START_BUY_PHASE, WRONG_INPUT_BUY_PHASE, NO_BUYS_LEFT, INIT_BUY_PHASE, CONTINUE_BUY_PHASE, BUY_AGAIN, NEXT_PLAYER_TURN = Value
 
   implicit val format: Format[roundmanagerBaseIml.RoundmanagerStatus.Value] = Json.formatEnum(this)
+
+  def roundStatusMapFromString(roundStatusString: String): RoundmanagerStatus = {
+    roundStatusString match {
+      case "PLAY_CARD_PHASE" => RoundmanagerStatus.PLAY_CARD_PHASE
+      case "VILLAGE_ACTION_PHASE" => RoundmanagerStatus.VILLAGE_ACTION_PHASE
+      case "VILLAGE_BUY_PHASE" => RoundmanagerStatus.VILLAGE_BUY_PHASE
+      case "FESTIVAL_ACTION_PHASE" => RoundmanagerStatus.FESTIVAL_ACTION_PHASE
+      case "FESTIVAL_BUY_PHASE" => RoundmanagerStatus.FESTIVAL_BUY_PHASE
+      case "SMITHY_ACTION_PHASE" => RoundmanagerStatus.SMITHY_ACTION_PHASE
+      case "SMITHY_BUY_PHASE" => RoundmanagerStatus.SMITHY_BUY_PHASE
+      case "MARKET_ACTION_PHASE" => RoundmanagerStatus.MARKET_ACTION_PHASE
+      case "MARKET_BUY_PHASE" => RoundmanagerStatus.MARKET_BUY_PHASE
+      case "MERCHANT_ACTION_PHASE" => RoundmanagerStatus.MERCHANT_ACTION_PHASE
+      case "MERCHANT_BUY_PHASE" => RoundmanagerStatus.MERCHANT_BUY_PHASE
+      case "CELLAR_ACTION_INPUT_PHASE" => RoundmanagerStatus.CELLAR_ACTION_INPUT_PHASE
+      case "CELLAR_END_ACTION" => RoundmanagerStatus.CELLAR_END_ACTION
+      case "CELLAR_BUY_PHASE" => RoundmanagerStatus.CELLAR_BUY_PHASE
+      case "MINE_ACTION_INPUT_PHASE" => RoundmanagerStatus.MINE_ACTION_INPUT_PHASE
+      case "MINE_NO_ACTION_PHASE" => RoundmanagerStatus.MINE_NO_ACTION_PHASE
+      case "MINE_NO_ACTION_BUY_PHASE" => RoundmanagerStatus.MINE_NO_ACTION_BUY_PHASE
+      case "MINE_END_ACTION" => RoundmanagerStatus.MINE_END_ACTION
+      case "REMODEL_NO_ACTION_BUY_PHASE" => RoundmanagerStatus.REMODEL_NO_ACTION_BUY_PHASE
+      case "REMODEL_ACTION_INPUT_PHASE" => RoundmanagerStatus.REMODEL_ACTION_INPUT_PHASE
+      case "REMODEL_END_ACTION" => RoundmanagerStatus.REMODEL_END_ACTION
+      case "REMODEL_BUY_PHASE" => RoundmanagerStatus.REMODEL_BUY_PHASE
+      case "REMODEL_ACTION_PHASE" => RoundmanagerStatus.REMODEL_ACTION_PHASE
+      case "WORKSHOP_INPUT_ACTION_PHASE" => RoundmanagerStatus.WORKSHOP_INPUT_ACTION_PHASE
+      case "WORKSHOP_BUY_PHASE" => RoundmanagerStatus.WORKSHOP_BUY_PHASE
+      case "WORKSHOP_ACTION_PHASE" => RoundmanagerStatus.WORKSHOP_ACTION_PHASE
+      case "START_BUY_PHASE" => RoundmanagerStatus.START_BUY_PHASE
+      case "WRONG_INPUT_BUY_PHASE" => RoundmanagerStatus.WRONG_INPUT_BUY_PHASE
+      case "NO_BUYS_LEFT" => RoundmanagerStatus.NO_BUYS_LEFT
+      case "INIT_BUY_PHASE" => RoundmanagerStatus.INIT_BUY_PHASE
+      case "CONTINUE_BUY_PHASE" => RoundmanagerStatus.CONTINUE_BUY_PHASE
+      case "BUY_AGAIN" => RoundmanagerStatus.BUY_AGAIN
+      case "NEXT_PLAYER_TURN" => RoundmanagerStatus.NEXT_PLAYER_TURN
+    }
+  }
 }

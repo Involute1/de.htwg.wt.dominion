@@ -47,6 +47,16 @@ object CardTables {
     def playingCardsCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])] = foreignKey("PLAYING_CARDS_CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
   }
 
+  class TrashCardsTable(tag: Tag) extends Table[(Int, Int)](tag, "CARD_TRASH") {
+    def trashId: Rep[Int] = column[Int]("TRASH_ID", O.PrimaryKey, O.AutoInc)
+
+    def cardFk: Rep[Int] = column[Int]("CARD_FKEY")
+
+    def * : ProvenShape[(Int, Int)] = (trashId, cardFk)
+
+    def trashCardsCardFk: ForeignKeyQuery[CardTable, (Int, Option[String], Option[String], Option[String], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int], Option[Int])] = foreignKey("TRASH_CARDS_CARD_FK", cardFk, cards)(_.cardId, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
+  }
+
   class HandCardsTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "CARD_PLAYER_HAND_CARDS") {
     def handCardsId: Rep[Int] = column[Int]("HAND_CARD_ID", O.PrimaryKey, O.AutoInc)
 

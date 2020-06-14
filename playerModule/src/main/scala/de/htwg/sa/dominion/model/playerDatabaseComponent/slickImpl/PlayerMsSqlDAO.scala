@@ -12,8 +12,10 @@ import slick.jdbc.SQLServerProfile
 import slick.lifted.TableQuery
 import slick.jdbc.SQLServerProfile.api._
 import akka.http.scaladsl.client.RequestBuilding._
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 
 import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration.Duration
@@ -35,11 +37,24 @@ class PlayerMsSqlDAO extends IPlayerDatabase with PlayJsonSupport {
       db.run(setup)
       true
     } catch {
-      case error: Error => println("Database error: ", error) false
+      case error: Error =>
+        println("Database error: ", error)
+        false
     }
   }
 
-  override def read(): List[Player] = ???
+  override def read(): List[Player] = {
+    val playerRowsSelect = for (p <- playerTable) yield (p.name, p.value, p.actions, p.buys, p.money)
+    val playerTuples = Await.result(db.run(playerRowsSelect.result), Duration(1, TimeUnit.SECONDS))
+    val loadedPlayerList = for (p <- playerTuples.indices) yield {
+      val playerValue = playerTuples(p)._2.get
+      val response = Http().singleRequest(Get("http://0.0.0.0:8082/card/load", playerValue))
+      val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[(List[List[Card]], List[Card], List[Card], List[Card], List[Card])])
+      val res = Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
+      Player(playerTuples(p)._1.get, playerValue, res._3, res._4, res._5, playerTuples(p)._3.get, playerTuples(p)._4.get, playerTuples(p)._5.get)
+    }
+    loadedPlayerList.toList
+  }
 
   override def update(playerList: List[Player]): Boolean = {
     try {
@@ -53,7 +68,9 @@ class PlayerMsSqlDAO extends IPlayerDatabase with PlayJsonSupport {
       }
       true
     } catch {
-      case error: Error => println("Database error: ", error) false
+      case error: Error =>
+        println("Database error: ", error)
+        false
     }
   }
 
