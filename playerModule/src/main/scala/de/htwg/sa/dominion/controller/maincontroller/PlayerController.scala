@@ -18,11 +18,12 @@ class PlayerController @Inject()(var playerInterface: IPlayer, fileIoInterface: 
     playerDbInterface.update(playerList)
   }
 
-  override def load(): Unit = {
-    playerInterface = fileIoInterface.load(playerInterface, "playerModule") match {
+  override def load(): List[Player] = {
+    /*playerInterface = fileIoInterface.load(playerInterface, "playerModule") match {
       case Failure(_) => return
       case Success(value) => value
-    }
+    }*/
+    playerDbInterface.read()
   }
 
   override def constructPlayerNameString(playerToUpdate: Player): String = playerInterface.constructPlayerNameString(playerToUpdate)

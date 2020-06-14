@@ -35,9 +35,15 @@ class CardHttpServer(controller: ICardController) extends PlayJsonSupport {
       }
     },
     get {
+      path("card" / "loadPlayingDecks") {
+        complete(controller.load(None))
+      }
+    },
+    get {
       path("card" / "load") {
-        controller.load()
-        complete("")
+        entity(as[Int]) { params => {
+          complete(controller.load(Option(params)))
+        }}
       }
     },
     get {

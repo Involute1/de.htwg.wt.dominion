@@ -23,18 +23,20 @@ class MsSqlDAO extends IDominionDatabase {
 
   val db: SQLServerProfile.backend.Database = Database.forConfig("mymssqldb")
 
-  override def create: Try[Boolean] = {
-    Try {
+  override def create: Boolean = {
+    try {
       val setup = DBIO.seq((roundManagerTable.schema ++ namesTable.schema ++ scoreTable.schema).createIfNotExists)
       db.run(setup)
       true
+    } catch {
+      case error: Error => println("Database error: ", error) false
     }
   }
 
-  override def read(): Roundmanager = ???
+  override def read(): (String, Roundmanager) = ???
 
-  override def update(controllerState: String, roundmanager: IRoundmanager): Try[Boolean] = {
-    Try {
+  override def update(controllerState: String, roundmanager: IRoundmanager): Boolean = {
+    try {
       val currentRoundmanger: Roundmanager = roundmanager.getCurrentInstance
       val namesTuple = currentRoundmanger.names match {
         case List(a, b, c) => (0, Option(a), Option(b), Option(c), Option(null), Option(null))
@@ -66,9 +68,11 @@ class MsSqlDAO extends IDominionDatabase {
       db.run(roundManagerTable.delete)
       db.run(roundmanagerInsert)
       true
+    } catch {
+      case error: Error => println("Database error: ", error) false
     }
   }
 
-  override def delete: Try[Boolean] = ???
+  override def delete: Boolean = ???
 
 }

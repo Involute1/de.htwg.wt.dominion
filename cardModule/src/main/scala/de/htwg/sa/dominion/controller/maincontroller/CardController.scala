@@ -18,11 +18,12 @@ class CardController @Inject()(var card: ICard, fileIO: ICardFileIO, cardDbInter
     cardDbInterface.update(playingDecks, handCards, stackerCards, deckCards, playerId)
   }
 
-  override def load(): Unit = {
-    card = fileIO.load(card, "cardModule") match {
+  override def load(playerId: Option[Int]): (Option[List[List[Card]]], Option[List[Card]], Option[List[Card]], Option[List[Card]]) = {
+    /*card = fileIO.load(card, "cardModule") match {
       case Failure(_) => return
       case Success(value) => value
-    }
+    }*/
+    ???
   }
 
   override def constructCardNameString(): String = card.constructCardNameString()

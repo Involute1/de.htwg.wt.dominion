@@ -6,12 +6,12 @@ import scala.util.Try
 
 trait IPlayerDatabase {
 
-  def create: Try[Boolean]
+  def create: Boolean
 
-  def read(): Unit
+  def read(): List[Player]
 
-  def update(playerList: List[Player]): Try[Boolean]
+  def update(playerList: List[Player]): Boolean
 
-  def delete: Try[Boolean]
+  def delete:Boolean
 
 }

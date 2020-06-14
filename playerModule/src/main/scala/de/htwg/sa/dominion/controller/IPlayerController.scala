@@ -6,7 +6,7 @@ trait IPlayerController {
 
   def save(playerList: List[Player]): Unit
 
-  def load(): Unit
+  def load(): List[Player]
 
   def constructPlayerNameString(playerToUpdate: Player): String
 

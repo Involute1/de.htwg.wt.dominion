@@ -38,9 +38,8 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
           }
         } ~
         get {
-          path("player" / "´load") {
-            controller.load()
-            complete("")
+          path("player" / "load") {
+            complete(controller.load())
           }
         } ~
         get {

@@ -29,18 +29,20 @@ class PlayerMsSqlDAO extends IPlayerDatabase with PlayJsonSupport {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  override def create: Try[Boolean] = {
-    Try {
+  override def create: Boolean = {
+    try {
       val setup = DBIO.seq(playerTable.schema.createIfNotExists)
       db.run(setup)
       true
+    } catch {
+      case error: Error => println("Database error: ", error) false
     }
   }
 
-  override def read(): Unit = ???
+  override def read(): List[Player] = ???
 
-  override def update(playerList: List[Player]): Try[Boolean] = {
-    Try {
+  override def update(playerList: List[Player]): Boolean = {
+    try {
       for (player <- playerList) {
         val deletePlayerQuery = playerTable.filter(_.name === player.name).delete
         db.run(deletePlayerQuery)
@@ -50,8 +52,10 @@ class PlayerMsSqlDAO extends IPlayerDatabase with PlayJsonSupport {
         Http().singleRequest(Get("http://0.0.0.0:8082/card/save", (player.handCards, player.stacker, player.deck, playerId)))
       }
       true
+    } catch {
+      case error: Error => println("Database error: ", error) false
     }
   }
 
-  override def delete: Try[Boolean] = ???
+  override def delete: Boolean = ???
 }

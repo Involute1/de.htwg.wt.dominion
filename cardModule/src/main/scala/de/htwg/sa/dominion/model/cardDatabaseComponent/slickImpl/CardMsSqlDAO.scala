@@ -23,8 +23,8 @@ class CardMsSqlDAO extends ICardDatabase {
 
   val db: SQLServerProfile.backend.Database = Database.forConfig("mymssqldb")
 
-  override def create: Try[Boolean] = {
-    Try {
+  override def create: Boolean = {
+    try {
       val setup = DBIO.seq(
         (cards.schema ++ handCards.schema ++ playingDecks.schema ++ stackers.schema ++ playerDecks.schema).createIfNotExists
       )
@@ -99,14 +99,18 @@ class CardMsSqlDAO extends ICardDatabase {
       )
       db.run(insertActions)
       true
+    } catch {
+      case error: Error => println("Database error: ", error) false
     }
   }
 
-  override def read(): Unit = ???
+  override def read(playerId: Option[Int]): (Option[List[List[Card]]], Option[List[Card]], Option[List[Card]], Option[List[Card]]) = {
+    ???
+  }
 
   override def update(playingDecksList: Option[List[List[Card]]], handCardsList: Option[List[Card]], stackerCardsList: Option[List[Card]],
-                      deckCardsList: Option[List[Card]], playerId: Option[Int]): Try[Boolean] = {
-    Try {
+                      deckCardsList: Option[List[Card]], playerId: Option[Int]): Boolean = {
+    try {
       if (playingDecksList.isDefined) {
         db.run(playingDecks.delete)
         for (deck <- playingDecksList.head) {
@@ -139,10 +143,12 @@ class CardMsSqlDAO extends ICardDatabase {
         }
         true
       }
+    } catch {
+      case error: Error => println("Database error: ", error) false
     }
   }
 
-  override def delete: Try[Boolean] = {
+  override def delete: Boolean = {
     ???
   }
 }

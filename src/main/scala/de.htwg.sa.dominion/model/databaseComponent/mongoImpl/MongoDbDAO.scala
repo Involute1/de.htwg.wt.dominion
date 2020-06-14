@@ -7,11 +7,11 @@ import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Round
 import scala.util.Try
 
 class MongoDbDAO extends IDominionDatabase {
-  override def create: Try[Boolean] = ???
+  override def create: Boolean = ???
 
-  override def read(): Roundmanager = ???
+  override def read(): (String, Roundmanager) = ???
 
-  override def update(controllerState: String, roundmanager: IRoundmanager): Try[Boolean] = ???
+  override def update(controllerState: String, roundmanager: IRoundmanager): Boolean = ???
 
-  override def delete: Try[Boolean] = ???
+  override def delete: Boolean = ???
 }

@@ -6,11 +6,11 @@ import de.htwg.sa.dominion.model.playerDatabaseComponent.IPlayerDatabase
 import scala.util.Try
 
 class PlayerMongoDbDAO extends IPlayerDatabase {
-  override def create: Try[Boolean] = ???
+  override def create: Boolean = ???
 
-  override def read(): Unit = ???
+  override def read(): List[Player] = ???
 
-  override def update(playerList: List[Player]): Try[Boolean] = ???
+  override def update(playerList: List[Player]): Boolean = ???
 
-  override def delete: Try[Boolean] = ???
+  override def delete: Boolean = ???
 }

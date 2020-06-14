@@ -8,12 +8,12 @@ import scala.util.Try
 
 trait IDominionDatabase {
 
-  def create: Try[Boolean]
+  def create: Boolean
 
-  def read(): Roundmanager
+  def read(): (String, Roundmanager)
 
-  def update(controllerState: String, roundmanager: IRoundmanager): Try[Boolean]
+  def update(controllerState: String, roundmanager: IRoundmanager): Boolean
 
-  def delete: Try[Boolean]
+  def delete: Boolean
 
 }
