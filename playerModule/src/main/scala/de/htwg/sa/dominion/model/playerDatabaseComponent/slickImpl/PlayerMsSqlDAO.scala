@@ -74,5 +74,14 @@ class PlayerMsSqlDAO extends IPlayerDatabase with PlayJsonSupport {
     }
   }
 
-  override def delete: Boolean = ???
+  override def delete: Boolean = {
+    try {
+      db.run(playerTable.delete)
+      true
+    } catch {
+      case error: Error =>
+        println("Database error: ", error)
+        false
+    }
+  }
 }

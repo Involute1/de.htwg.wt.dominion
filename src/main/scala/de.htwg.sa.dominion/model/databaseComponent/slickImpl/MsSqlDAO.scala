@@ -142,6 +142,17 @@ class MsSqlDAO extends IDominionDatabase with PlayJsonSupport {
     }
   }
 
-  override def delete: Boolean = ???
+  override def delete: Boolean = {
+    try {
+      db.run(scoreTable.delete)
+      db.run(namesTable.delete)
+      db.run(roundManagerTable.delete)
+      true
+    } catch {
+      case error: Error =>
+        println("Database error: ", error)
+        false
+    }
+  }
 
 }

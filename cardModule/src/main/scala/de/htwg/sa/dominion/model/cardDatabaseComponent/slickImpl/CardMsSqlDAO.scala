@@ -206,6 +206,19 @@ class CardMsSqlDAO extends ICardDatabase {
   }
 
   override def delete: Boolean = {
-    ???
+    try {
+      db.run(playingDecks.delete)
+      db.run(trash.delete)
+      val deletePlayerCardsQuery = DBIO.seq(
+        handCards.delete,
+        stackers.delete,
+        playerDecks.delete)
+      db.run(deletePlayerCardsQuery)
+      true
+    } catch {
+      case error: Error =>
+        println("Database error: ", error)
+        false
+    }
   }
 }
