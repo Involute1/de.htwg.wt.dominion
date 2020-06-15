@@ -11,7 +11,7 @@ import scala.util.Try
 
 class MongoDbDAO extends IDominionDatabase {
 
-  val uri: String = "mongodb+srv://dominionUser:dominion@dominioncluster-fnmjl.mongodb.net/Dominion?retryWrites=true&w=majority"
+  val uri: String = "mongodb+srv://dominionUser:dominion@dominioncluster-fnmjl.mongodb.net/DominionCluster?retryWrites=true&w=majority"
   System.setProperty("org.mongodb.async.type", "netty")
   val client: MongoClient = MongoClient()
   val database: MongoDatabase = client.getDatabase("Dominion")
