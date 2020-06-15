@@ -23,7 +23,7 @@ val commonDependencies = Seq(
   "org.slf4j" % "slf4j-nop" % "1.7.26",
   "com.typesafe" % "config" % "1.4.0",
   "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2",
-  "com.microsoft.sqlserver" % "mssql-jdbc" % "8.3.1.jre14-preview"
+  "com.microsoft.sqlserver" % "mssql-jdbc" % "8.3.1.jre8-preview"
 )
 
 lazy val root = (project in file(".")).settings(
