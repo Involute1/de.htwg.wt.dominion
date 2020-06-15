@@ -22,11 +22,18 @@ class MongoDbDAO extends IDominionDatabase {
 
   override def read(): (String, Roundmanager) = ???
 
-  override def save(controllerState: String, roundmanager: IRoundmanager): Unit = {
-    val roundmanagerDoc: Document = Document(Json.prettyPrint(roundmanager.toJson))
-    roundManagerCollection.insertOne(roundmanagerDoc)
+  override def update(controllerState: String, roundmanager: IRoundmanager): Boolean = {
+    try {
+      val roundmanagerDoc: Document = Document(Json.prettyPrint(roundmanager.toJson))
+      roundManagerCollection.insertOne(roundmanagerDoc)
+      true
+    } catch {
+      case error: Error =>
+        println("Database error: ", error)
+        false
+    }
+
   }
-  override def update(controllerState: String, roundmanager: IRoundmanager): Boolean = ???
 
   override def delete: Boolean = ???
 }

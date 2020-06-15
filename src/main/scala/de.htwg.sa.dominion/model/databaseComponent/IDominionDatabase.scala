@@ -14,8 +14,6 @@ trait IDominionDatabase {
 
   def update(controllerState: String, roundmanager: IRoundmanager): Boolean
 
-  def save(controllerState: String, roundmanager: IRoundmanager): Unit
-
   def delete: Boolean
 
 }
