@@ -155,4 +155,6 @@ class MsSqlDAO extends IDominionDatabase with PlayJsonSupport {
     }
   }
 
+  override def save(controllerState: String, roundmanager: IRoundmanager): Unit = ???
+
 }
