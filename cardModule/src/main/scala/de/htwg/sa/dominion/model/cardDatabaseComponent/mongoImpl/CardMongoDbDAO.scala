@@ -1,5 +1,6 @@
 package de.htwg.sa.dominion.model.cardDatabaseComponent.mongoImpl
 
+import com.mongodb.BasicDBObject
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.cardDatabaseComponent.ICardDatabase
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase}
@@ -13,7 +14,7 @@ class CardMongoDbDAO extends ICardDatabase {
   val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("Dominion")
 
-  val playerDecksCollection: MongoCollection[Document] = database.getCollection("playingDecks")
+  val playingDecksCollection: MongoCollection[Document] = database.getCollection("playingDecks")
   val trashCollection: MongoCollection[Document] = database.getCollection("trash")
   val playerHandCollection: MongoCollection[Document] = database.getCollection("playerHand")
   val playerDeckCollection: MongoCollection[Document] = database.getCollection("playerDeck")
@@ -40,12 +41,19 @@ class CardMongoDbDAO extends ICardDatabase {
                       stackerCards: Option[List[Card]], deckCards: Option[List[Card]], playerId: Option[Int]): Boolean = {
     try {
       if (playingDecks.isDefined) {
+        for (doc <- playingDecksCollection.find()) playingDecksCollection.deleteMany(doc).head()
+        for (doc <- trashCollection.find()) trashCollection.deleteMany(doc).head()
+
         val playingDecksDoc: Document = Document(Json.prettyPrint(Json.toJson(playingDecks.head)))
         val trashDoc: Document = Document(Json.prettyPrint(Json.toJson(trashList.head)))
 
-        playerDecksCollection.insertOne(playingDecksDoc).head()
+        playingDecksCollection.insertOne(playingDecksDoc).head()
         trashCollection.insertOne(trashDoc).head()
       } else {
+        for (doc <- playerHandCollection.find()) playerHandCollection.deleteMany(doc).head()
+        for (doc <- playerDeckCollection.find()) playerDeckCollection.deleteMany(doc).head()
+        for (doc <- playerStackerCollection.find()) playerStackerCollection.deleteMany(doc).head()
+
         val playerHandDoc: Document = Document(Json.prettyPrint(Json.toJson(playerId.get, handCards.head)))
         val playerStackerDoc: Document = Document(Json.prettyPrint(Json.toJson(playerId.get, stackerCards.head)))
         val playerDeckDoc: Document = Document(Json.prettyPrint(Json.toJson(playerId.get, deckCards.head)))
@@ -64,11 +72,11 @@ class CardMongoDbDAO extends ICardDatabase {
 
   override def delete: Boolean = {
     try {
-      //playerDecksCollection.deleteMany()
-      //trashCollection.deleteMany()
-      //playerHandCollection.deleteMany()
-      //playerDeckCollection.deleteMany()
-      //playerStackerCollection.deleteMany()
+      for (doc <- playingDecksCollection.find()) playingDecksCollection.deleteMany(doc).head()
+      for (doc <- trashCollection.find()) trashCollection.deleteMany(doc).head()
+      for (doc <- playerHandCollection.find()) playerHandCollection.deleteMany(doc).head()
+      for (doc <- playerDeckCollection.find()) playerDeckCollection.deleteMany(doc).head()
+      for (doc <- playerStackerCollection.find()) playerStackerCollection.deleteMany(doc).head()
       true
     } catch {
       case error: Error =>
