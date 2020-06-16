@@ -57,10 +57,10 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
 
   override def save(): Unit = {
     val roundManagerToSave = roundmanager.getCurrentInstance
-    //fileIO.save(getControllerStateAsString, roundmanager)
-    dbInterface.update(getControllerStateAsString, roundmanager)
-    Http().singleRequest(Get("http://0.0.0.0:8081/player/save", roundManagerToSave.players))
-    Http().singleRequest(Get("http://0.0.0.0:8082/card/savePlayingDecks", (roundManagerToSave.decks, roundManagerToSave.trash)))
+    fileIO.save(getControllerStateAsString, roundmanager)
+    //dbInterface.update(getControllerStateAsString, roundmanager)
+    //Http().singleRequest(Get("http://0.0.0.0:8081/player/save", roundManagerToSave.players))
+    //Http().singleRequest(Get("http://0.0.0.0:8082/card/savePlayingDecks", (roundManagerToSave.decks, roundManagerToSave.trash)))
     notifyObservers
   }
 
