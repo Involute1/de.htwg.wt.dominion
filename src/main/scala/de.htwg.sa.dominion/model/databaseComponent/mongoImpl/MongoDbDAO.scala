@@ -1,5 +1,8 @@
 package de.htwg.sa.dominion.model.databaseComponent.mongoImpl
 
+import java.util.concurrent.TimeUnit
+
+import com.mongodb.BasicDBObject
 import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
@@ -15,7 +18,7 @@ class MongoDbDAO extends IDominionDatabase {
 
   val uri: String = "mongodb+srv://dominionUser:dominion@dominioncluster-fnmjl.mongodb.net/Dominion?retryWrites=true&w=majority"
   System.setProperty("org.mongodb.async.type", "netty")
-  val client: MongoClient = MongoClient()
+  val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("Dominion")
   val roundManagerCollection: MongoCollection[Document] = database.getCollection("roundManager")
 
@@ -34,6 +37,7 @@ class MongoDbDAO extends IDominionDatabase {
 
   override def update(controllerState: String, roundmanager: IRoundmanager): Boolean = {
     try {
+      for (doc <- roundManagerCollection.find()) roundManagerCollection.deleteMany(doc).head()
       val roundManagerToSave = roundmanager.getCurrentInstance
       val dbRoundManager = DatabaseRoundManager(controllerState, roundManagerToSave.names, roundManagerToSave.numberOfPlayers,
         roundManagerToSave.turn, roundManagerToSave.emptyDeckCount, roundManagerToSave.gameEnd, roundManagerToSave.score,
@@ -52,7 +56,7 @@ class MongoDbDAO extends IDominionDatabase {
 
   override def delete: Boolean = {
     try {
-      //roundManagerCollection.deleteMany()
+      for (doc <- roundManagerCollection.find()) roundManagerCollection.deleteMany(doc).head()
       true
     } catch {
       case error: Error =>
