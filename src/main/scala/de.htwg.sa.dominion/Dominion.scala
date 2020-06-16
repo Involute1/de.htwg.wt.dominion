@@ -23,7 +23,6 @@ object Dominion {
   if (dockerenv == "FALSE") {
     val gui = new SwingGui(controller)
   }
-  //val gui = new SwingGui(controller)
   val httpServer: HttpServer = new HttpServer(controller)
 
   val introString: String = "Welcome to Dominion! \n Press 'q' to exit and any other key to start "

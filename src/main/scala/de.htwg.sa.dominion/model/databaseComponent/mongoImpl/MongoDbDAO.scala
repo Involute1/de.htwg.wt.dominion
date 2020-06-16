@@ -41,8 +41,8 @@ class MongoDbDAO extends IDominionDatabase {
         roundManagerToSave.turn, roundManagerToSave.emptyDeckCount, roundManagerToSave.gameEnd, roundManagerToSave.score,
         roundManagerToSave.roundStatus, roundManagerToSave.playerTurn)
 
-      val roundmanagerDoc: Document = Document(Json.prettyPrint())
-      roundManagerCollection.insertOne(roundmanagerDoc)
+      val roundManagerDoc: Document = Document(Json.prettyPrint(Json.toJson(dbRoundManager)))
+      roundManagerCollection.insertOne(roundManagerDoc).head()
       true
     } catch {
       case error: Error =>
@@ -52,5 +52,14 @@ class MongoDbDAO extends IDominionDatabase {
 
   }
 
-  override def delete: Boolean = ???
+  override def delete: Boolean = {
+    try {
+      //roundManagerCollection.deleteMany()
+      true
+    } catch {
+      case error: Error =>
+        println("Database error: ", error)
+        false
+    }
+  }
 }
