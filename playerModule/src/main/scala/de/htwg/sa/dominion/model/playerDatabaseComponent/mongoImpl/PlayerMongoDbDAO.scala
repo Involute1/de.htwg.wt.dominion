@@ -11,7 +11,7 @@ import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 import de.htwg.sa.dominion.model.playerDatabaseComponent.IPlayerDatabase
-import de.htwg.sa.dominion.util.{DatabasePlayer, DatabaseRoundManager}
+import de.htwg.sa.dominion.util.{DatabasePlayer}
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase}
 import play.api.libs.json.Json
 
@@ -43,7 +43,7 @@ class PlayerMongoDbDAO extends IPlayerDatabase with PlayJsonSupport {
   }
 
   override def read(): List[Player] = {
-    val playerList: List[Player] = for(doc <- Await.result(playerCollection.find().head(), Duration(1, TimeUnit.SECONDS))) yield {
+    /*val playerList: List[Player] = for(doc <- Await.result(playerCollection.find().head(), Duration(1, TimeUnit.SECONDS))) yield {
       //val singledoc = Await.result(playerCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
       val jsonDoc = Json.parse(doc.toJson())
       val loadedPlayerDatabase = jsonDoc.validate[DatabasePlayer].get
@@ -53,7 +53,8 @@ class PlayerMongoDbDAO extends IPlayerDatabase with PlayJsonSupport {
       val Player1: Player = Player(loadedPlayerDatabase.name, loadedPlayerDatabase.value, res._5, res._4, res._3, loadedPlayerDatabase.actions, loadedPlayerDatabase.buys, loadedPlayerDatabase.money)
       Player1
     }
-    playerList
+    playerList*/
+    ???
   }
 
   override def update(playerList: List[Player]): Boolean = {
