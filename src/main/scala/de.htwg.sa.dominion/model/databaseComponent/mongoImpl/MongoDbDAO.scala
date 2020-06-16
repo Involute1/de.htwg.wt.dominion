@@ -1,7 +1,5 @@
 package de.htwg.sa.dominion.model.databaseComponent.mongoImpl
 
-import java.util.concurrent.TimeUnit
-
 import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
@@ -17,7 +15,7 @@ class MongoDbDAO extends IDominionDatabase {
 
   val uri: String = "mongodb+srv://dominionUser:dominion@dominioncluster-fnmjl.mongodb.net/Dominion?retryWrites=true&w=majority"
   System.setProperty("org.mongodb.async.type", "netty")
-  val client: MongoClient = MongoClient(uri)
+  val client: MongoClient = MongoClient()
   val database: MongoDatabase = client.getDatabase("Dominion")
   val roundManagerCollection: MongoCollection[Document] = database.getCollection("roundManager")
 

@@ -24,7 +24,7 @@ val commonDependencies = Seq(
   "com.typesafe" % "config" % "1.4.0",
   "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2",
   "com.microsoft.sqlserver" % "mssql-jdbc" % "8.3.1.jre8-preview",
-  "org.mongodb.scala" %% "mongo-scala-driver" % "4.0.4"
+  "org.mongodb.scala" %% "mongo-scala-driver" % "4.0.2"
 )
 
 lazy val root = (project in file(".")).settings(
