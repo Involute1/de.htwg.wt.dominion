@@ -2,15 +2,22 @@ package de.htwg.sa.dominion.model.databaseComponent.mongoImpl
 
 import java.util.concurrent.TimeUnit
 
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.client.RequestBuilding.Get
+import akka.http.scaladsl.unmarshalling.Unmarshal
+import akka.stream.ActorMaterializer
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
+import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.{Roundmanager, RoundmanagerStatus}
 import de.htwg.sa.dominion.util.DatabaseRoundManager
 import org.mongodb.scala._
 import play.api.libs.json.{JsError, JsNumber, JsSuccess, JsValue, Json}
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration.Duration
 
 
@@ -21,6 +28,10 @@ class MongoDbDAO extends IDominionDatabase with PlayJsonSupport {
   val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("Dominion")
   val roundManagerCollection: MongoCollection[Document] = database.getCollection("roundManager")
+
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   override def create: Boolean = {
     try {
@@ -38,12 +49,22 @@ class MongoDbDAO extends IDominionDatabase with PlayJsonSupport {
     val jsonDoc = Json.parse(doc.toJson())
     val loadedDatabaseRoundManager = jsonDoc.validate[DatabaseRoundManager].get
 
+    val loadedPlayerList: List[Player] = {
+      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/load"))
+      val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[List[Player]])
+      Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
+    }
+    val loadedPlayingDecks: (List[List[Card]], List[Card]) = {
+      val response = Http().singleRequest(Get("http://0.0.0.0:8082/card/loadPlayingDecks"))
+      val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[(List[List[Card]], List[Card], List[Card], List[Card], List[Card])])
+      val res = Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
+      (res._1, res._2)
+    }
 
-
-    val umbringen = Roundmanager(Nil, loadedDatabaseRoundManager.names, loadedDatabaseRoundManager.numberOfPlayers, loadedDatabaseRoundManager.turn,
-      Nil, loadedDatabaseRoundManager.emptyDeckCount, loadedDatabaseRoundManager.gameEnd, loadedDatabaseRoundManager.score,
-      loadedDatabaseRoundManager.roundStatus, loadedDatabaseRoundManager.playerTurn, Nil)
-    (loadedDatabaseRoundManager.controllerStateString, umbringen)
+    val loadedRoundManager: Roundmanager = Roundmanager(loadedPlayerList, loadedDatabaseRoundManager.names, loadedDatabaseRoundManager.numberOfPlayers, loadedDatabaseRoundManager.turn,
+      loadedPlayingDecks._1, loadedDatabaseRoundManager.emptyDeckCount, loadedDatabaseRoundManager.gameEnd, loadedDatabaseRoundManager.score,
+      loadedDatabaseRoundManager.roundStatus, loadedDatabaseRoundManager.playerTurn, loadedPlayingDecks._2)
+    (loadedDatabaseRoundManager.controllerStateString, loadedRoundManager)
   }
 
   override def update(controllerState: String, roundmanager: IRoundmanager): Boolean = {
