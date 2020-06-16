@@ -33,7 +33,11 @@ class MongoDbDAO extends IDominionDatabase {
     }
   }
 
-  override def read(): (String, Roundmanager) = ???
+  override def read(): (String, Roundmanager) = {
+    val test: Document = Await.result(roundManagerCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
+    println(test)
+    ???
+  }
 
   override def update(controllerState: String, roundmanager: IRoundmanager): Boolean = {
     try {

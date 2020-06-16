@@ -58,9 +58,9 @@ class CardMongoDbDAO extends ICardDatabase {
         val playerStackerDoc: Document = Document(Json.prettyPrint(Json.toJson(playerId.get, stackerCards.head)))
         val playerDeckDoc: Document = Document(Json.prettyPrint(Json.toJson(playerId.get, deckCards.head)))
 
-        playerHandCollection.insertOne(playerHandDoc)
-        playerDeckCollection.insertOne(playerStackerDoc)
-        playerStackerCollection.insertOne(playerDeckDoc)
+        playerHandCollection.insertOne(playerHandDoc).head()
+        playerDeckCollection.insertOne(playerStackerDoc).head()
+        playerStackerCollection.insertOne(playerDeckDoc).head()
       }
       true
     } catch  {
