@@ -1,17 +1,22 @@
 package de.htwg.sa.dominion.model.playerDatabaseComponent.mongoImpl
 
+import java.util.concurrent.TimeUnit
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.client.RequestBuilding.Get
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.playerComponent.playerBaseImpl.Player
 import de.htwg.sa.dominion.model.playerDatabaseComponent.IPlayerDatabase
-import de.htwg.sa.dominion.util.DatabasePlayer
+import de.htwg.sa.dominion.util.{DatabasePlayer, DatabaseRoundManager}
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase}
 import play.api.libs.json.Json
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{Await, ExecutionContextExecutor}
+import scala.concurrent.duration.Duration
 import scala.util.Try
 
 class PlayerMongoDbDAO extends IPlayerDatabase with PlayJsonSupport {
@@ -37,7 +42,19 @@ class PlayerMongoDbDAO extends IPlayerDatabase with PlayJsonSupport {
     }
   }
 
-  override def read(): List[Player] = ???
+  override def read(): List[Player] = {
+    val playerList: List[Player] = for(doc <- Await.result(playerCollection.find().head(), Duration(1, TimeUnit.SECONDS))) yield {
+      //val singledoc = Await.result(playerCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
+      val jsonDoc = Json.parse(doc.toJson())
+      val loadedPlayerDatabase = jsonDoc.validate[DatabasePlayer].get
+      val response = Http().singleRequest(Get("http://0.0.0.0:8082/card/load", loadedPlayerDatabase.value))
+      val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[(List[List[Card]], List[Card], List[Card], List[Card], List[Card])])
+      val res = Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
+      val Player1: Player = Player(loadedPlayerDatabase.name, loadedPlayerDatabase.value, res._5, res._4, res._3, loadedPlayerDatabase.actions, loadedPlayerDatabase.buys, loadedPlayerDatabase.money)
+      Player1
+    }
+    playerList
+  }
 
   override def update(playerList: List[Player]): Boolean = {
     try {

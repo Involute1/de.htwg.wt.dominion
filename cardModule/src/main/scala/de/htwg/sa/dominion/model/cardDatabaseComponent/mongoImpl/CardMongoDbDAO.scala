@@ -1,11 +1,16 @@
 package de.htwg.sa.dominion.model.cardDatabaseComponent.mongoImpl
 
+import java.util.concurrent.TimeUnit
+
 import com.mongodb.BasicDBObject
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.cardDatabaseComponent.ICardDatabase
+import de.htwg.sa.dominion.util.DatabaseRoundManager
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase}
 import play.api.libs.json.Json
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
 
 class CardMongoDbDAO extends ICardDatabase {
@@ -35,7 +40,31 @@ class CardMongoDbDAO extends ICardDatabase {
     }
   }
 
-  override def read(playerId: Option[Int]): (List[List[Card]], List[Card], List[Card], List[Card], List[Card]) = ???
+  override def read(playerId: Option[Int]): (List[List[Card]], List[Card], List[Card], List[Card], List[Card]) = {
+    if (playerId.isDefined) {
+      val playerHandDoc = Await.result(playerHandCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
+      val jsonPlayerHandDoc = Json.parse(playerHandDoc.toJson())
+      val loadedPlayerHandCollection = jsonPlayerHandDoc.validate.get
+
+      val playerDeckDoc = Await.result(playerDeckCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
+      val jsonPlayerDeckDoc = Json.parse(playerDeckDoc.toJson())
+      val loadedPlayerDeckCollection = jsonPlayerDeckDoc.validate.get
+
+      val playerStackerDoc = Await.result(playerStackerCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
+      val jsonPlayerStackerDoc = Json.parse(playerStackerDoc.toJson())
+      val loadedPlayerStackCollection = jsonPlayerStackerDoc.validate.get
+      (Nil, Nil, loadedPlayerHandCollection, loadedPlayerDeckCollection, loadedPlayerStackCollection)
+    } else {
+      val playingDeckDoc = Await.result(playerDeckCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
+      val jsonPlayingDeckDoc = Json.parse(playingDeckDoc.toJson())
+      val loadedPlayingDecksCollection = jsonPlayingDeckDoc.validate.get
+
+      val trashDoc = Await.result(trashCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
+      val jsonTrashDoc = Json.parse(trashDoc.toJson())
+      val loadedTrashCollection = jsonTrashDoc.validate.get
+      (loadedPlayingDecksCollection, loadedTrashCollection, Nil, Nil, Nil)
+    }
+  }
 
   override def update(playingDecks: Option[List[List[Card]]], trashList: Option[List[Card]], handCards: Option[List[Card]],
                       stackerCards: Option[List[Card]], deckCards: Option[List[Card]], playerId: Option[Int]): Boolean = {
