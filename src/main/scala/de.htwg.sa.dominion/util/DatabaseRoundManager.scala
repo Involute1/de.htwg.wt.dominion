@@ -1,6 +1,5 @@
 package de.htwg.sa.dominion.util
 
-import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.RoundmanagerStatus.RoundmanagerStatus
 
 case class DatabaseRoundManager(controllerStateString: String, names: List[String], numberOfPlayers: Int, turn: Int,

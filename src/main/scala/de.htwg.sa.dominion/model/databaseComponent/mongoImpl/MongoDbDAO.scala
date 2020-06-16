@@ -2,19 +2,19 @@ package de.htwg.sa.dominion.model.databaseComponent.mongoImpl
 
 import java.util.concurrent.TimeUnit
 
-import com.mongodb.BasicDBObject
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
-import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.Roundmanager
+import de.htwg.sa.dominion.model.roundmanagerComponent.roundmanagerBaseIml.{Roundmanager, RoundmanagerStatus}
 import de.htwg.sa.dominion.util.DatabaseRoundManager
 import org.mongodb.scala._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsError, JsNumber, JsSuccess, JsValue, Json}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 
-class MongoDbDAO extends IDominionDatabase {
+class MongoDbDAO extends IDominionDatabase with PlayJsonSupport {
 
   val uri: String = "mongodb+srv://dominionUser:dominion@dominioncluster-fnmjl.mongodb.net/Dominion?retryWrites=true&w=majority"
   System.setProperty("org.mongodb.async.type", "netty")
@@ -34,9 +34,16 @@ class MongoDbDAO extends IDominionDatabase {
   }
 
   override def read(): (String, Roundmanager) = {
-    val test: Document = Await.result(roundManagerCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
-    println(test)
-    ???
+    val doc = Await.result(roundManagerCollection.find().first().head(), Duration(1, TimeUnit.SECONDS))
+    val jsonDoc = Json.parse(doc.toJson())
+    val loadedDatabaseRoundManager = jsonDoc.validate[DatabaseRoundManager].get
+
+
+
+    val umbringen = Roundmanager(Nil, loadedDatabaseRoundManager.names, loadedDatabaseRoundManager.numberOfPlayers, loadedDatabaseRoundManager.turn,
+      Nil, loadedDatabaseRoundManager.emptyDeckCount, loadedDatabaseRoundManager.gameEnd, loadedDatabaseRoundManager.score,
+      loadedDatabaseRoundManager.roundStatus, loadedDatabaseRoundManager.playerTurn, Nil)
+    (loadedDatabaseRoundManager.controllerStateString, umbringen)
   }
 
   override def update(controllerState: String, roundmanager: IRoundmanager): Boolean = {
@@ -55,7 +62,6 @@ class MongoDbDAO extends IDominionDatabase {
         println("Database error: ", error)
         false
     }
-
   }
 
   override def delete: Boolean = {
