@@ -27,7 +27,7 @@ object Dominion {
 
   val introString: String = "Welcome to Dominion! \n Press 'q' to exit and any other key to start "
   controller.setControllerMessage(introString)
-  //PlayerMain.main(Array())
+  PlayerMain.main(Array())
   //CardMain.main(Array())
   controller.notifyObservers
 
