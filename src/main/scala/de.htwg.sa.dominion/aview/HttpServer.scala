@@ -48,9 +48,9 @@ class HttpServer(controller: IController) {
         decodeRequest {
           entity(as[String]) { input => {
             val strippedInput = input.replace("input=", "")
-            if (strippedInput == "s") {
+            if (strippedInput.equalsIgnoreCase("save")) {
               controller.save()
-            } else if (strippedInput == "l") {
+            } else if (strippedInput.equalsIgnoreCase("load")) {
               controller.load()
             } else {
               controller.eval(strippedInput)
