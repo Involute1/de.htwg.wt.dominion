@@ -78,24 +78,24 @@ case class Player(name: String, value: Int, deck: List[Card], stacker: List[Card
   override def removeHandCardAddToStacker(cardIndex: Int, player: Player): Player = {
     val updatedHand = player.handCards.zipWithIndex.collect { case (a, i) if i != cardIndex => a }
     val updatedStacker = List.concat(player.stacker, List(player.handCards(cardIndex)))
-    this.copy(handCards = updatedHand, stacker = updatedStacker)
+    player.copy(handCards = updatedHand, stacker = updatedStacker)
   }
 
   override def trashHandCard(cardIdx: Int, player: Player): Player = {
     val updatedHand = player.handCards.zipWithIndex.collect { case (a, i) if i != cardIdx => a }
-    this.copy(handCards = updatedHand)
+    player.copy(handCards = updatedHand)
   }
 
   override def discard(indexesToDiscard: List[Int], player: Player): Player = {
     val updatedStacker = List.concat(player.stacker, player.handCards.zipWithIndex.collect { case (card, idx) if indexesToDiscard.contains(idx) => card })
     val updatedHand = player.handCards.zipWithIndex.collect { case (card, idx) if !indexesToDiscard.contains(idx) => card }
-    this.copy(stacker = updatedStacker, handCards = updatedHand)
+    player.copy(stacker = updatedStacker, handCards = updatedHand)
   }
 
   override def calculatePlayerMoneyForBuy(player: Player): Player = {
     val moneyValues: List[Int] = for (card <- player.handCards) yield card.moneyValue
     val finalMoneyValue = moneyValues.sum + player.money
-    this.copy(money = finalMoneyValue)
+    player.copy(money = finalMoneyValue)
   }
 
   override def checkForTreasure(player: Player): Boolean = {
