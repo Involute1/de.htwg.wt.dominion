@@ -47,7 +47,14 @@ class HttpServer(controller: IController) {
       path("dominion") {
         decodeRequest {
           entity(as[String]) { input => {
-            controller.eval(input.replace("input=", ""))
+            val strippedInput = input.replace("input=", "")
+            if (strippedInput == "s") {
+              controller.save()
+            } else if (strippedInput == "l") {
+              controller.load()
+            } else {
+              controller.eval(strippedInput)
+            }
             toHtml
           }
           }
@@ -73,4 +80,6 @@ class HttpServer(controller: IController) {
         | <input type="submit" value="Submit">
         |</form> """.stripMargin))
   }
+
+
 }

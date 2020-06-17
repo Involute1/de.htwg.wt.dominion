@@ -3,7 +3,7 @@ import sbt.Keys.libraryDependencies
 ThisBuild / version       := "0.1"
 ThisBuild / scalaVersion  := "2.13.1"
 ThisBuild / trapExit := false
-scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
+scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "UTF-8")
 
 resolvers += Resolver.jcenterRepo
 
