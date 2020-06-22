@@ -66,6 +66,7 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
         get {
           path("player" / "constructPlayerHandString") {
             entity(as[Player]) { params => {
+              println("reached")
               complete(controller.constructPlayerHandString(params))
             }}
           }
@@ -143,6 +144,7 @@ case class PlayerHttpServer(controller: IPlayerController) extends PlayJsonSuppo
         get {
           path("player" / "constructCellarTrashString") {
             entity(as[Player]) { params => {
+              println("reached")
               complete(controller.constructCellarTrashString(params))
             }}
           }

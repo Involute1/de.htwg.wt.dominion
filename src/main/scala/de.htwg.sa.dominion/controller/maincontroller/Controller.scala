@@ -16,14 +16,15 @@ import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.CardName.CardName
 import de.htwg.sa.dominion.model.fileIOComponent.IDominionFileIO
 import de.htwg.sa.dominion.model.roundmanagerComponent.IRoundmanager
 import akka.http.scaladsl.Http
-
 import akka.http.scaladsl.client.RequestBuilding._
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.dominion.model.databaseComponent.IDominionDatabase
 import de.htwg.sa.dominion.util.{Observer, UndoManager}
 import javax.inject.Inject
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{Await, ExecutionContextExecutor}
+import scala.concurrent.duration.Duration
 
 class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFileIO, dbInterface: IDominionDatabase) extends IController with PlayJsonSupport {
 
@@ -59,8 +60,8 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
     val roundManagerToSave = roundmanager.getCurrentInstance
     //fileIO.save(getControllerStateAsString, roundmanager)
     dbInterface.update(getControllerStateAsString, roundmanager)
-    Http().singleRequest(Get("http://0.0.0.0:8081/player/save", roundManagerToSave.players))
-    Http().singleRequest(Get("http://0.0.0.0:8082/card/savePlayingDecks", (roundManagerToSave.decks, roundManagerToSave.trash)))
+    Http().singleRequest(Get("http://player:8081/player/save", roundManagerToSave.players))
+    Http().singleRequest(Get("http://card:8082/card/savePlayingDecks", (roundManagerToSave.decks, roundManagerToSave.trash)))
     notifyObservers
   }
 

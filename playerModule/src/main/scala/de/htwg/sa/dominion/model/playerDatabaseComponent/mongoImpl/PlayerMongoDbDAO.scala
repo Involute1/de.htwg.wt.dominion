@@ -51,7 +51,7 @@ class PlayerMongoDbDAO extends IPlayerDatabase with PlayJsonSupport {
 
     val loadedPlayers = for (dbPlayer <- loadedDatabasePlayerList.toList) yield {
       val loadedCards = {
-        val response = Http().singleRequest(Get("http://0.0.0.0:8082/load", dbPlayer.value))
+        val response = Http().singleRequest(Get("http://card:8082/card/load", dbPlayer.value))
         val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[(List[List[Card]], List[Card], List[Card], List[Card], List[Card])])
         val result = Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
         (result._3, result._4, result._5)
@@ -68,7 +68,7 @@ class PlayerMongoDbDAO extends IPlayerDatabase with PlayJsonSupport {
         val dbPlayer = DatabasePlayer(player.name, player.value, player.actions, player.buys, player.money)
         val playerDoc: Document = Document(Json.prettyPrint(Json.toJson(dbPlayer)))
         playerCollection.insertOne(playerDoc).head()
-        Http().singleRequest(Get("http://0.0.0.0:8082/card/save", (player.handCards, player.stacker, player.deck, player.value)))
+        Http().singleRequest(Get("http://card:8082/card/save", (player.handCards, player.stacker, player.deck, player.value)))
       }
       true
     } catch {

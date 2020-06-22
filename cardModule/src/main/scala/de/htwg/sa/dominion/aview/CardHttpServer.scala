@@ -19,6 +19,11 @@ class CardHttpServer(controller: ICardController) extends PlayJsonSupport {
 
   val route: Route = concat(
     get {
+      path("card") {
+        toHtml("<h1>This is the Card Module Server of Dominion</h1>")
+      }
+    },
+    get {
       path("card" / "savePlayingDecks") {
         entity(as[(List[List[Card]], List[Card])]) { params => {
           controller.save(Option(params._1), Option(params._2), None, None, None, None)

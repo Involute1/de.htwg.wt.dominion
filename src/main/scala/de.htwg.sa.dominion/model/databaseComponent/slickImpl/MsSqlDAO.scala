@@ -49,12 +49,12 @@ class MsSqlDAO extends IDominionDatabase with PlayJsonSupport {
 
   override def read(): (String, Roundmanager) = {
     val loadedPlayerList: List[Player] = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/load"))
+      val response = Http().singleRequest(Get("http://player:8081/player/load"))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[List[Player]])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
     val loadedPlayingDecks: (List[List[Card]], List[Card]) = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8082/card/loadPlayingDecks"))
+      val response = Http().singleRequest(Get("http://card:8082/card/loadPlayingDecks"))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[(List[List[Card]], List[Card], List[Card], List[Card], List[Card])])
       val res = Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
       (res._1, res._2)

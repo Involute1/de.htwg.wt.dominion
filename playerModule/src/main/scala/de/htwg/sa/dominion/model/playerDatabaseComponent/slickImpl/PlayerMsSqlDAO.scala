@@ -48,7 +48,7 @@ class PlayerMsSqlDAO extends IPlayerDatabase with PlayJsonSupport {
     val playerTuples = Await.result(db.run(playerRowsSelect.result), Duration(1, TimeUnit.SECONDS))
     val loadedPlayerList = for (p <- playerTuples.indices) yield {
       val playerValue = playerTuples(p)._2.get
-      val response = Http().singleRequest(Get("http://0.0.0.0:8082/card/load", playerValue))
+      val response = Http().singleRequest(Get("http://card:8082/card/load", playerValue))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[(List[List[Card]], List[Card], List[Card], List[Card], List[Card])])
       val res = Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
       Player(playerTuples(p)._1.get, playerValue, res._3, res._4, res._5, playerTuples(p)._3.get, playerTuples(p)._4.get, playerTuples(p)._5.get)
@@ -64,7 +64,7 @@ class PlayerMsSqlDAO extends IPlayerDatabase with PlayJsonSupport {
         val playerInsert = (playerTable returning playerTable.map(_.id)) += (0, Option(player.name), Option(player.value),
           Option(player.actions), Option(player.buys), Option(player.money))
         val playerId = Await.result(db.run(playerInsert), Duration(1, TimeUnit.SECONDS))
-        Http().singleRequest(Get("http://0.0.0.0:8082/card/save", (player.handCards, player.stacker, player.deck, playerId)))
+        Http().singleRequest(Get("http://card:8082/card/save", (player.handCards, player.stacker, player.deck, playerId)))
       }
       true
     } catch {

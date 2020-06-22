@@ -363,7 +363,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   def cellarActionEnd(input: List[Int]): List[Player] = {
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Post("http://0.0.0.0:8081/player/discard", (input, this.players(this.playerTurn))))
+      val response = Http().singleRequest(Post("http://player:8081/player/discard", (input, this.players(this.playerTurn))))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -420,7 +420,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   def merchantCheckForSilver(playerList: List[Player]): List[Player] = {
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/checkForFirstSilver", playerList(this.playerTurn)))
+      val response = Http().singleRequest(Get("http://player:8081/player/checkForFirstSilver", playerList(this.playerTurn)))
       val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -429,7 +429,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   def removeHandCardAndAddToStacker(input: Int, playerList: List[Player]): Player = {
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Post("http://0.0.0.0:8081/player/removeHandCardAddToStacker", (input, playerList(this.playerTurn))))
+      val response = Http().singleRequest(Post("http://player:8081/player/removeHandCardAddToStacker", (input, playerList(this.playerTurn))))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -454,7 +454,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
     val updatedPlayerList: List[Player] = this.players.patch(this.playerTurn, Seq(buyPhaseAddCardToStackerFromPlayingDecks(input.toInt)), 1)
     val updatedPlayer: Player = {
       val money: Int = updatedPlayerList(this.playerTurn).money - this.decks(input.toInt).head.costValue
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/updateMoney", (money, updatedPlayerList(this.playerTurn))))
+      val response = Http().singleRequest(Get("http://player:8081/player/updateMoney", (money, updatedPlayerList(this.playerTurn))))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -468,7 +468,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   def updateMoneyForRoundmanager(playerList: List[Player]): List[Player] = {
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/calculatePlayerMoneyForBuy", playerList(this.playerTurn)))
+      val response = Http().singleRequest(Get("http://player:8081/player/calculatePlayerMoneyForBuy", playerList(this.playerTurn)))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -478,7 +478,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   def addToPlayerMoney(moneyToAdd: Int, playerList: List[Player]): List[Player] = {
     val updatedMoney: Int = moneyToAdd + playerList(this.playerTurn).money
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/updateMoney", (updatedMoney, playerList(this.playerTurn))))
+      val response = Http().singleRequest(Get("http://player:8081/player/updateMoney", (updatedMoney, playerList(this.playerTurn))))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -488,7 +488,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   def addToPlayerActions(actionsToAdd: Int, playerList: List[Player]): List[Player] = {
     val updateActions = actionsToAdd + playerList(this.playerTurn).actions
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/updateActions", (updateActions, playerList(this.playerTurn))))
+      val response = Http().singleRequest(Get("http://player:8081/player/updateActions", (updateActions, playerList(this.playerTurn))))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -505,7 +505,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   def addToPlayerBuys(buysToAdd: Int, playerList: List[Player]): List[Player] = {
     val updatedBuys = buysToAdd + playerList(this.playerTurn).buys
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/updateBuys", (updatedBuys, playerList(this.playerTurn))))
+      val response = Http().singleRequest(Get("http://player:8081/player/updateBuys", (updatedBuys, playerList(this.playerTurn))))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -515,7 +515,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   def addToTrash(input: Int): (List[Card], List[Player]) = {
     val updatedTrash: List[Card] = List.concat(this.trash, List(this.players(this.playerTurn).handCards(input)))
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/trashHandCard", (input, this.players(this.playerTurn))))
+      val response = Http().singleRequest(Get("http://player:8081/player/trashHandCard", (input, this.players(this.playerTurn))))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -531,7 +531,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   def drawXAmountOfCards(cardDrawAmount: Int, player: Player): List[Player] = {
     val updatedPlayer: Player = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/updateHand", (cardDrawAmount, player)))
+      val response = Http().singleRequest(Get("http://player:8081/player/updateHand", (cardDrawAmount, player)))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -540,7 +540,7 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   def checkIfHandContainsTreasure(): Boolean = {
     val handContainsTreasure: Boolean = {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/checkForTreasure", this.players(this.playerTurn)))
+      val response = Http().singleRequest(Get("http://player:8081/player/checkForTreasure", this.players(this.playerTurn)))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Boolean])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -585,12 +585,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
       this.copy(gameEnd = true, score = calculateScore())
     } else {
       val removeHandPlayer: Player = {
-        val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/removeCompleteHand", (this.players(this.playerTurn), this.players(this.playerTurn).handCards.size - 1)))
+        val response = Http().singleRequest(Get("http://player:8081/player/removeCompleteHand", (this.players(this.playerTurn), this.players(this.playerTurn).handCards.size - 1)))
         val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
         Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
       }
       val handCardPlayer: Player = {
-        val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/updateHand", (5, removeHandPlayer)))
+        val response = Http().singleRequest(Get("http://player:8081/player/updateHand", (5, removeHandPlayer)))
         val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
         Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
       }
@@ -602,12 +602,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
 
   private def calculateScore(): List[(String, Int)] = {
     val updatedPlayerList: List[Player] = for (player <- this.players) yield {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/moveAllCardsToDeckForScore", player))
+      val response = Http().singleRequest(Get("http://player:8081/player/moveAllCardsToDeckForScore", player))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Player])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
     val scoreList: List[Int] = for (player <- updatedPlayerList) yield {
-      val response = Http().singleRequest(Get("http://0.0.0.0:8081/player/calculateScore", player))
+      val response = Http().singleRequest(Get("http://player:8081/player/calculateScore", player))
       val jsonFuture = response.flatMap(r => Unmarshal(r.entity).to[Int])
       Await.result(jsonFuture, Duration(1, TimeUnit.SECONDS))
     }
@@ -746,12 +746,12 @@ case class Roundmanager(players: List[Player], names: List[String], numberOfPlay
   override def constructRoundermanagerStateString: String = {
     val handDefaultString = "----HAND CARDS----\n"
     val handString = {
-      val updatePlayerJsonFuture = Http().singleRequest(Get("http://localhost:8081/player/constructPlayerHandString", this.players(this.playerTurn)))
+      val updatePlayerJsonFuture = Http().singleRequest(Get("http://player:8081/player/constructPlayerHandString", this.players(this.playerTurn)))
       val jsonPlayerStringFuture = updatePlayerJsonFuture.flatMap(r => Unmarshal(r.entity).to[String])
       Await.result(jsonPlayerStringFuture, Duration(1, TimeUnit.SECONDS))
     }
     val trashString = {
-      val updateTrashJsonFuture = Http().singleRequest(Get("http://localhost:8081/player/constructCellarTrashString", this.players(this.playerTurn)))
+      val updateTrashJsonFuture = Http().singleRequest(Get("http://player:8081/player/constructCellarTrashString", this.players(this.playerTurn)))
       val jsonTrashStringFuture = updateTrashJsonFuture.flatMap(r => Unmarshal(r.entity).to[String])
       Await.result(jsonTrashStringFuture, Duration(1, TimeUnit.SECONDS))
     }

@@ -2,22 +2,34 @@ version: '3.8'
 services:
   main:
     image: main-sbt:latest
+    hostname: main
     depends_on:
       - player
       - card
     stdin_open: true
     ports:
       - "8080:8080"
+    environment:
+      CLUSTER_PORT: 8080
+      CLUSTER_IP: main
   player:
     image: player-sbt:latest
+    hostname: player
     stdin_open: true
     depends_on:
       - card
     ports:
       - "8081:8081"
+    environment:
+      CLUSTER_PORT: 8081
+      CLUSTER_IP: player
   card:
     image: card-sbt:latest
+    hostname: card
     stdin_open: true
     ports:
       - "8082:8082"
+    environment:
+      CLUSTER_PORT: 8082
+      CLUSTER_IP: card
 

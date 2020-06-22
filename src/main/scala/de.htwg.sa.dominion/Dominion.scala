@@ -20,14 +20,14 @@ object Dominion {
 
   val tui = new TUI(controller)
   val dockerenv: String = sys.env.getOrElse("DOCKERENV", "FALSE")
-  /*if (dockerenv == "FALSE") {
+  if (dockerenv == "FALSE") {
     val gui = new SwingGui(controller)
-  }*/
+  }
   val httpServer: HttpServer = new HttpServer(controller)
 
   val introString: String = "Welcome to Dominion! \n Press 'q' to exit and any other key to start "
   controller.setControllerMessage(introString)
-  PlayerMain.main(Array())
+  //PlayerMain.main(Array())
   //CardMain.main(Array())
   controller.notifyObservers
 
