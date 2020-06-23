@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 import com.mongodb.BasicDBObject
 import de.htwg.sa.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.sa.dominion.model.cardDatabaseComponent.ICardDatabase
-
+import de.htwg.sa.dominion.util.{DatabaseCard, DatabaseList}
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase}
 import play.api.libs.json.Json
 
@@ -73,8 +73,10 @@ class CardMongoDbDAO extends ICardDatabase {
         for (doc <- playingDecksCollection.find()) playingDecksCollection.deleteMany(doc).head()
         for (doc <- trashCollection.find()) trashCollection.deleteMany(doc).head()
 
-        val playingDecksDoc: Document = Document(Json.prettyPrint(Json.toJson(playingDecks.head)))
-        val trashDoc: Document = Document(Json.prettyPrint(Json.toJson(trashList.head)))
+        val dbPlayingDecks = DatabaseList(playingDecks.get)
+        val dbTrash = DatabaseCard(trashList.get)
+        val playingDecksDoc: Document = Document(Json.prettyPrint(Json.toJson(dbPlayingDecks)))
+        val trashDoc: Document = Document(Json.prettyPrint(Json.toJson(dbTrash)))
 
         playingDecksCollection.insertOne(playingDecksDoc).head()
         trashCollection.insertOne(trashDoc).head()
@@ -83,13 +85,16 @@ class CardMongoDbDAO extends ICardDatabase {
         for (doc <- playerDeckCollection.find()) playerDeckCollection.deleteMany(doc).head()
         for (doc <- playerStackerCollection.find()) playerStackerCollection.deleteMany(doc).head()
 
-        val playerHandDoc: Document = Document(Json.prettyPrint(Json.toJson(playerId.get, handCards.head)))
-        val playerStackerDoc: Document = Document(Json.prettyPrint(Json.toJson(playerId.get, stackerCards.head)))
-        val playerDeckDoc: Document = Document(Json.prettyPrint(Json.toJson(playerId.get, deckCards.head)))
+        val dbHandcard = DatabaseCard(handCards.get)
+        val dbStackercard = DatabaseCard(stackerCards.get)
+        val dbDeckcard = DatabaseCard(deckCards.get)
+        val playerHandDoc: Document = Document(Json.prettyPrint(Json.toJson(dbHandcard)))
+        val playerStackerDoc: Document = Document(Json.prettyPrint(Json.toJson(dbStackercard)))
+        val playerDeckDoc: Document = Document(Json.prettyPrint(Json.toJson(dbDeckcard)))
 
         playerHandCollection.insertOne(playerHandDoc).head()
-        playerDeckCollection.insertOne(playerStackerDoc).head()
-        playerStackerCollection.insertOne(playerDeckDoc).head()
+        playerDeckCollection.insertOne(playerDeckDoc).head()
+        playerStackerCollection.insertOne(playerStackerDoc).head()
       }
       true
     } catch  {

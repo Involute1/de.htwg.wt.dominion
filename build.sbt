@@ -77,3 +77,4 @@ lazy val playerModule = project.settings(
   },
   mainClass in assembly := Some("de.htwg.sa.dominion.PlayerMain")
 ).aggregate(cardModule).dependsOn(cardModule)
+
