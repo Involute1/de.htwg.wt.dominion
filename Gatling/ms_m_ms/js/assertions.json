@@ -1,0 +1,10 @@
+{
+  "simulation": "dominion.saving",
+  "simulationId": "saving",
+  "start": 1592939139229,
+  "description": "msmms",
+  "scenarios": ["dreisql"],
+  "assertions": [
+
+  ]
+}
