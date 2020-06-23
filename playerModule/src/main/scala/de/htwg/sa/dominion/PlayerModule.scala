@@ -17,6 +17,6 @@ class PlayerModule extends AbstractModule with ScalaModule {
     bind[IPlayer].toInstance(Player("", 0, Nil, Nil, Nil, 1, 1, 0))
     bind[IPlayerController].to[PlayerController]
     bind[IPlayerFileIO].to[FileIO]
-    bind[IPlayerDatabase].to[PlayerMongoDbDAO]
+    bind[IPlayerDatabase].to[PlayerMsSqlDAO]
   }
 }

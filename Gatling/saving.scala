@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class OneRound extends Simulation {
+class saving extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://localhost:8080")
@@ -27,7 +27,7 @@ class OneRound extends Simulation {
 
 
 
-	val scn = scenario("traurig")
+	val scn = scenario("dreisql")
 		.exec(http("request_0")
 			.post("/dominion")
 			.headers(headers_0)
@@ -37,36 +37,41 @@ class OneRound extends Simulation {
 			.post("/dominion")
 			.headers(headers_0)
 			.formParam("input", "3"))
-		.pause(2)
+		.pause(1)
 		.exec(http("request_2")
 			.post("/dominion")
 			.headers(headers_0)
 			.formParam("input", "a"))
-		.pause(2)
+		.pause(1)
 		.exec(http("request_3")
 			.post("/dominion")
 			.headers(headers_0)
-			.formParam("input", "b"))
-		.pause(2)
+			.formParam("input", "w"))
+		.pause(1)
 		.exec(http("request_4")
 			.post("/dominion")
 			.headers(headers_0)
-			.formParam("input", "c"))
-		.pause(6)
+			.formParam("input", "a"))
+		.pause(3)
 		.exec(http("request_5")
 			.post("/dominion")
 			.headers(headers_0)
 			.formParam("input", "a"))
-		.pause(3)
+		.pause(16)
 		.exec(http("request_6")
 			.post("/dominion")
 			.headers(headers_0)
-			.formParam("input", "1"))
-		.pause(3)
+			.formParam("input", "0"))
+		.pause(9)
 		.exec(http("request_7")
 			.post("/dominion")
 			.headers(headers_0)
 			.formParam("input", "a"))
+		.pause(6)
+		.exec(http("request_8")
+			.post("/dominion")
+			.headers(headers_0)
+			.formParam("input", "save"))
 
 	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
 }

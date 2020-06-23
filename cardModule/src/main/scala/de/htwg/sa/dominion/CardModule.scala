@@ -17,6 +17,6 @@ class CardModule extends AbstractModule with ScalaModule {
     bind[ICard].toInstance(Card("", "", Cardtype.KINGDOM, 0, 0, 0, 0, 0, 0, 0))
     bind[ICardController].to[CardController]
     bind[ICardFileIO].to[FileIO]
-    bind[ICardDatabase].to[CardMongoDbDAO]
+    bind[ICardDatabase].to[CardMsSqlDAO]
   }
 }
