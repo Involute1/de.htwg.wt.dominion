@@ -40,7 +40,6 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
   val injector: Injector = Guice.createInjector(new DominionModule)
 
   dbInterface.create
-
   override def eval(input: String): Unit = {
     undoManager.doStep(new SetCommand(this))
     controllerState.evaluate(input)
