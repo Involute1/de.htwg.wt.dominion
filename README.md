@@ -26,7 +26,7 @@ Project is: _in progress_
 | [![Build Status](https://travis-ci.org/Involute1/de.htwg.se.dominion.svg?branch=Development_Luis)](https://travis-ci.org/Involute1/de.htwg.se.dominion)  | [![Coverage Status](https://travis-ci.org/Involute1/de.htwg.se.dominion.svg?branch=Development_Luis)](https://travis-ci.org/Involute1/de.htwg.se.dominion)  |
 
 ## Team
-[![Luis Nothvogel](https://avatars1.githubusercontent.com/u/48949590?s=400&v=4)](https://github.com/Involute1) | [![Tobias Schoch](https://avatars3.githubusercontent.com/u/48965803?s=400&v=4)](https://github.com/Tobias-Schoch)
+[![Luis Nothvogel](https://avatars1.githubusercontent.com/u/48949590?s=400&v=4)](https://github.com/Involute1) | [![Tobias Schoch](https://avatars3.githubusercontent.com/u/43953160?s=400&u=4d66d900dec2004d7213dce3bc1aa54ceafc0f80&v=4)](https://github.com/Tobias-Schoch)
 ---|---
 [Luis Nothvogel](https://github.com/Involute1) |[Tobias Schoch](https://github.com/Tobias-Schoch)
 
