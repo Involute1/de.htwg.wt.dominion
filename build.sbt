@@ -41,7 +41,7 @@ lazy val root = (project in file(".")).settings(
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
   },
-  mainClass in assembly := Some("de.htwg.sa.dominion.Dominion")
+  mainClass in assembly := Some("de.htwg.wt.dominion.Dominion")
 ).aggregate(cardModule, playerModule).dependsOn(cardModule, playerModule)
 
 lazy val cardModule = project.settings(
@@ -58,7 +58,7 @@ lazy val cardModule = project.settings(
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
   },
-  mainClass in assembly := Some("de.htwg.sa.dominion.CardMain")
+  mainClass in assembly := Some("de.htwg.wt.dominion.CardMain")
 )
 
 lazy val playerModule = project.settings(
@@ -75,6 +75,6 @@ lazy val playerModule = project.settings(
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
   },
-  mainClass in assembly := Some("de.htwg.sa.dominion.PlayerMain")
+  mainClass in assembly := Some("de.htwg.wt.dominion.PlayerMain")
 ).aggregate(cardModule).dependsOn(cardModule)
 
