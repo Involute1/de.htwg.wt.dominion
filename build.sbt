@@ -1,7 +1,7 @@
 import sbt.Keys.libraryDependencies
-//name          := "de.htwg.sa.dominion"
+//name          := "de.htwg.wt.dominion"
 ThisBuild / version       := "0.1"
-ThisBuild / scalaVersion  := "2.13.1"
+ThisBuild / scalaVersion  := "2.13.3"
 ThisBuild / trapExit := false
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "UTF-8")
 
@@ -28,7 +28,7 @@ val commonDependencies = Seq(
 )
 
 lazy val root = (project in file(".")).settings(
-  name := "de.htwg.sa.dominion",
+  name := "de.htwg.wt.dominion",
   libraryDependencies ++= commonDependencies,
   assemblyMergeStrategy in assembly := {
     case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
