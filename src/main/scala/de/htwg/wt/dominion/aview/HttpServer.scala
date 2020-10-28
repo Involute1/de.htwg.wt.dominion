@@ -16,33 +16,42 @@ class HttpServer(controller: IController) {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContext = system.dispatcher
 
-  val route: Route = {
+  val route: Route = concat(
     get {
-    path("dominion") {
-      toHtml
-    }~
-      path("dominion" / "undo") {
-        controller.undo()
+      path("dominion") {
         toHtml
-      }~
-      path("dominion" / "redo") {
+      }
+    },
+      get {
+        path("dominion" / "undo") {
+          controller.undo()
+          toHtml
+        }
+      },
+      get {      path("dominion" / "redo") {
         controller.redo()
         toHtml
-      }~
-      path("dominion" / "save") {
-        controller.save()
-        toHtml
-      }~
-      path("dominion" / "load") {
-        controller.load()
-        toHtml
-      }~
-      path("dominion" / Segment) {
-        input =>
-          controller.eval(input)
+      }},
+
+      get {
+        path("dominion" / "save") {
+          controller.save()
           toHtml
-      }
-  }~
+        }
+      },
+      get {
+        path("dominion" / "load") {
+          controller.load()
+          toHtml
+        }
+      },
+      get {
+        path("dominion" / Segment) {
+          input =>
+            controller.eval(input)
+            toHtml
+        }
+      },
     post {
       path("dominion") {
         decodeRequest {
@@ -61,7 +70,7 @@ class HttpServer(controller: IController) {
         }
       }
     }
-  }
+    )
 
   println(s"Dominion Module Server online at http://localhost:8080/dominion")
 

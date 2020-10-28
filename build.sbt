@@ -20,7 +20,7 @@ val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-testkit" % "2.6.5" % Test,
   "de.heikoseeberger" %% "akka-http-play-json" % "1.32.0",
   "com.typesafe.slick" %% "slick" % "3.3.2",
-  "org.slf4j" % "slf4j-nop" % "1.7.26",
+ // "org.slf4j" % "slf4j-nop" % "1.7.26",
   "com.typesafe" % "config" % "1.4.0",
   "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2",
   "com.microsoft.sqlserver" % "mssql-jdbc" % "8.3.1.jre8-preview",
