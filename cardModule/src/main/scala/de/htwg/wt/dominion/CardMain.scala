@@ -13,7 +13,6 @@ object CardMain {
     val controller: CardController = injector.getInstance(classOf[CardController])
     val httpServer: CardHttpServer = new CardHttpServer(controller)
 
-
     while(!shutdown) {
       Thread.sleep(100)
     }

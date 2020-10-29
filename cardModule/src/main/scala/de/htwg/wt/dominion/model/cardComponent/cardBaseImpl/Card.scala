@@ -14,7 +14,7 @@ case class Card(cardName: String, cardDescription: String, cardType: Cardtype, c
     this.cardName
   }
 
-  override def constructCardInformationString: String = {
+  override def constructCardInformationString(): String = {
     val cardInfoString = "Cardname: " + this.cardName + "\nCarddescription: " + this.cardDescription + "\nCost: " +
       +this.costValue + " Money\n" + "Money worth: " + this.moneyValue + "\nVictory Points worth: " + this.vpValue + "\n" +
       "Allows you to have " + this.additionalActionsValue + " Actions, " + this.additionalBuysValue + " Buys," + this.additionalMoneyValue + " " +

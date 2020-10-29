@@ -41,6 +41,6 @@ object Dominion {
     } while (input != "q")
     httpServer.unbind()
     Http().singleRequest(HttpRequest(uri = "http://localhost:8081/player/exit"))
-    Http().singleRequest(HttpRequest(uri = "http://localhost:8082/card/exit"))
+    Http().singleRequest(HttpRequest(uri = "http://localhost:8079/card/exit"))
   }
 }

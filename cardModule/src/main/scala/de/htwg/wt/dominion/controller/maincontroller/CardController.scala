@@ -27,5 +27,5 @@ class CardController @Inject()(var card: ICard, fileIO: ICardFileIO, cardDbInter
 
   override def constructCardNameString(): String = card.constructCardNameString()
 
-  override def constructCardInfoString(): String = card.constructCardInformationString
+  override def constructCardInfoString(): String = card.constructCardInformationString()
 }

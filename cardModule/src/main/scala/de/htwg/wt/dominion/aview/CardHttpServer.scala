@@ -63,9 +63,9 @@ class CardHttpServer(controller: ICardController) extends PlayJsonSupport {
     }
   )
 
-  println("CardModule Server online at http://localhost:8082/card")
+  println("CardModule Server online at http://localhost:8079/card")
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "0.0.0.0", 8082)
+  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "0.0.0.0", 8079)
 
   def shutdownWebServer() : Unit = {
     bindingFuture

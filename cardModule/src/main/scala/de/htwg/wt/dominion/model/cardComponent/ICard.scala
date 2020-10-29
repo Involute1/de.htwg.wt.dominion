@@ -9,7 +9,7 @@ trait ICard {
 
   def constructCardNameString(): String
 
-  def constructCardInformationString: String
+  def constructCardInformationString(): String
 
   def toJson: JsValue
 
