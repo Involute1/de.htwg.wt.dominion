@@ -16,61 +16,52 @@ class HttpServer(controller: IController) {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContext = system.dispatcher
 
-  val route: Route = concat(
+  val route: Route = {
     get {
       path("dominion") {
         toHtml
-      }
-    },
-      get {
+      }~
         path("dominion" / "undo") {
           controller.undo()
           toHtml
-        }
-      },
-      get {      path("dominion" / "redo") {
-        controller.redo()
-        toHtml
-      }},
-
-      get {
+        }~
+        path("dominion" / "redo") {
+          controller.redo()
+          toHtml
+        }~
         path("dominion" / "save") {
           controller.save()
           toHtml
-        }
-      },
-      get {
+        }~
         path("dominion" / "load") {
           controller.load()
           toHtml
-        }
-      },
-      get {
+        }~
         path("dominion" / Segment) {
           input =>
             controller.eval(input)
             toHtml
         }
-      },
-    post {
-      path("dominion") {
-        decodeRequest {
-          entity(as[String]) { input => {
-            val strippedInput = input.replace("input=", "")
-            if (strippedInput.equalsIgnoreCase("save")) {
-              controller.save()
-            } else if (strippedInput.equalsIgnoreCase("load")) {
-              controller.load()
-            } else {
-              controller.eval(strippedInput)
+    }~
+      post {
+        path("dominion") {
+          decodeRequest {
+            entity(as[String]) { input => {
+              val strippedInput = input.replace("input=", "")
+              if (strippedInput.equalsIgnoreCase("save")) {
+                controller.save()
+              } else if (strippedInput.equalsIgnoreCase("load")) {
+                controller.load()
+              } else {
+                controller.eval(strippedInput)
+              }
+              toHtml
             }
-            toHtml
-          }
+            }
           }
         }
       }
-    }
-    )
+  }
 
   println(s"Dominion Module Server online at http://localhost:8080/dominion")
 

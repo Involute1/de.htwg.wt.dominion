@@ -13,9 +13,9 @@ object PlayerMain {
     val controller: PlayerController = injector.getInstance(classOf[PlayerController])
     val httpServer: PlayerHttpServer = new PlayerHttpServer(controller)
 
-    while(!shutdown) {
-      Thread.sleep(100)
-    }
-    httpServer.shutdownWebServer()
+//    while(!shutdown) {
+//      Thread.sleep(100)
+//    }
+//    httpServer.shutdownWebServer()
   }
 }
