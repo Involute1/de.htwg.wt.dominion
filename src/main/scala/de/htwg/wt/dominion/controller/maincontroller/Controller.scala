@@ -1,7 +1,6 @@
 package de.htwg.wt.dominion.controller.maincontroller
 
 import java.util.concurrent.TimeUnit
-
 import akka.actor.ActorSystem
 
 import scala.util.{Failure, Success}
@@ -17,14 +16,14 @@ import akka.http.scaladsl.unmarshalling.Unmarshal
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.wt.dominion.util.Observer
 import de.htwg.wt.dominion.DominionModule
-import de.htwg.wt.dominion.controller.IController
+import de.htwg.wt.dominion.controller.{EvalEvent, IController}
 import de.htwg.wt.dominion.model.cardComponent.cardBaseImpl.{Card, CardName}
 import de.htwg.wt.dominion.model.databaseComponent.IDominionDatabase
 import de.htwg.wt.dominion.model.fileIOComponent.IDominionFileIO
 import de.htwg.wt.dominion.model.roundmanagerComponent.IRoundmanager
 import de.htwg.wt.dominion.util.UndoManager
-import javax.inject.Inject
 
+import javax.inject.Inject
 import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration.Duration
 
@@ -44,17 +43,20 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
     undoManager.doStep(new SetCommand(this))
     controllerState.evaluate(input)
     setControllerMessage(controllerState.getCurrentControllerMessage)
-    notifyObservers
+//    notifyObservers
+    publish(new EvalEvent)
   }
 
   override def undo(): Unit = {
     undoManager.undoStep()
-    notifyObservers
+//    notifyObservers
+    publish(new EvalEvent)
   }
 
   override def redo(): Unit = {
     undoManager.redoStep()
-    notifyObservers
+//    notifyObservers
+    publish(new EvalEvent)
   }
 
   override def save(): Unit = {
@@ -65,7 +67,8 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
     Http().singleRequest(Get("http://localhost:8081/player/save", roundManagerToSave.players))
     //Http().singleRequest(Get("http://card:8079/card/savePlayingDecks", (roundManagerToSave.decks, roundManagerToSave.trash)))
     Http().singleRequest(Get("http://localhost:8079/card/savePlayingDecks", (roundManagerToSave.decks, roundManagerToSave.trash)))
-    notifyObservers
+//    notifyObservers
+    publish(new EvalEvent)
   }
 
   override def load(): Unit = {
@@ -82,7 +85,8 @@ class Controller @Inject()(var roundmanager: IRoundmanager, fileIO: IDominionFil
       case "GameOverState" => GameOverState(this)
     }
     roundmanager = loadedResult._2
-    notifyObservers
+//    notifyObservers
+    publish(new EvalEvent)
   }
 
   override def getControllerMessage: String = {

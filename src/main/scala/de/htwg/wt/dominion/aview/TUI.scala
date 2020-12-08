@@ -1,11 +1,13 @@
 package de.htwg.wt.dominion.aview
 
-import de.htwg.wt.dominion.controller.IController
+import de.htwg.wt.dominion.controller.{EvalEvent, IController}
 import de.htwg.wt.dominion.util.Observer
 
-class TUI(controller: IController) extends Observer {
+import scala.swing.Reactor
 
-  controller.add(this)
+class TUI(controller: IController) extends Reactor {
+
+  listenTo(controller)
 
   def processInputLine(input: String): Unit = {
     input match {
@@ -18,8 +20,12 @@ class TUI(controller: IController) extends Observer {
     }
   }
 
-  override def update(): Boolean = {
-    println(controller.getControllerMessage)
-    true
+  reactions += {
+    case event: EvalEvent => println(controller.getControllerMessage)
   }
+
+//  override def update(): Boolean = {
+//    println(controller.getControllerMessage)
+//    true
+//  }
 }

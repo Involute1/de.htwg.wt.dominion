@@ -3,7 +3,10 @@ package de.htwg.wt.dominion.controller
 import de.htwg.wt.dominion.model.cardComponent.cardBaseImpl.Card
 import de.htwg.wt.dominion.util.Observable
 
-trait IController extends Observable {
+import scala.swing.Publisher
+import scala.swing.event.Event
+
+trait IController extends Publisher {
 
   def eval(input: String)
 
@@ -47,3 +50,5 @@ trait IController extends Observable {
 
   def toHTML: String
 }
+
+class EvalEvent extends Event
